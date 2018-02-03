@@ -24,6 +24,7 @@ public:
 	Matrix3 operator-(const Matrix3 &mat) const;
 
 	float get(int row, int col) const;
+	void set(int row, int col, float val);
 	Vector3 getRow(int row) const;
 	Vector3 getColumn(int col) const;
 	Matrix3 transposed() const;
@@ -88,6 +89,12 @@ float Matrix3::get(int row, int col) const {
 	if (row < 0 || row > dim || col < 0 || col > dim)
 		throw std::invalid_argument("Coordinates are invalid");
 	return values[row * dim + col];
+}
+
+void Matrix3::set(int row, int col, float val) {
+	if (row < 0 || row > dim || col < 0 || col > dim)
+		throw std::invalid_argument("Coordinates are invalid");
+	values[row * dim + col] = val;
 }
 
 Vector3 Matrix3::getRow(int row) const {
