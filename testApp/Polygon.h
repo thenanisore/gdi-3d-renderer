@@ -13,7 +13,7 @@ class Polygon
 public:
 	Polygon(const std::vector<Vector3> &_vertices);
 	Polygon(const std::vector<Vector4> &_vertices);
-	
+
 	// Applies a matrix transformation to the polygon
 	void transform(const Matrix4 &mat);
 

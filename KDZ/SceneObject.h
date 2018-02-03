@@ -9,6 +9,13 @@ class SceneObject
 {
 public:
 	SceneObject(std::vector<Polygon> _polygons);
+
+	// Matrix transformations (in local coordinates).
+
+	void translate(float angle);
+	void rotate(float angle);
+	void scale(float angle);
+
 	std::vector<Polygon> polygons;
 };
 

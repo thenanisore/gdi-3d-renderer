@@ -17,16 +17,16 @@ public:
 
 	const int dim = 3;
 
-	Matrix3 operator*(float s);
-	Matrix3 operator*(const Matrix3 &mat);
-	Vector3 operator*(const Vector3 &vec);
-	Matrix3 operator+(const Matrix3 &mat);
-	Matrix3 operator-(const Matrix3 &mat);
+	Matrix3 operator*(float s) const;
+	Matrix3 operator*(const Matrix3 &mat) const;
+	Vector3 operator*(const Vector3 &vec) const;
+	Matrix3 operator+(const Matrix3 &mat) const;
+	Matrix3 operator-(const Matrix3 &mat) const;
 
 	float get(int row, int col) const;
 	Vector3 getRow(int row) const;
 	Vector3 getColumn(int col) const;
-	Matrix3 transposed();
+	Matrix3 transposed() const;
 
 private:
 	std::vector<float> values;
@@ -42,7 +42,7 @@ Matrix3::Matrix3(const std::vector<float> _values) : values(_values) { }
 
 Matrix3::Matrix3(const Matrix3 &mat) : values(mat.values) { }
 
-Matrix3 Matrix3::operator*(float s) {
+Matrix3 Matrix3::operator*(float s) const {
 	std::vector<float> newValues(values);
 	for (int i = 0; i < newValues.size(); i++) {
 		newValues[i] *= s;
@@ -50,7 +50,7 @@ Matrix3 Matrix3::operator*(float s) {
 	return Matrix3(newValues);
 }
 
-Matrix3 Matrix3::operator*(const Matrix3 &mat) {
+Matrix3 Matrix3::operator*(const Matrix3 &mat) const {
 	std::vector<float> newValues(values);
 	for (int i = 0; i < dim; i++) {
 		for (int j = 0; j < dim; j++) {
@@ -60,7 +60,7 @@ Matrix3 Matrix3::operator*(const Matrix3 &mat) {
 	return Matrix3(newValues);
 }
 
-Vector3 Matrix3::operator*(const Vector3 &vec) {
+Vector3 Matrix3::operator*(const Vector3 &vec) const {
 	std::vector<float> newVector;
 	for (int i = 0; i < dim; i++) {
 		newVector.push_back(getRow(i).dot(vec));
@@ -68,7 +68,7 @@ Vector3 Matrix3::operator*(const Vector3 &vec) {
 	return Vector3(newVector);
 }
 
-Matrix3 Matrix3::operator+(const Matrix3 &mat) {
+Matrix3 Matrix3::operator+(const Matrix3 &mat) const {
 	std::vector<float> newValues(values);
 	for (int i = 0; i < newValues.size(); i++) {
 		newValues[i] += mat.get(i / dim, i % dim);
@@ -76,7 +76,7 @@ Matrix3 Matrix3::operator+(const Matrix3 &mat) {
 	return Matrix3(newValues);
 }
 
-Matrix3 Matrix3::operator-(const Matrix3 &mat) {
+Matrix3 Matrix3::operator-(const Matrix3 &mat) const {
 	std::vector<float> newValues(values);
 	for (int i = 0; i < newValues.size(); i++) {
 		newValues[i] -= mat.get(i / dim, i % dim);
@@ -102,7 +102,7 @@ Vector3 Matrix3::getColumn(int col) const {
 	return Vector3(get(0, col), get(1, col), get(2, col));
 }
 
-Matrix3 Matrix3::transposed() {
+Matrix3 Matrix3::transposed() const {
 	std::vector<float> newValues(values);
 	for (int i = 0; i < newValues.size(); i++) {
 		newValues[i] = get(i % dim, i / dim);

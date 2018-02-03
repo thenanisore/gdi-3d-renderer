@@ -21,17 +21,17 @@ public:
 
 	float x, y, z, w, len;
 
-	inline bool operator==(const Vector4 &vec) const;
-	inline bool operator!=(const Vector4 &vec) const;
-	inline Vector4 operator+(const Vector4 &vec) const;
-	inline Vector4 operator-(const Vector4 &vec) const;
-	inline Vector4 operator-() const;
-	inline Vector4 operator*(float s) const;
-	inline Vector4 operator/(float s) const;
+	inline bool operator==(const Vector4 &vec);
+	inline bool operator!=(const Vector4 &vec);
+	inline Vector4 operator+(const Vector4 &vec);
+	inline Vector4 operator-(const Vector4 &vec);
+	inline Vector4 operator-();
+	inline Vector4 operator*(float s);
+	inline Vector4 operator/(float s);
 	// Returns a dot product of two vectors
-	inline float dot(const Vector4 &vec) const;
+	inline float dot(const Vector4 &vec);
 	// Returns a vector of the same direction with the length 1
-	inline Vector4 normalized() const;
+	inline Vector4 normalized();
 };
 
 Vector4::Vector4() : Vector4(0.0f, 0.0f, 0.0f, 0.0f) { }
@@ -54,41 +54,41 @@ Vector4::Vector4(const Vector4 &vec) {
 	x = vec.x; y = vec.y; z = vec.z; w = vec.w;
 }
 
-inline bool Vector4::operator==(const Vector4 &vec) const {
+inline bool Vector4::operator==(const Vector4 &vec) {
 	return x == vec.x && y == vec.y && z == vec.z && w == vec.w;
 }
 
-inline bool Vector4::operator!=(const Vector4 &vec) const {
+inline bool Vector4::operator!=(const Vector4 &vec) {
 	return x != vec.x || y != vec.y || z != vec.z || w != vec.w;
 }
 
-inline Vector4 Vector4::operator+(const Vector4 &vec) const {
+inline Vector4 Vector4::operator+(const Vector4 &vec) {
 	return Vector4(x + vec.x, y + vec.y, z + vec.z, w + vec.w);
 }
 
-inline Vector4 Vector4::operator-(const Vector4 &vec) const {
+inline Vector4 Vector4::operator-(const Vector4 &vec) {
 	return Vector4(x - vec.x, y - vec.y, z - vec.z, w - vec.w);
 }
 
-inline Vector4 Vector4::operator-() const {
+inline Vector4 Vector4::operator-() {
 	return Vector4(-x, -y, -z, -w);
 }
 
-inline Vector4 Vector4::operator*(float s) const {
+inline Vector4 Vector4::operator*(float s) {
 	return Vector4(s * x, s * y, s * z, s * w);
 }
 
-inline Vector4 Vector4::operator/(float s) const {
+inline Vector4 Vector4::operator/(float s) {
 	if (s == 0)
 		throw std::invalid_argument("Division by zero");
 	return Vector4(x / s, y / s, z / s, w / s);
 }
 
-inline float Vector4::dot(const Vector4 &vec) const {
+inline float Vector4::dot(const Vector4 &vec) {
 	return x * vec.x + y * vec.y + z * vec.z + w * vec.w;
 }
 
-inline Vector4 Vector4::normalized() const {
+inline Vector4 Vector4::normalized() {
 	// return a zero vector if already is one
 	return (*this) / (len == 0 ? 1 : len);
 }
