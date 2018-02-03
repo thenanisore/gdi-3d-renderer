@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 #include "Vector3.h"
 
 // The Matrix3 class represents a 3-dimensional matrix. The indices start at zero.
@@ -26,15 +27,13 @@ public:
 	Vector3 getColumn(int col) const;
 	Matrix3 transposed();
 
+	void print();
+
 private:
 	std::vector<float> values;
 };
 
-Matrix3::Matrix3() {
-	values = { 1, 0, 0,
-		       0, 1, 0,
-		       0, 0, 1 };
-}
+Matrix3::Matrix3() { values = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }; }
 
 Matrix3::Matrix3(const std::vector<float> _values) : values(_values) { }
 
@@ -93,4 +92,16 @@ Matrix3 Matrix3::transposed() {
 		newValues[i] = get(i % dim, i / dim);
 	}
 	return Matrix3(newValues);
+}
+
+void Matrix3::print() {
+	std::cout << "{" << std::endl;
+	for (int i = 0; i < dim; i++) {
+		std::cout << "  ";
+		for (int j = 0; j < dim; j++) {
+			std::cout << get(i, j) << " ";
+		}
+		std::cout << std::endl;
+	}
+	std::cout << "}" << std::endl;
 }
