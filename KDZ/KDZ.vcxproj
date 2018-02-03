@@ -132,7 +132,6 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="MainForm.cpp" />
-    <ClCompile Include="Polygon.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shape.cpp" />
   </ItemGroup>

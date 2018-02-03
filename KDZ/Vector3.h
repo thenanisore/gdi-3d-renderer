@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cmath>
+#include <vector>
+#include <cassert>
 
 // The Vector3 class represents a vector in a 3-dimensional space.
 class Vector3
@@ -10,6 +12,8 @@ public:
 	Vector3();
 	// Initializes a vector with the specified values.
 	Vector3(float _x, float _y, float _z);
+	// Initializes a vector with the first three values of the given std::vector.
+	Vector3(const std::vector<float> &vec);
 	// Copy constructor
 	Vector3(const Vector3 &vec);
 
@@ -24,6 +28,8 @@ public:
 	inline Vector3 operator/(float s);
 	// Returns a dot product of two vectors
 	inline float dot(const Vector3 &vec);
+	// Returns a cross product of two vectors
+	inline Vector3 cross(const Vector3 &vec);
 	// Returns a vector of the same direction with the length 1
 	inline Vector3 normalized();
 };
@@ -36,6 +42,12 @@ Vector3::Vector3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {
 
 Vector3::Vector3(const Vector3 &vec) {
 	x = vec.x; y = vec.y; z = vec.z;
+}
+
+Vector3::Vector3(const std::vector<float> &vec) {
+	if (vec.size < 3)
+		throw std::invalid_argument("Vector size less than dimension");
+	x = vec[0]; y = vec[1]; z = vec[2];
 }
 
 inline bool Vector3::operator==(const Vector3 &vec) {
@@ -63,6 +75,8 @@ inline Vector3 Vector3::operator*(float s) {
 }
 
 inline Vector3 Vector3::operator/(float s) {
+	if (s == 0)
+		throw std::invalid_argument("Division by zero");
 	return Vector3(x / s, y / s, z / s);
 }
 
@@ -70,6 +84,13 @@ inline float Vector3::dot(const Vector3 &vec) {
 	return x * vec.x + y * vec.y + z * vec.z;
 }
 
+inline Vector3 Vector3::cross(const Vector3 &vec) {
+	return Vector3(y * vec.z - z * vec.y,
+			   	   z * vec.x - x * vec.z,
+				   x * vec.y - y * vec.x);
+}
+
 inline Vector3 Vector3::normalized() {
-	return (*this) / this->len;
+	// return a zero vector if already is one
+	return (*this) / (len == 0 ? 1 : len);
 }

@@ -1,7 +1,12 @@
 #pragma once
-ref class Polygon
+
+#include "Vector4.h"
+
+class Polygon
 {
 public:
 	Polygon();
+private:
+
 };
 

@@ -18,6 +18,7 @@ public:
 
 	Matrix4 operator*(float s);
 	Matrix4 operator*(const Matrix4 &mat);
+	Vector4 operator*(const Vector4 &vec);
 	Matrix4 operator+(const Matrix4 &mat);
 	Matrix4 operator-(const Matrix4 &mat);
 
@@ -59,6 +60,14 @@ Matrix4 Matrix4::operator*(const Matrix4 &mat) {
 	return Matrix4(newValues);
 }
 
+Vector4 Matrix4::operator*(const Vector4 &vec) {
+	std::vector<float> newVector;
+	for (int i = 0; i < dim; i++) {
+		newVector.push_back(getRow(i).dot(vec));
+	}
+	return Vector4(newVector);
+}
+
 Matrix4 Matrix4::operator+(const Matrix4 &mat) {
 	std::vector<float> newValues(values);
 	for (int i = 0; i < newValues.size(); i++) {
@@ -76,15 +85,20 @@ Matrix4 Matrix4::operator-(const Matrix4 &mat) {
 }
 
 float Matrix4::get(int row, int col) const {
-	// TODO: check boundaries.
+	if (row < 0 || row > dim || col < 0 || col > dim)
+		throw std::invalid_argument("Coordinates are invalid");
 	return values[row * dim + col];
 }
 
 Vector4 Matrix4::getRow(int row) const {
+	if (row < 0 || row > dim)
+		throw std::invalid_argument("Row number is invalid");
 	return Vector4(get(row, 0), get(row, 1), get(row, 2), get(row, 3));
 }
 
 Vector4 Matrix4::getColumn(int col) const {
+	if (col < 0 || col > dim)
+		throw std::invalid_argument("Col number is invalid");
 	return Vector4(get(0, col), get(1, col), get(2, col), get(3, col));
 }
 

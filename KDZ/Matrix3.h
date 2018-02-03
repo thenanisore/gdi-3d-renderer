@@ -18,6 +18,7 @@ public:
 
 	Matrix3 operator*(float s);
 	Matrix3 operator*(const Matrix3 &mat);
+	Vector3 operator*(const Vector3 &vec);
 	Matrix3 operator+(const Matrix3 &mat);
 	Matrix3 operator-(const Matrix3 &mat);
 
@@ -32,8 +33,8 @@ private:
 
 Matrix3::Matrix3() {
 	values = { 1, 0, 0,
-		       0, 1, 0,
-		       0, 0, 1 };
+			   0, 1, 0,
+			   0, 0, 1 };
 }
 
 Matrix3::Matrix3(const std::vector<float> _values) : values(_values) { }
@@ -58,6 +59,14 @@ Matrix3 Matrix3::operator*(const Matrix3 &mat) {
 	return Matrix3(newValues);
 }
 
+Vector3 Matrix3::operator*(const Vector3 &vec) {
+	std::vector<float> newVector;
+	for (int i = 0; i < dim; i++) {
+		newVector.push_back(getRow(i).dot(vec));
+	}
+	return Vector3(newVector);
+}
+
 Matrix3 Matrix3::operator+(const Matrix3 &mat) {
 	std::vector<float> newValues(values);
 	for (int i = 0; i < newValues.size(); i++) {
@@ -75,15 +84,20 @@ Matrix3 Matrix3::operator-(const Matrix3 &mat) {
 }
 
 float Matrix3::get(int row, int col) const {
-	// TODO: check boundaries.
+	if (row < 0 || row > dim || col < 0 || col > dim)
+		throw std::invalid_argument("Coordinates are invalid");
 	return values[row * dim + col];
 }
 
 Vector3 Matrix3::getRow(int row) const {
+	if (row < 0 || row > dim)
+		throw std::invalid_argument("Row number is invalid");
 	return Vector3(get(row, 0), get(row, 1), get(row, 2));
 }
 
 Vector3 Matrix3::getColumn(int col) const {
+	if (col < 0 || col > dim)
+		throw std::invalid_argument("Col number is invalid");
 	return Vector3(get(0, col), get(1, col), get(2, col));
 }
 
