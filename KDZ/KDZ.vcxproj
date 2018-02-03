@@ -133,7 +133,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Shape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -144,7 +143,7 @@
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="Shape.h" />
+    <ClInclude Include="SceneObject.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
   </ItemGroup>

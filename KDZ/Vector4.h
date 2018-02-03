@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cmath>
 #include "Vector3.h"
+
+#include <cmath>
 
 // The Vector4 class represents a vector in a 4-dimensional space.
 class Vector4

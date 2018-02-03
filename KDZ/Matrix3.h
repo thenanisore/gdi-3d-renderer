@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include "Vector3.h"
+
+#include <vector>
 
 // The Matrix3 class represents a 3-dimensional matrix. The indices start at zero.
 class Matrix3

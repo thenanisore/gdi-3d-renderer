@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include "Vector4.h"
+
+#include <vector>
 
 // The Matrix4 class represents a 4-dimensional matrix. The indices start at zero.
 class Matrix4
