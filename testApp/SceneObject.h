@@ -30,6 +30,8 @@ public:
 	void reflectYZ();
 	// Scales the object by the given magnitude vector.
 	void scale(const Vector3 magnitude);
+	// Adds a polygon to the SceneObject's mesh.
+	void addPolygon(Polygon pol);
 
 	std::vector<Polygon> polygons;
 
@@ -128,6 +130,10 @@ void SceneObject::transformPolygons(const Matrix4 &tr) {
 	for (int i = 0; i < polygons.size(); i++) {
 		polygons[i].transform(tr);
 	}
+}
+
+void SceneObject::addPolygon(Polygon pol) {
+	polygons.push_back(pol);
 }
 
 inline float SceneObject::degreesToRadians(float degrees) {
