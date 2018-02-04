@@ -15,6 +15,10 @@ public:
 
 	// Returns a LookAt matrix based on the Camera's current parameters.
 	Matrix4 getLookAt();
+	// Returns a projection matrix with the specified parameters.
+	Matrix4 getProjection(float fov, float aspect, float near, float far);
+	// Returns an orthgraphic matrix with the specified parameters.
+	Matrix4 getOrthographic();
 
 private:
 	Vector3 position;
@@ -46,4 +50,14 @@ Matrix4 Camera::getLookAt() {
 		0.0f, 0.0f, 0.0f, 1.0f
 	});
 	return basis * positional;
+}
+
+Matrix4 Camera::getProjection(float fov, float aspect, float near, float far) {
+	// TODO: projection matrix
+	return Matrix4();
+}
+
+Matrix4 Camera::getOrthographic() {
+	// TODO: orthographic matrix
+	return Matrix4();
 }
