@@ -23,7 +23,7 @@ private:
 	Vector3 cameraUp;
 };
 
-Camera::Camera(Vector3 _position, Vector3 _target, Vector3 _up) : position(_position) {
+Camera::Camera(Vector3 _position, Vector3 _target, Vector3 _up): position(_position) {
 	// calculate the (reverse) direction vector
 	direction = (_position - _target).normalized();
 	// calculate the basis vector that points to the right

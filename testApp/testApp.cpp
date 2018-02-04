@@ -7,6 +7,8 @@
 #include "Matrix4.h"
 #include "Polygon.h"
 #include "SceneObject.h"
+#include "Camera.h"
+
 #include <iostream>
 
 using namespace System;
@@ -62,8 +64,7 @@ void print(SceneObject so) {
 	std::cout << std::endl;
 }
 
-int main(array<System::String ^> ^args)
-{
+void test1() {
 	Matrix4 trans(std::vector<float> { 1, 0, 0, 1, 0, 1, 0, 2, 0, 0, 1, 3, 0, 0, 0, 1 });
 	Matrix4 scale(std::vector<float> { 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1 });
 	Vector4 v1;
@@ -110,6 +111,15 @@ int main(array<System::String ^> ^args)
 	t.translate(Vector3(10, 10, -10));
 
 	print(t);
+}
+
+int main(array<System::String ^> ^args)
+{
+	Camera cam(Vector3(0, 0, 3), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	print(cam.getLookAt());
+
+	Camera cam1(Vector3(0, 0, 3), Vector3(0, 0, 0), Vector3(0, -1, 0));
+	print(cam1.getLookAt());
 
 	std::getchar();
     return 0;
