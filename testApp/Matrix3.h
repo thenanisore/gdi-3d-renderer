@@ -35,8 +35,8 @@ private:
 
 Matrix3::Matrix3() {
 	values = { 1, 0, 0,
-		0, 1, 0,
-		0, 0, 1 };
+			   0, 1, 0,
+		   	   0, 0, 1 };
 }
 
 Matrix3::Matrix3(const std::vector<float> _values) : values(_values) { }

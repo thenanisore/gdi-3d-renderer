@@ -6,6 +6,7 @@
 #include "Vector4.h"
 #include "Matrix4.h"
 #include "Polygon.h"
+#include "SceneObject.h"
 #include <iostream>
 
 using namespace System;
@@ -53,6 +54,14 @@ void print(char* str) {
 	std::cout << str << std::endl;
 }
 
+void print(SceneObject so) {
+	std::cout << "--- SceneObject ---" << std::endl;
+	for (const Polygon &pol : so.polygons) {
+		print(pol);
+	}
+	std::cout << std::endl;
+}
+
 int main(array<System::String ^> ^args)
 {
 	Matrix4 trans(std::vector<float> { 1, 0, 0, 1, 0, 1, 0, 2, 0, 0, 1, 3, 0, 0, 0, 1 });
@@ -74,20 +83,33 @@ int main(array<System::String ^> ^args)
 	print(trans * v2);
 	print(scale * v2);
 
-	Polygon p(std::vector<Vector3> {
-		Vector3(0, 0, 0),
-		Vector3(2, 0, 0),
-		Vector3(0, 3, 0),
+	Polygon p1(std::vector<Vector3> {
+		Vector3(-1, 0, 1),
+		Vector3(0, 0, -1),
+		Vector3(1, 0, 1)
 	});
-	print(p);
+	Polygon p2(std::vector<Vector3> {
+		Vector3(0, 0, -1),
+		Vector3(-1, 0, 1),
+		Vector3(2, 1.25, 1)
+	});
 
-	p.transform(trans);
-	print("translate 1 up 2 right 3 z:");
-	print(p);
-	p.transform(scale);
-	print("scale by 2");
-	print(p);
+	// scene object
+	SceneObject t(std::vector<Polygon> { p1, p2 });
+	
+	print(t);
 
+	t.scale(Vector3(3, -1, 1));
+
+	print(t);
+
+	t.reflectXY();
+
+	print(t);
+
+	t.translate(Vector3(10, 10, -10));
+
+	print(t);
 
 	std::getchar();
     return 0;

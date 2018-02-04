@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <vector>
-#include <cassert>
 
 // The Vector3 class represents a vector in a 3-dimensional space.
 class Vector3
