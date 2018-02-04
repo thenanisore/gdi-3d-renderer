@@ -1,7 +1,7 @@
+
 #pragma once
 
 namespace KDZ {
-
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -127,15 +127,6 @@ namespace KDZ {
 
 #pragma endregion
 private:
-	System::Void button1_Click(System::Object ^sender, System::EventArgs ^e) 
-	{
-		Graphics ^im = pictureBox->CreateGraphics();
-		Color ^col = gcnew Color();
-		Pen ^pen = gcnew Pen(col->Red);
-		im->Clear(col->White);
-		im->DrawLine(pen, 5, 5, 10, 10);
-		im->DrawLine(pen, 100, 100, 101, 101);
-		im->DrawLine(pen, 102, 102, 102, 102);
-	}
+	System::Void button1_Click(System::Object ^sender, System::EventArgs ^e);
 };
 }

@@ -27,7 +27,7 @@ private:
 	Vector3 cameraUp;
 };
 
-Camera::Camera(Vector3 _position, Vector3 _target, Vector3 _up): position(_position) {
+Camera::Camera(Vector3 _position, Vector3 _target, Vector3 _up) : position(_position) {
 	// calculate the (reverse) direction vector
 	direction = (_position - _target).normalized();
 	// calculate the basis vector that points to the right
@@ -39,15 +39,15 @@ Camera::Camera(Vector3 _position, Vector3 _target, Vector3 _up): position(_posit
 Matrix4 Camera::getLookAt() {
 	Matrix4 basis(std::vector<float> {
 		cameraRight.x, cameraRight.y, cameraRight.z, 0.0f,
-		cameraUp.x, cameraUp.y, cameraUp.z, 0.0f,
-		direction.x, direction.y, direction.z, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f
+			cameraUp.x, cameraUp.y, cameraUp.z, 0.0f,
+			direction.x, direction.y, direction.z, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
 	});
 	Matrix4 positional(std::vector<float> {
 		1.0f, 0.0f, 0.0f, -position.x,
-		0.0f, 1.0f, 0.0f, -position.y,
-		0.0f, 0.0f, 1.0f, -position.z,
-		0.0f, 0.0f, 0.0f, 1.0f
+			0.0f, 1.0f, 0.0f, -position.y,
+			0.0f, 0.0f, 1.0f, -position.z,
+			0.0f, 0.0f, 0.0f, 1.0f
 	});
 	return basis * positional;
 }
