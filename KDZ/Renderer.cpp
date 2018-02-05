@@ -1,11 +1,20 @@
 #include "Renderer.h"
 
+#include <climits>
+
 namespace GL {
 
 	using namespace System;
 	using namespace System::Drawing;
+	using namespace System::Collections::Generic;
 
-	Renderer::Renderer(Graphics ^im, Color ^col, Pen ^p, Brush ^br) : graphics(im), color(col), pen(p), brush(br) { }
+	Renderer::Renderer(Graphics ^im, Color ^col, int width, int height) : graphics(im), color(col) {
+		pen = gcnew Pen(color->Blue);
+		brush = gcnew SolidBrush(color->Blue);
+		// initialize a z-buffer
+		zbuffer = gcnew array<int, 2>(width, height);
+		setViewport(width, height);
+	}
 
 	void Renderer::setViewport(int width, int height) {
 		viewportX = width;
@@ -23,7 +32,11 @@ namespace GL {
 	}
 
 	void Renderer::clearZBuffer() {
-		// TODO: clear z buffer
+		for (int x = 0; x < zbuffer->GetLength(0); x++) {
+			for (int y = 0; y < zbuffer->GetLength(1); y++) {
+				zbuffer->SetValue(INT_MIN, x, y);
+			}
+		}
 	}
 
 	void Renderer::renderObject(const SceneObject &obj) {

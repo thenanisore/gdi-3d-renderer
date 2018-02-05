@@ -20,7 +20,6 @@ System::Void MainForm::button1_Click(System::Object ^sender, System::EventArgs ^
 	Pen ^pen = gcnew Pen(col->Blue);
 	SolidBrush ^br = gcnew SolidBrush(col->Blue);
 	GL::Scene sc;
-	GL::Renderer rend(im, col, pen, br);
-	rend.setViewport(pictureBox->Width, pictureBox->Height);
+	GL::Renderer rend(im, col, pictureBox->Width, pictureBox->Height);
 	sc.renderScene(%rend);
 }
