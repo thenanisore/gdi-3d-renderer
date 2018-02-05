@@ -14,12 +14,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	return 0;
 }
 
-System::Void MainForm::button1_Click(System::Object ^sender, System::EventArgs ^e) {
-	Graphics ^im = pictureBox->CreateGraphics();
+System::Void MainForm::setScene() {
+	Graphics ^im = Graphics::FromImage(bm);
 	Color ^col = gcnew Color();
 	Pen ^pen = gcnew Pen(col->Blue);
 	SolidBrush ^br = gcnew SolidBrush(col->Blue);
 	GL::Scene sc;
 	GL::Renderer rend(im, col, pictureBox->Width, pictureBox->Height);
-	sc.renderScene(%rend);
+	try {
+		sc.renderScene(%rend);
+	}
+	finally {
+		delete im;
+	}
+	pictureBox->Refresh();
+}
+
+System::Void MainForm::MainForm_Shown(System::Object^  sender, System::EventArgs^  e) {
+	setScene();
 }
