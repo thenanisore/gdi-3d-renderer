@@ -12,7 +12,7 @@ namespace GL {
 		translationMatrix.set(1, 3, move.y);
 		translationMatrix.set(2, 3, move.z);
 		// apply
-		transformPolygons(translationMatrix);
+		transform(translationMatrix);
 	}
 
 	void SceneObject::rotateX(float degrees) {
@@ -24,7 +24,7 @@ namespace GL {
 		rotationMatrix.set(2, 1, sin(angle));
 		rotationMatrix.set(2, 2, cos(angle));
 		// apply
-		transformPolygons(rotationMatrix);
+		transform(rotationMatrix);
 	}
 
 	void SceneObject::rotateY(float degrees) {
@@ -36,7 +36,7 @@ namespace GL {
 		rotationMatrix.set(2, 0, -sin(angle));
 		rotationMatrix.set(2, 2, cos(angle));
 		// apply
-		transformPolygons(rotationMatrix);
+		transform(rotationMatrix);
 	}
 
 	void SceneObject::rotateZ(float degrees) {
@@ -48,7 +48,7 @@ namespace GL {
 		rotationMatrix.set(1, 0, sin(angle));
 		rotationMatrix.set(1, 1, cos(angle));
 		// apply
-		transformPolygons(rotationMatrix);
+		transform(rotationMatrix);
 	}
 
 	// Reflects the object across the XY plane.
@@ -57,7 +57,7 @@ namespace GL {
 		Matrix4 reflectionMatrix;
 		reflectionMatrix.set(2, 2, -1);
 		// apply
-		transformPolygons(reflectionMatrix);
+		transform(reflectionMatrix);
 	}
 
 	// Reflects the object across the XZ plane.
@@ -66,7 +66,7 @@ namespace GL {
 		Matrix4 reflectionMatrix;
 		reflectionMatrix.set(1, 1, -1);
 		// apply
-		transformPolygons(reflectionMatrix);
+		transform(reflectionMatrix);
 	}
 
 	// Reflects the object across the YZ plane.
@@ -75,7 +75,7 @@ namespace GL {
 		Matrix4 reflectionMatrix;
 		reflectionMatrix.set(0, 0, -1);
 		// apply
-		transformPolygons(reflectionMatrix);
+		transform(reflectionMatrix);
 	}
 
 	void SceneObject::scale(const Vector3 magnitude) {
@@ -85,11 +85,11 @@ namespace GL {
 		scaleMatrix.set(1, 1, magnitude.y);
 		scaleMatrix.set(2, 2, magnitude.z);
 		// apply
-		transformPolygons(scaleMatrix);
+		transform(scaleMatrix);
 	}
 
 	// Applies a transformation to every SceneObject's polygon.
-	void SceneObject::transformPolygons(const Matrix4 &tr) {
+	void SceneObject::transform(const Matrix4 &tr) {
 		for (int i = 0; i < polygons.size(); i++) {
 			polygons[i].transform(tr);
 		}

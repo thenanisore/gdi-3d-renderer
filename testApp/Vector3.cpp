@@ -19,6 +19,11 @@ namespace GL {
 		x = vec[0]; y = vec[1]; z = vec[2];
 	}
 
+	Vector3& Vector3::operator=(const Vector3 &vec) {
+		x = vec.x; y = vec.y; z = vec.z;
+		return *this;
+	}
+
 	bool Vector3::operator==(const Vector3 &vec) const {
 		return x == vec.x && y == vec.y && z == vec.z;
 	}

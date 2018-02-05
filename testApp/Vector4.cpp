@@ -23,6 +23,11 @@ namespace GL {
 		x = vec.x; y = vec.y; z = vec.z; w = vec.w;
 	}
 
+	Vector4& Vector4::operator=(const Vector4 &vec) {
+		x = vec.x; y = vec.y; z = vec.z; w = vec.w;
+		return *this;
+	}
+
 	bool Vector4::operator==(const Vector4 &vec) const {
 		return x == vec.x && y == vec.y && z == vec.z && w == vec.w;
 	}

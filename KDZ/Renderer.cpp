@@ -58,4 +58,9 @@ namespace GL {
 	void Renderer::drawPoint(int x, int y) {
 		graphics->FillRectangle(brush, x, y, 1, 1);
 	}
+
+	// Remaps the coordinates from [-1, 1] to the [0, viewport] space. 
+	Vector3 Renderer::NDCtoViewport(const Vector3 &vertex) {
+		return Vector3((1.0f + vertex.x) * viewportX / 2.0f, (1.0f + vertex.y) * viewportY / 2.0f, 0.0f);
+	}
 }

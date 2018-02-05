@@ -19,6 +19,8 @@ namespace GL {
 
 		const int dim = 3;
 
+		// Copy assignment operator.
+		Matrix3& operator=(const Matrix3 &mat);
 		Matrix3 operator*(float s) const;
 		Matrix3 operator*(const Matrix3 &mat) const;
 		Vector3 operator*(const Vector3 &vec) const;

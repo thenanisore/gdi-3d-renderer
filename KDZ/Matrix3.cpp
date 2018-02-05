@@ -12,6 +12,11 @@ namespace GL {
 
 	Matrix3::Matrix3(const Matrix3 &mat) : values(mat.values) { }
 
+	Matrix3& Matrix3::operator=(const Matrix3 &mat) {
+		values = mat.values;
+		return *this;
+	}
+
 	Matrix3 Matrix3::operator*(float s) const {
 		std::vector<float> newValues(values);
 		for (int i = 0; i < newValues.size(); i++) {

@@ -17,7 +17,7 @@ namespace GL {
 		sceneObjects[0].rotateY(30);
 		sceneObjects[0].rotateX(30);
 		sceneObjects[0].rotateZ(30);
-		sceneObjects[0].transformPolygons(camera.getLookAt());
+		sceneObjects[0].transform(camera.getLookAt());
 		//sceneObjects[0].transformPolygons(camera.getProjection(0, 0, 0, 0));
 		gr->Clear(col->LightYellow);
 		for (GL::Polygon pol : sceneObjects[0].polygons) {

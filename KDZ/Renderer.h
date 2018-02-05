@@ -30,5 +30,6 @@ namespace GL {
 		array<int, 2> ^zbuffer;
 		void drawLine(const Vector3 &from, const Vector3 &to);
 		void drawPoint(int x, int y);
+		Vector3 NDCtoViewport(const Vector3 &vertex);
 	};
 }

@@ -8,6 +8,10 @@ namespace GL {
 		len = sqrt(_x * _x + _y * _y + _z * _z + _w * _w);
 	}
 
+	Vector4::Vector4(const Vector4 &vec) {
+		x = vec.x; y = vec.y; z = vec.z; w = vec.w;
+	}
+
 	Vector4::Vector4(const std::vector<float> &vec) {
 		if (vec.size() < 4)
 			throw std::invalid_argument("Vector size less than dimension");
@@ -18,8 +22,9 @@ namespace GL {
 		x = vec.x; y = vec.y; z = vec.z; w = _w;
 	}
 
-	Vector4::Vector4(const Vector4 &vec) {
+	Vector4& Vector4::operator=(const Vector4 &vec) {
 		x = vec.x; y = vec.y; z = vec.z; w = vec.w;
+		return *this;
 	}
 
 	bool Vector4::operator==(const Vector4 &vec) const {

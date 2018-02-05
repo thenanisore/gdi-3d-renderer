@@ -14,6 +14,11 @@ namespace GL {
 
 	Matrix4::Matrix4(const Matrix4 &mat) : values(mat.values) { }
 
+	Matrix4& Matrix4::operator=(const Matrix4 &mat) {
+		values = mat.values;
+		return *this;
+	}
+
 	Matrix4 Matrix4::operator*(float s) const {
 		std::vector<float> newValues(values);
 		for (int i = 0; i < newValues.size(); i++) {

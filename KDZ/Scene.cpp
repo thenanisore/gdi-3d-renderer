@@ -30,7 +30,7 @@ namespace GL {
 		//sceneObjects[0].rotateZ(45);
 		sceneObjects[0].scale(Vector3(1, 1, 1) * 80);
 		sceneObjects[0].translate(Vector3(200, 200, 0));
-		sceneObjects[0].transformPolygons(camera.getLookAt());
+		sceneObjects[0].transform(camera.getLookAt());
 		//sceneObjects[0].transformPolygons(camera.getProjection(0, 0, 0, 0));
 
 		// 5. get view and projection matrices, transform every object

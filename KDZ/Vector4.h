@@ -23,6 +23,8 @@ namespace GL {
 
 		float x, y, z, w, len;
 
+		// Copy assignment operator
+		Vector4& operator=(const Vector4 &vec);
 		bool operator==(const Vector4 &vec) const;
 		bool operator!=(const Vector4 &vec) const;
 		Vector4 operator+(const Vector4 &vec) const;
