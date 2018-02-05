@@ -6,25 +6,41 @@ namespace GL {
 	using namespace System::Drawing;
 
 	Scene::Scene() : camera(Vector3(0, 0, 3), Vector3(0, 0, 0), Vector3(0, 1, 0)) {
+		// 1. set up the camera
+		// 2. set up the renderer (or pass him in renderScene method?)
+
 		// test code
 		addCube();
 	}
 
-	void Scene::renderScene(Graphics ^gr, Color ^col, Pen ^pen) {
+	void Scene::renderScene(Renderer ^renderer) {
+		// 1. clear Z buffer
+		renderer->clearZBuffer();
+
+		// 2. clear screen
+		renderer->clearScreen();
+
+		// 3. draw axes/grid
+
+		// 4. perform all model transformations
+
+		// test code
+		sceneObjects[0].rotateY(45);
+		sceneObjects[0].rotateX(45);
+		//sceneObjects[0].rotateZ(45);
 		sceneObjects[0].scale(Vector3(1, 1, 1) * 80);
-		sceneObjects[0].translate(Vector3(300, 150, 0));
-		sceneObjects[0].rotateY(30);
-		sceneObjects[0].rotateX(30);
-		sceneObjects[0].rotateZ(30);
+		sceneObjects[0].translate(Vector3(200, 200, 0));
 		sceneObjects[0].transformPolygons(camera.getLookAt());
 		//sceneObjects[0].transformPolygons(camera.getProjection(0, 0, 0, 0));
-		gr->Clear(col->LightYellow);
-		for (GL::Polygon pol : sceneObjects[0].polygons) {
-			for (int i = 0; i < pol.vertices.size() - 1; i++) {
-				gr->DrawLine(pen, pol.vertices[i].x, pol.vertices[i].y, pol.vertices[i + 1].x, pol.vertices[i + 1].y);
-			}
-			gr->DrawLine(pen, pol.vertices[pol.vertices.size() - 1].x, pol.vertices[pol.vertices.size() - 1].y, pol.vertices[0].x, pol.vertices[0].y);
-		}
+
+		// 5. get view and projection matrices, transform every object
+		Matrix4 view = camera.getLookAt();
+		Matrix4 projection = camera.perspective(0, 0, 0, 0);
+
+		// 6. apply all transformations, change polygon coordinates
+
+		// 7. render
+		renderer->renderObject(sceneObjects[0]);
 	}
 
 	void Scene::addObject(SceneObject obj) {

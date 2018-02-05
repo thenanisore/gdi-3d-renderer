@@ -27,12 +27,12 @@ namespace GL {
 		return basis * positional;
 	}
 
-	Matrix4 Camera::getProjection(float fov, float aspect, float near, float far) {
-		// TODO: projection matrix
+	Matrix4 Camera::perspective(float fov, float aspect, float near, float far) {
+		// TODO: perspective matrix
 		return Matrix4();
 	}
 
-	Matrix4 Camera::getOrthographic() {
+	Matrix4 Camera::orthographic() {
 		// TODO: orthographic matrix
 		return Matrix4();
 	}

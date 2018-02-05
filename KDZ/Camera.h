@@ -17,10 +17,10 @@ namespace GL {
 
 		// Returns a LookAt matrix based on the Camera's current parameters.
 		Matrix4 getLookAt();
-		// Returns a projection matrix with the specified parameters.
-		Matrix4 getProjection(float fov, float aspect, float near, float far);
-		// Returns an orthgraphic matrix with the specified parameters.
-		Matrix4 getOrthographic();
+		// Returns a perspective projection matrix with the specified parameters.
+		Matrix4 perspective(float fov, float aspect, float near, float far);
+		// Returns an orthgraphic projection matrix with the specified parameters.
+		Matrix4 orthographic();
 
 	private:
 		Vector3 position;

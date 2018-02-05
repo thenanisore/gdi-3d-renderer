@@ -2,6 +2,7 @@
 
 #include "SceneObject.h"
 #include "Camera.h"
+#include "Renderer.h"
 
 #include <vector>
 
@@ -15,7 +16,7 @@ namespace GL {
 	{
 	public:
 		Scene();
-		void renderScene(Graphics ^gr, Color ^col, Pen ^pen);
+		void renderScene(Renderer ^renderer);
 		void addObject(SceneObject obj);
 		// test
 		void addCube();
