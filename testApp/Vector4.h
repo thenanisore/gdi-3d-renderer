@@ -4,91 +4,35 @@
 
 #include <cmath>
 
-// The Vector4 class represents a vector in a 4-dimensional space.
-class Vector4
-{
-public:
-	// Initializes a vector with the default values (0, 0, 0, 0).
-	Vector4();
-	// Initializes a vector with the specified values.
-	Vector4(float _x, float _y, float _z, float _w);
-	// Initializes a vector with the first four values of the given std::vector.
-	Vector4::Vector4(const std::vector<float> &vec);
-	// Initializes a vector with the values of the given Vector3 with a w-coordinate.
-	Vector4(const Vector3 &vec, float _w);
-	// Copy constructor
-	Vector4(const Vector4 &vec);
+namespace GL {
 
-	float x, y, z, w, len;
+	// The Vector4 class represents a vector in a 4-dimensional space.
+	class Vector4
+	{
+	public:
+		// Initializes a vector with the default values (0, 0, 0, 0).
+		Vector4();
+		// Initializes a vector with the specified values.
+		Vector4(float _x, float _y, float _z, float _w);
+		// Initializes a vector with the first four values of the given std::vector.
+		Vector4::Vector4(const std::vector<float> &vec);
+		// Initializes a vector with the values of the given Vector3 with a w-coordinate.
+		Vector4(const Vector3 &vec, float _w);
+		// Copy constructor
+		Vector4(const Vector4 &vec);
 
-	inline bool operator==(const Vector4 &vec) const;
-	inline bool operator!=(const Vector4 &vec) const;
-	inline Vector4 operator+(const Vector4 &vec) const;
-	inline Vector4 operator-(const Vector4 &vec) const;
-	inline Vector4 operator-() const;
-	inline Vector4 operator*(float s) const;
-	inline Vector4 operator/(float s) const;
-	// Returns a dot product of two vectors
-	inline float dot(const Vector4 &vec) const;
-	// Returns a vector of the same direction with the length 1
-	inline Vector4 normalized() const;
-};
+		float x, y, z, w, len;
 
-Vector4::Vector4() : Vector4(0.0f, 0.0f, 0.0f, 0.0f) { }
-
-Vector4::Vector4(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {
-	len = sqrt(_x * _x + _y * _y + _z * _z + _w * _w);
-}
-
-Vector4::Vector4(const std::vector<float> &vec) {
-	if (vec.size() < 4)
-		throw std::invalid_argument("Vector size less than dimension");
-	x = vec[0]; y = vec[1]; z = vec[2]; w = vec[3];
-}
-
-Vector4::Vector4(const Vector3 &vec, float _w) {
-	x = vec.x; y = vec.y; z = vec.z; w = _w;
-}
-
-Vector4::Vector4(const Vector4 &vec) {
-	x = vec.x; y = vec.y; z = vec.z; w = vec.w;
-}
-
-inline bool Vector4::operator==(const Vector4 &vec) const {
-	return x == vec.x && y == vec.y && z == vec.z && w == vec.w;
-}
-
-inline bool Vector4::operator!=(const Vector4 &vec) const {
-	return x != vec.x || y != vec.y || z != vec.z || w != vec.w;
-}
-
-inline Vector4 Vector4::operator+(const Vector4 &vec) const {
-	return Vector4(x + vec.x, y + vec.y, z + vec.z, w + vec.w);
-}
-
-inline Vector4 Vector4::operator-(const Vector4 &vec) const {
-	return Vector4(x - vec.x, y - vec.y, z - vec.z, w - vec.w);
-}
-
-inline Vector4 Vector4::operator-() const {
-	return Vector4(-x, -y, -z, -w);
-}
-
-inline Vector4 Vector4::operator*(float s) const {
-	return Vector4(s * x, s * y, s * z, s * w);
-}
-
-inline Vector4 Vector4::operator/(float s) const {
-	if (s == 0)
-		throw std::invalid_argument("Division by zero");
-	return Vector4(x / s, y / s, z / s, w / s);
-}
-
-inline float Vector4::dot(const Vector4 &vec) const {
-	return x * vec.x + y * vec.y + z * vec.z + w * vec.w;
-}
-
-inline Vector4 Vector4::normalized() const {
-	// return a zero vector if already is one
-	return (*this) / (len == 0 ? 1 : len);
+		bool operator==(const Vector4 &vec) const;
+		bool operator!=(const Vector4 &vec) const;
+		Vector4 operator+(const Vector4 &vec) const;
+		Vector4 operator-(const Vector4 &vec) const;
+		Vector4 operator-() const;
+		Vector4 operator*(float s) const;
+		Vector4 operator/(float s) const;
+		// Returns a dot product of two vectors
+		float dot(const Vector4 &vec) const;
+		// Returns a vector of the same direction with the length 1
+		Vector4 normalized() const;
+	};
 }
