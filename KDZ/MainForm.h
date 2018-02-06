@@ -21,17 +21,21 @@ namespace KDZ {
 			InitializeComponent();
 			mainScene = new GL::Scene();
 			bm = gcnew Bitmap(pictureBox->Width, pictureBox->Height);
+			renderer = gcnew GL::Renderer(Graphics::FromImage(bm), Color::White, Color::Blue, pictureBox->Width, pictureBox->Height);
 			pictureBox->Image = bm;
+			isResettingScene = false;
 		}
 
 	private: 
+		GL::Renderer ^renderer;
 		Bitmap^ bm;
 		 // Main scene
 		GL::Scene *mainScene;
 		System::Void setScene();
 		System::Void renderScene();
-		// Events:
+		// mainform events
 		System::Void MainForm_Shown(System::Object^  sender, System::EventArgs^  e);
+		System::Void MainForm_ResizeEnd(System::Object^  sender, System::EventArgs^  e);
 		// object scroll bars
 		System::Void changeObjectPosition();
 		System::Void objPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
@@ -61,6 +65,7 @@ namespace KDZ {
 		System::Void resetObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		System::Void resetCamButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		// object reflection checkboxes:
+		bool isResettingScene;
 		System::Void changeObjectReflection();
 		System::Void objReflectionXYCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void objReflectionXZCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
@@ -647,12 +652,13 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// objScaleZBar
 			// 
 			this->objScaleZBar->Location = System::Drawing::Point(6, 159);
-			this->objScaleZBar->Maximum = 100;
-			this->objScaleZBar->Minimum = -100;
+			this->objScaleZBar->Maximum = 20;
+			this->objScaleZBar->Minimum = 1;
 			this->objScaleZBar->Name = L"objScaleZBar";
 			this->objScaleZBar->Size = System::Drawing::Size(212, 56);
 			this->objScaleZBar->TabIndex = 10;
 			this->objScaleZBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objScaleZBar->Value = 10;
 			this->objScaleZBar->Scroll += gcnew System::EventHandler(this, &MainForm::objScaleZBar_Scroll);
 			// 
 			// objScaleZLabel
@@ -670,12 +676,13 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// objScaleYBar
 			// 
 			this->objScaleYBar->Location = System::Drawing::Point(6, 100);
-			this->objScaleYBar->Maximum = 100;
-			this->objScaleYBar->Minimum = -100;
+			this->objScaleYBar->Maximum = 20;
+			this->objScaleYBar->Minimum = 1;
 			this->objScaleYBar->Name = L"objScaleYBar";
 			this->objScaleYBar->Size = System::Drawing::Size(212, 56);
 			this->objScaleYBar->TabIndex = 8;
 			this->objScaleYBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objScaleYBar->Value = 10;
 			this->objScaleYBar->Scroll += gcnew System::EventHandler(this, &MainForm::objScaleYBar_Scroll);
 			// 
 			// objScaleYLabel
@@ -693,12 +700,13 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// objScaleXBar
 			// 
 			this->objScaleXBar->Location = System::Drawing::Point(6, 41);
-			this->objScaleXBar->Maximum = 100;
-			this->objScaleXBar->Minimum = -100;
+			this->objScaleXBar->Maximum = 20;
+			this->objScaleXBar->Minimum = 1;
 			this->objScaleXBar->Name = L"objScaleXBar";
 			this->objScaleXBar->Size = System::Drawing::Size(212, 56);
 			this->objScaleXBar->TabIndex = 6;
 			this->objScaleXBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objScaleXBar->Value = 10;
 			this->objScaleXBar->Scroll += gcnew System::EventHandler(this, &MainForm::objScaleXBar_Scroll);
 			// 
 			// objScaleXLabel
@@ -1123,6 +1131,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->Name = L"MainForm";
 			this->Text = L"КДЗ 1 по Компьютерной графике. Иванов О. 2018";
 			this->Shown += gcnew System::EventHandler(this, &MainForm::MainForm_Shown);
+			this->ResizeEnd += gcnew System::EventHandler(this, &MainForm::MainForm_ResizeEnd);
 			this->menuStrip->ResumeLayout(false);
 			this->menuStrip->PerformLayout();
 			this->tableLayoutPanel->ResumeLayout(false);

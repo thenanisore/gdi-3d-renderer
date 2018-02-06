@@ -7,8 +7,6 @@ namespace GL {
 	using namespace System::Drawing;
 
 	Scene::Scene() : camera(Vector3(0, 0, -5), Vector3(0, 0, 0), Vector3(0, 1, 0)) {
-		// 1. set up the camera
-
 		// test code
 		addCube();
 		selectedObject = 0;
@@ -45,20 +43,23 @@ namespace GL {
 
 	// methods to manipulate objects:
 
+	const float positionMultiplier = 0.1f;
 	void Scene::setObjectPosition(int x_coord, int y_coord, int z_coord) {
-		sceneObjects[selectedObject].setPosition(Vector3(x_coord, y_coord, z_coord));
+		sceneObjects[selectedObject].setPosition(Vector3(x_coord, y_coord, z_coord) * positionMultiplier);
 	}
 
+	const float rotationMultiplier = 1.0f;
 	void Scene::setObjectRotation(float x_angle, float y_angle, float z_angle) {
-		sceneObjects[selectedObject].setRotation(Vector3(x_angle, y_angle, z_angle));
+		sceneObjects[selectedObject].setRotation(Vector3(x_angle, y_angle, z_angle) * rotationMultiplier);
+	}
+
+	const float scaleMultiplier = 0.1f;
+	void Scene::setObjectScale(int x_scale, int y_scale, int z_scale) {
+		sceneObjects[selectedObject].setScale(Vector3(x_scale, y_scale, z_scale) * scaleMultiplier);
 	}
 
 	void Scene::setObjectReflection(bool xy, bool xz, bool yz) {
 		sceneObjects[selectedObject].setReflection(xy, xz, yz);
-	}
-
-	void Scene::setObjectScale(int x_scale, int y_scale, int z_scale) {
-		sceneObjects[selectedObject].setScale(Vector3(x_scale, y_scale, z_scale));
 	}
 
 	void Scene::resetObject() {
@@ -83,12 +84,14 @@ namespace GL {
 
 	// methods to manipulate the camera:
 
+	const float cameraPositionMultiplier = 0.1f;
 	void Scene::setCameraPosition(int x_coord, int y_coord, int z_coord) {
-		camera.setPosition(Vector3(x_coord, y_coord, z_coord));
+		camera.setPosition(Vector3(x_coord, y_coord, z_coord) * cameraPositionMultiplier);
 	}
 
+	const float camerRotationMultiplier = 1.0f;
 	void Scene::setCameraRotation(float pitch, float yawn, float roll) {
-		camera.setRotation(Vector3(pitch, yawn, roll));
+		camera.setRotation(Vector3(pitch, yawn, roll) * camerRotationMultiplier);
 	}
 
 	void Scene::resetCamera() {

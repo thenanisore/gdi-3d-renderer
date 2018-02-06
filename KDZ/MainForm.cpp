@@ -20,16 +20,13 @@ System::Void MainForm::setScene() {
 }
 
 System::Void MainForm::renderScene() {
-	Graphics ^im = Graphics::FromImage(bm);
-	Color ^col = gcnew Color();
-	Pen ^pen = gcnew Pen(col->Blue);
-	SolidBrush ^br = gcnew SolidBrush(col->Blue);
-	GL::Renderer rend(im, col, pictureBox->Width, pictureBox->Height);
+	Graphics ^gr = Graphics::FromImage(bm);
 	try {
-		mainScene->renderScene(%rend);
+		renderer->setGraphics(gr);
+		mainScene->renderScene(renderer);
 	}
 	finally {
-		delete im;
+		delete gr;
 	}
 	pictureBox->Refresh();
 }
@@ -37,6 +34,14 @@ System::Void MainForm::renderScene() {
 // Sets scene after the MainForm is shown.
 System::Void MainForm::MainForm_Shown(System::Object^  sender, System::EventArgs^  e) {
 	setScene();
+}
+
+System::Void MainForm::MainForm_ResizeEnd(System::Object^  sender, System::EventArgs^  e) {
+	bm = gcnew Bitmap(pictureBox->Width, pictureBox->Height);
+	renderer->setGraphics(Graphics::FromImage(bm));
+	renderer->setViewport(pictureBox->Width, pictureBox->Height);
+	pictureBox->Image = bm;
+	renderScene();
 }
 
 // Object position scroll bars:
@@ -126,9 +131,9 @@ System::Void MainForm::camPosZBar_Scroll(System::Object^  sender, System::EventA
 // Camera rotation scroll bars:
 
 System::Void MainForm::changeCameraRotation() {
-	mainScene->setCameraRotation(((TrackBar^)camRotPitchBar)->Value,
-								 ((TrackBar^)camRotYawBar)->Value, 
-							  	 ((TrackBar^)camRotRollBar)->Value);
+	mainScene->setCameraRotation(camRotPitchBar->Value,
+								 camRotYawBar->Value, 
+							  	 camRotRollBar->Value);
 	renderScene();
 }
 
@@ -163,21 +168,49 @@ System::Void MainForm::deleteObjButton_Click(System::Object^  sender, System::Ev
 
 System::Void MainForm::resetObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	mainScene->resetObject();
+
+	isResettingScene = true;
+	// reset object's trackbars
+	objPosXBar->Value = 0;
+	objPosYBar->Value = 0;
+	objPosZBar->Value = 0;
+	objScaleXBar->Value = 1;
+	objScaleYBar->Value = 1;
+	objScaleZBar->Value = 1;
+	objRotXBar->Value = 0;
+	objRotYBar->Value = 0;
+	objRotZBar->Value = 0;
+	objReflectionXYCheckbox->Checked = false;
+	objReflectionXZCheckbox->Checked = false;
+	objReflectionYZCheckbox->Checked = false;
+	isResettingScene = false;
+
 	renderScene();
 }
 
 System::Void MainForm::resetCamButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	mainScene->resetCamera();
+
+	// reset camera's trackbars
+	camPosXBar->Value = 0;
+	camPosYBar->Value = 0;
+	camPosZBar->Value = -1;
+	camRotPitchBar->Value = 0;
+	camPosYBar->Value = 0;
+	camPosZBar->Value = 0;
+
 	renderScene();
 }
 
 // Object reflection checkboxes:
 
 System::Void MainForm::changeObjectReflection() {
-	mainScene->setObjectReflection(objReflectionXYCheckbox->Checked, 
-		                           objReflectionXZCheckbox->Checked,
-		                           objReflectionYZCheckbox->Checked);
-	renderScene();
+	if (!isResettingScene) {
+		mainScene->setObjectReflection(objReflectionXYCheckbox->Checked, 
+									   objReflectionXZCheckbox->Checked,
+									   objReflectionYZCheckbox->Checked);
+		renderScene();
+	}
 }
 
 System::Void MainForm::objReflectionXYCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {

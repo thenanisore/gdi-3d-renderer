@@ -8,12 +8,13 @@ namespace GL {
 	using namespace System::Drawing;
 	using namespace System::Collections::Generic;
 
-	Renderer::Renderer(Graphics ^im, Color ^col, int width, int height) : graphics(im), color(col) {
-		pen = gcnew Pen(color->Blue);
-		brush = gcnew SolidBrush(color->Blue);
+	Renderer::Renderer(Graphics ^im, Color _bgColor, Color _wfColor, int viewportWidth, int viewportHeight) 
+		: graphics(im), bgColor(_bgColor), wfColor(_wfColor) {
+		pen = gcnew Pen(wfColor);
+		brush = gcnew SolidBrush(wfColor);
 		// initialize a z-buffer
-		zbuffer = gcnew array<int, 2>(width, height);
-		setViewport(width, height);
+		zbuffer = gcnew array<int, 2>(viewportWidth, viewportHeight);
+		setViewport(viewportWidth, viewportHeight);
 	}
 
 	void Renderer::setViewport(int width, int height) {
@@ -28,7 +29,7 @@ namespace GL {
 	}
 
 	void Renderer::clearScreen() {
-		graphics->Clear(color->GhostWhite);
+		graphics->Clear(bgColor);
 	}
 
 	void Renderer::clearZBuffer() {
@@ -57,6 +58,10 @@ namespace GL {
 			// draw the last line
 			graphics->DrawLine(pen, ndc[ndc.size() - 1].x, ndc[ndc.size() - 1].y, ndc[0].x, ndc[0].y);
 		}
+	}
+
+	void Renderer::setGraphics(Graphics ^g) {
+		graphics = g;
 	}
 
 	void Renderer::drawLine(const Vector3 &from, const Vector3 &to) {
