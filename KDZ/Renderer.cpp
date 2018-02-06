@@ -47,23 +47,14 @@ namespace GL {
 		}
 	}
 
-	void Renderer::renderObject(const SceneObject &obj, const Matrix4& transformMatrix) {
-		// return if doesn't contain at least a triangle
-		if (obj.polygons.size() < 3) return;
-
+	void Renderer::renderObject(const SceneObject &obj, const Matrix4& transformMatrix, bool wireframe, bool solid) {
 		for (GL::Polygon pol : obj.polygons) {
-			// the ndc vector memorizes the vectors already in clip space
-			std::vector<Vector3> ndc{
-				NDCtoViewport((transformMatrix * pol.vertices[0]).fromHomogeneous())
-			};
-			for (int i = 0; i < pol.vertices.size() - 1; i++) {
-				// transform 3D world coordinates to the NDC
-				ndc.push_back(NDCtoViewport((transformMatrix * pol.vertices[i + 1]).fromHomogeneous()));
-				// draw the lines
-				drawLine(ndc[i], ndc[i + 1]);
-			}
-			// draw the last line
-			drawLine(ndc[ndc.size() - 1], ndc[0]);
+			GL::Polygon transformed = pol.transform(transformMatrix);
+			Vector3 first = NDCtoViewport(transformed.vertices[0].fromHomogeneous());
+			Vector3 second = NDCtoViewport(transformed.vertices[1].fromHomogeneous());
+			Vector3 third = NDCtoViewport(transformed.vertices[2].fromHomogeneous());
+			if (wireframe) drawPolygon(first, second, third);
+			if (solid) fillPolygon(first, second, third);
 		}
 	}
 
@@ -90,6 +81,7 @@ namespace GL {
 	void Renderer::setWFColor(Color _col) {
 		wfColor = _col;
 		wfPen->Color = wfColor;
+		wfBrush = gcnew SolidBrush(wfColor);
 	}
 
 	void Renderer::setSelectedColor(Color _col) {
@@ -117,6 +109,7 @@ namespace GL {
 		int t = x; x = y; y = t;
 	}
 
+	// Draws a line using the Bresenham's algorithm
 	void Renderer::drawLine(const Vector3 &from, const Vector3 &to) {
 		int x = from.x, y = from.y;
 		Vector3 current(x, y, 0);
@@ -151,6 +144,22 @@ namespace GL {
 
 	void Renderer::drawPoint(int x, int y) {
 		graphics->FillRectangle(wfBrush, x, y, 1, 1);
+	}
+
+	void Renderer::drawPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third) {
+		drawLine(first, second);
+		drawLine(second, third);
+		drawLine(third, first);
+	}
+
+	void Renderer::fillPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third) {
+		// TODO: fill polygon
+		array<Point> ^points = gcnew array<Point> {
+			Point(first.x, first.y),
+			Point(second.x, second.y),
+			Point(third.x, third.y)
+		};
+		graphics->FillPolygon(wfBrush, points);
 	}
 
 	// Remaps the coordinates from [-1, 1] to the [0, viewport] space. 

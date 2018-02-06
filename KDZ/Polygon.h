@@ -9,16 +9,20 @@
 
 namespace GL {
 
-	// The Polygon class represents a polygon with 3-dimensional vertices represented as Vector3.
+	// The Polygon class represents a triangular polygon with 3-dimensional vertices represented as Vector3.
 	class Polygon
 	{
 	public:
-		Polygon(const std::vector<Vector3> &_vertices);
-		Polygon(const std::vector<Vector4> &_vertices);
+		Polygon(const Vector3 &first, const Vector3 &second, const Vector3 &third);
+		Polygon(const Vector4 &first, const Vector4 &second, const Vector4 &third);
 
-		// Applies a matrix transformation to the polygon
-		void transform(const Matrix4 &mat);
+		void setColors(const Vector4 &first, const Vector4 &second, const Vector4 &third);
+		void calculateNormals();
+		// Returns a Polygon with the given transformation applied.
+		Polygon transform(const Matrix4 &mat);
 
 		std::vector<Vector4> vertices;
+		std::vector<Vector4> colors;
+		std::vector<Vector3> normals;
 	};
 }
