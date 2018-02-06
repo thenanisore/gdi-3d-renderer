@@ -24,12 +24,12 @@ namespace GL {
 		// 3. draw axes/grid
 
 		// 4. model matrix transformations
-		Matrix4 model;
-		model = Util::rotateY(model, 15.0f);
-		model = Util::rotateX(model, 15.0f);
-		model = Util::rotateZ(model, 15.0f);
-		model = Util::scale(model, Vector3(1.0f, 1.0f, 1.0f));
-		model = Util::translate(model, Vector3(0.0f, 0.0f, 0.0f));
+		Matrix4 model = sceneObjects[selectedObject].getModelMatrix();
+		//model = Util::rotateY(model, 15.0f);
+		//model = Util::rotateX(model, 15.0f);
+		//model = Util::rotateZ(model, 15.0f);
+		//model = Util::scale(model, Vector3(1.0f, 1.0f, 1.0f));
+		//model = Util::translate(model, Vector3(0.0f, 0.0f, 0.0f));
 
 		// 5. get view and projection matrices
 		Matrix4 view = camera.getLookAt();

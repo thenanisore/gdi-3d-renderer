@@ -23,6 +23,7 @@ namespace GL {
 		void setScale(const Vector3 &newScale);
 		void setRotation(const Vector3 &newRotation);
 		void setReflection(bool xy, bool xz, bool yz);
+		Matrix4 getModelMatrix();
 		void reset();
 
 		std::vector<Polygon> polygons;

@@ -1,4 +1,5 @@
 #include "SceneObject.h"
+#include "Matrix.h"
 
 namespace GL {
 
@@ -34,6 +35,22 @@ namespace GL {
 		reflectionXY = xy;
 		reflectionXZ = xz;
 		reflectionYZ = yz;
+	}
+
+	Matrix4 SceneObject::getModelMatrix() {
+		Matrix4 model;
+		// multiplication order: T * R * S * identity
+		model = Util::scale(model, scale);
+		model = Util::rotateX(model, rotation.x);
+		model = Util::rotateY(model, rotation.y);
+		model = Util::rotateZ(model, rotation.z);
+		model = Util::translate(model, position);
+		// apply reflection
+		if (reflectionXY) model = Util::reflectXY(model);
+		if (reflectionXZ) model = Util::reflectXZ(model);
+		if (reflectionYZ) model = Util::reflectYZ(model);
+
+		return model;
 	}
 
 	void SceneObject::reset() {

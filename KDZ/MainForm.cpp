@@ -124,8 +124,8 @@ System::Void MainForm::resetCamButton_Click(System::Object^  sender, System::Eve
 }
 
 System::Void MainForm::changeObjectReflection() {
-	mainScene->setObjectReflection(objReflectionYZCheckbox->Checked, 
-		                           objReflectionYZCheckbox->Checked,
+	mainScene->setObjectReflection(objReflectionXYCheckbox->Checked, 
+		                           objReflectionXZCheckbox->Checked,
 		                           objReflectionYZCheckbox->Checked);
 	renderScene();
 }
