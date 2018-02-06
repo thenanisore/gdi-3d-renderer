@@ -17,25 +17,30 @@ namespace GL {
 		renderer->clearScreen();
 		// TODO: draw axes/grid
 
-		// get transformation matrices
-		Matrix4 model = sceneObjects[selectedObject].getModelMatrix();
-		Matrix4 view = camera.getViewMatrix();
-		Matrix4 projection;
-		if (isPerspective) {
-			// TODO: regulate FoV
-			projection = Util::perspective(45.0f, renderer->getViewportAspect(), 0.1f, 100.0f);
-		}
-		else {
-			// TODO: set parameters
-			projection = Util::orthographic(-10, 10, -10, 10, 0.1, 100);
-		}
+		if (!isEmpty()) {
+			// get transformation matrices
+			Matrix4 model = sceneObjects[selectedObject].getModelMatrix();
+			Matrix4 view = camera.getViewMatrix();
+			Matrix4 projection;
+			if (isPerspective) {
+				// TODO: regulate FoV
+				projection = Util::perspective(45.0f, renderer->getViewportAspect(), 0.1f, 100.0f);
+			}
+			else {
+				// TODO: set parameters
+				projection = Util::orthographic(-10, 10, -10, 10, 0.1, 100);
+			}
 
-		// pass the current object and a transformation matrix in a renderer
-		renderer->renderObject(sceneObjects[selectedObject], projection * view * model, drawWireframe, drawSolid); 
+			// TODO: render each object
+			// pass the current object and a transformation matrix in a renderer
+			renderer->renderObject(sceneObjects[selectedObject], projection * view * model, drawWireframe, drawSolid);
+		}
 	}
 
 	void Scene::addObject(SceneObject obj) {
 		sceneObjects.push_back(obj);
+		// select the added object
+		selectedObject = sceneObjects.size() - 1;
 	}
 
 	// methods to manipulate objects:
@@ -60,21 +65,25 @@ namespace GL {
 	}
 
 	void Scene::resetObject() {
-		sceneObjects[selectedObject].reset();
+		if (!isEmpty()) {
+			sceneObjects[selectedObject].reset();
+		}
 	}
 
 	void Scene::deleteObject() {
-		// TODO
+		if (!isEmpty()) {
+			sceneObjects.erase(sceneObjects.begin() + selectedObject);
+		}
 	}
 
 	void Scene::selectNextObject() {
-		if (selectedObject < sceneObjects.size()) {
+		if (!isEmpty() && selectedObject < sceneObjects.size() - 1) {
 			selectedObject++;
 		}
 	}
 
 	void Scene::selectPreviousObject() {
-		if (selectedObject > 0) {
+		if (!isEmpty() && selectedObject > 0) {
 			selectedObject--;
 		}
 	}
@@ -131,5 +140,6 @@ namespace GL {
 			Polygon(Vector3(-1, -1, -1), Vector3(1, -1, 1), Vector3(1, -1, -1))
 		});
 		sceneObjects.push_back(cube);
+		selectedObject = sceneObjects.size() - 1;
 	}
 }
