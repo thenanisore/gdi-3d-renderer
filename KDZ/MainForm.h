@@ -21,7 +21,7 @@ namespace KDZ {
 			InitializeComponent();
 			mainScene = new GL::Scene();
 			bm = gcnew Bitmap(pictureBox->Width, pictureBox->Height);
-			renderer = gcnew GL::Renderer(Graphics::FromImage(bm), Color::White, Color::Blue, pictureBox->Width, pictureBox->Height);
+			renderer = gcnew GL::Renderer(Graphics::FromImage(bm), pictureBox->Width, pictureBox->Height);
 			pictureBox->Image = bm;
 			isResettingScene = false;
 		}
@@ -29,7 +29,22 @@ namespace KDZ {
 	private: 
 		GL::Renderer ^renderer;
 		Bitmap^ bm;
-		 // Main scene
+	private: System::Windows::Forms::TabPage^  otherTabPage;
+	private: System::Windows::Forms::FlowLayoutPanel^  otherFlowLayoutPanel;
+	private: System::Windows::Forms::GroupBox^  colorGroupBox;
+	private: System::Windows::Forms::Button^  selectedColorButton;
+
+	private: System::Windows::Forms::Label^  selectedColorLabel;
+	private: System::Windows::Forms::Button^  wfColorButton;
+
+	private: System::Windows::Forms::Label^  wfColorLabel;
+	private: System::Windows::Forms::Button^  bgColorButton;
+	private: System::Windows::Forms::Label^  bgColorLabel;
+	private: System::Windows::Forms::ColorDialog^  bgColorDialog;
+	private: System::Windows::Forms::ColorDialog^  wfColorDialog;
+	private: System::Windows::Forms::ColorDialog^  selectedColorDialog;
+
+			 // Main scene
 		GL::Scene *mainScene;
 		System::Void setScene();
 		System::Void renderScene();
@@ -70,6 +85,10 @@ namespace KDZ {
 		System::Void objReflectionXYCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void objReflectionXZCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void objReflectionYZCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		// color pickers
+		System::Void bgColorButton_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void wfColorButton_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void selectedColorButton_Click(System::Object^  sender, System::EventArgs^  e);
 
 	private: System::Windows::Forms::Button^  prevObjButton;
 	private: System::Windows::Forms::Button^  nextObjButton;
@@ -117,7 +136,10 @@ namespace KDZ {
 	private: System::Windows::Forms::StatusStrip^  statusStrip;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel;
 	private: System::Windows::Forms::ToolStripMenuItem^  openToolStripMenuItem;
-	private: System::Windows::Forms::TabControl^  tabControl;
+private: System::Windows::Forms::TabControl^  tabControl;
+
+
+
 
 
 	private: System::Windows::Forms::TabPage^  objectTabPage;
@@ -338,8 +360,20 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camYawLabel = (gcnew System::Windows::Forms::Label());
 			this->camRotPitchBar = (gcnew System::Windows::Forms::TrackBar());
 			this->camPitchLabel = (gcnew System::Windows::Forms::Label());
+			this->otherTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->otherFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
+			this->colorGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->selectedColorButton = (gcnew System::Windows::Forms::Button());
+			this->selectedColorLabel = (gcnew System::Windows::Forms::Label());
+			this->wfColorButton = (gcnew System::Windows::Forms::Button());
+			this->wfColorLabel = (gcnew System::Windows::Forms::Label());
+			this->bgColorButton = (gcnew System::Windows::Forms::Button());
+			this->bgColorLabel = (gcnew System::Windows::Forms::Label());
 			this->statusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripStatusLabel = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+			this->bgColorDialog = (gcnew System::Windows::Forms::ColorDialog());
+			this->wfColorDialog = (gcnew System::Windows::Forms::ColorDialog());
+			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -371,6 +405,9 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotRollBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotYawBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotPitchBar))->BeginInit();
+			this->otherTabPage->SuspendLayout();
+			this->otherFlowLayoutPanel->SuspendLayout();
+			this->colorGroupBox->SuspendLayout();
 			this->statusStrip->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -444,6 +481,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// 
 			this->tabControl->Controls->Add(this->objectTabPage);
 			this->tabControl->Controls->Add(this->cameraTabPage);
+			this->tabControl->Controls->Add(this->otherTabPage);
 			this->tabControl->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tabControl->Location = System::Drawing::Point(644, 3);
 			this->tabControl->Name = L"tabControl";
@@ -1101,6 +1139,102 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camPitchLabel->Text = L"Pitch";
 			this->camPitchLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
+			// otherTabPage
+			// 
+			this->otherTabPage->BackColor = System::Drawing::SystemColors::Control;
+			this->otherTabPage->Controls->Add(this->otherFlowLayoutPanel);
+			this->otherTabPage->Location = System::Drawing::Point(4, 25);
+			this->otherTabPage->Name = L"otherTabPage";
+			this->otherTabPage->Padding = System::Windows::Forms::Padding(3);
+			this->otherTabPage->Size = System::Drawing::Size(259, 613);
+			this->otherTabPage->TabIndex = 2;
+			this->otherTabPage->Text = L"Other";
+			// 
+			// otherFlowLayoutPanel
+			// 
+			this->otherFlowLayoutPanel->Controls->Add(this->colorGroupBox);
+			this->otherFlowLayoutPanel->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->otherFlowLayoutPanel->FlowDirection = System::Windows::Forms::FlowDirection::TopDown;
+			this->otherFlowLayoutPanel->Location = System::Drawing::Point(3, 3);
+			this->otherFlowLayoutPanel->Name = L"otherFlowLayoutPanel";
+			this->otherFlowLayoutPanel->Size = System::Drawing::Size(253, 607);
+			this->otherFlowLayoutPanel->TabIndex = 0;
+			// 
+			// colorGroupBox
+			// 
+			this->colorGroupBox->Controls->Add(this->selectedColorButton);
+			this->colorGroupBox->Controls->Add(this->selectedColorLabel);
+			this->colorGroupBox->Controls->Add(this->wfColorButton);
+			this->colorGroupBox->Controls->Add(this->wfColorLabel);
+			this->colorGroupBox->Controls->Add(this->bgColorButton);
+			this->colorGroupBox->Controls->Add(this->bgColorLabel);
+			this->colorGroupBox->Location = System::Drawing::Point(3, 3);
+			this->colorGroupBox->Name = L"colorGroupBox";
+			this->colorGroupBox->Size = System::Drawing::Size(247, 119);
+			this->colorGroupBox->TabIndex = 0;
+			this->colorGroupBox->TabStop = false;
+			this->colorGroupBox->Text = L"Colors";
+			// 
+			// selectedColorButton
+			// 
+			this->selectedColorButton->BackColor = System::Drawing::Color::Blue;
+			this->selectedColorButton->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->selectedColorButton->Location = System::Drawing::Point(97, 78);
+			this->selectedColorButton->Name = L"selectedColorButton";
+			this->selectedColorButton->Size = System::Drawing::Size(144, 23);
+			this->selectedColorButton->TabIndex = 5;
+			this->selectedColorButton->UseVisualStyleBackColor = false;
+			this->selectedColorButton->Click += gcnew System::EventHandler(this, &MainForm::selectedColorButton_Click);
+			// 
+			// selectedColorLabel
+			// 
+			this->selectedColorLabel->AutoSize = true;
+			this->selectedColorLabel->Location = System::Drawing::Point(7, 81);
+			this->selectedColorLabel->Name = L"selectedColorLabel";
+			this->selectedColorLabel->Size = System::Drawing::Size(63, 17);
+			this->selectedColorLabel->TabIndex = 4;
+			this->selectedColorLabel->Text = L"Selected";
+			// 
+			// wfColorButton
+			// 
+			this->wfColorButton->BackColor = System::Drawing::Color::Black;
+			this->wfColorButton->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->wfColorButton->Location = System::Drawing::Point(97, 48);
+			this->wfColorButton->Name = L"wfColorButton";
+			this->wfColorButton->Size = System::Drawing::Size(144, 23);
+			this->wfColorButton->TabIndex = 3;
+			this->wfColorButton->UseVisualStyleBackColor = false;
+			this->wfColorButton->Click += gcnew System::EventHandler(this, &MainForm::wfColorButton_Click);
+			// 
+			// wfColorLabel
+			// 
+			this->wfColorLabel->AutoSize = true;
+			this->wfColorLabel->Location = System::Drawing::Point(7, 51);
+			this->wfColorLabel->Name = L"wfColorLabel";
+			this->wfColorLabel->Size = System::Drawing::Size(73, 17);
+			this->wfColorLabel->TabIndex = 2;
+			this->wfColorLabel->Text = L"Wireframe";
+			// 
+			// bgColorButton
+			// 
+			this->bgColorButton->BackColor = System::Drawing::Color::White;
+			this->bgColorButton->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->bgColorButton->Location = System::Drawing::Point(97, 19);
+			this->bgColorButton->Name = L"bgColorButton";
+			this->bgColorButton->Size = System::Drawing::Size(144, 23);
+			this->bgColorButton->TabIndex = 1;
+			this->bgColorButton->UseVisualStyleBackColor = false;
+			this->bgColorButton->Click += gcnew System::EventHandler(this, &MainForm::bgColorButton_Click);
+			// 
+			// bgColorLabel
+			// 
+			this->bgColorLabel->AutoSize = true;
+			this->bgColorLabel->Location = System::Drawing::Point(7, 22);
+			this->bgColorLabel->Name = L"bgColorLabel";
+			this->bgColorLabel->Size = System::Drawing::Size(84, 17);
+			this->bgColorLabel->TabIndex = 0;
+			this->bgColorLabel->Text = L"Background";
+			// 
 			// statusStrip
 			// 
 			this->statusStrip->ImageScalingSize = System::Drawing::Size(20, 20);
@@ -1127,8 +1261,10 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->Controls->Add(this->tableLayoutPanel);
 			this->Controls->Add(this->menuStrip);
 			this->MainMenuStrip = this->menuStrip;
+			this->MaximizeBox = false;
 			this->MinimumSize = System::Drawing::Size(800, 600);
 			this->Name = L"MainForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"КДЗ 1 по Компьютерной графике. Иванов О. 2018";
 			this->Shown += gcnew System::EventHandler(this, &MainForm::MainForm_Shown);
 			this->ResizeEnd += gcnew System::EventHandler(this, &MainForm::MainForm_ResizeEnd);
@@ -1173,6 +1309,10 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotRollBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotYawBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotPitchBar))->EndInit();
+			this->otherTabPage->ResumeLayout(false);
+			this->otherFlowLayoutPanel->ResumeLayout(false);
+			this->colorGroupBox->ResumeLayout(false);
+			this->colorGroupBox->PerformLayout();
 			this->statusStrip->ResumeLayout(false);
 			this->statusStrip->PerformLayout();
 			this->ResumeLayout(false);

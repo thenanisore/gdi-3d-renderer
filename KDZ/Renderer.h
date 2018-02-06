@@ -13,7 +13,7 @@ namespace GL {
 	{
 	public:
 		// TODO: pass in graphics and mesh color, I don't know yet
-		Renderer(Graphics ^im, Color _bgColor, Color _wfColor, int viewportWidth, int viewportHeight);
+		Renderer(Graphics ^im, int viewportWidth, int viewportHeight);
 		void setViewport(int width, int height);
 		void drawAxes(Vector3 origin, Vector3 x_axis, Vector3 y_axis, Vector3 z_axis, bool grid);
 		void clearScreen();
@@ -21,12 +21,24 @@ namespace GL {
 		void renderObject(const SceneObject &obj, const Matrix4 &transformMatrix);
 		void setGraphics(Graphics ^g);
 
+		// color getters/setters:
+
+		Color getBGColor();
+		Color getWFColor();
+		Color getSelectedColor();
+		void setBGColor(Color _col);
+		void setWFColor(Color _col);
+		void setSelectedColor(Color _col);
+
 	private:
 		Graphics ^graphics;
 		Color bgColor;
 		Color wfColor;
-		Pen ^pen;
-		Brush ^brush;
+		Color selectedColor;
+		Pen ^wfPen;
+		Pen ^selectedPen;
+		Brush ^wfBrush;
+		Brush ^selectedBrush;
 		int viewportX;
 		int viewportY;
 		array<int, 2> ^zbuffer;

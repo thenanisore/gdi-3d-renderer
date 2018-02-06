@@ -224,3 +224,41 @@ System::Void MainForm::objReflectionXZCheckbox_CheckedChanged(System::Object^  s
 System::Void MainForm::objReflectionYZCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 	changeObjectReflection();
 }
+
+// Color pickers:
+
+System::Void MainForm::bgColorButton_Click(System::Object^  sender, System::EventArgs^  e) {
+	ColorDialog ^dialog = gcnew ColorDialog();
+	dialog->ShowHelp = true;
+	dialog->Color = renderer->getBGColor();
+	// Update the text box color if the user clicks OK 
+	if (dialog->ShowDialog(this) == ::DialogResult::OK) {
+		renderer->setBGColor(dialog->Color);
+		bgColorButton->BackColor = dialog->Color;
+		renderScene();
+	}
+}
+
+System::Void MainForm::wfColorButton_Click(System::Object^  sender, System::EventArgs^  e) {
+	ColorDialog ^dialog = gcnew ColorDialog();
+	dialog->ShowHelp = true;
+	dialog->Color = renderer->getWFColor();
+	// Update the text box color if the user clicks OK 
+	if (dialog->ShowDialog(this) == ::DialogResult::OK) {
+		renderer->setWFColor(dialog->Color);
+		wfColorButton->BackColor = dialog->Color;
+		renderScene();
+	}
+}
+
+System::Void MainForm::selectedColorButton_Click(System::Object^  sender, System::EventArgs^  e) {
+	ColorDialog ^dialog = gcnew ColorDialog();
+	dialog->ShowHelp = true;
+	dialog->Color = renderer->getSelectedColor();
+	// Update the text box color if the user clicks OK 
+	if (dialog->ShowDialog(this) == ::DialogResult::OK) {
+		renderer->setSelectedColor(dialog->Color);
+		selectedColorButton->BackColor = dialog->Color;
+		renderScene();
+	}
+}

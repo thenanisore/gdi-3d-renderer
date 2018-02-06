@@ -8,11 +8,14 @@ namespace GL {
 	using namespace System::Drawing;
 	using namespace System::Collections::Generic;
 
-	Renderer::Renderer(Graphics ^im, Color _bgColor, Color _wfColor, int viewportWidth, int viewportHeight) 
-		: graphics(im), bgColor(_bgColor), wfColor(_wfColor) {
-		pen = gcnew Pen(wfColor);
-		brush = gcnew SolidBrush(wfColor);
-		// initialize a z-buffer
+	Renderer::Renderer(Graphics ^im, int viewportWidth, int viewportHeight) : graphics(im), 
+		bgColor(Color::White), wfColor(Color::Black), selectedColor(Color::Blue)
+	{
+		wfPen = gcnew Pen(wfColor, 3);
+		selectedPen = gcnew Pen(selectedColor, 3);
+		wfBrush = gcnew SolidBrush(wfColor);
+		selectedBrush = gcnew SolidBrush(selectedColor);
+		// initialize z-buffer
 		zbuffer = gcnew array<int, 2>(viewportWidth, viewportHeight);
 		setViewport(viewportWidth, viewportHeight);
 	}
@@ -53,10 +56,10 @@ namespace GL {
 				// transform 3D world coordinates to the NDC
 				ndc.push_back(NDCtoViewport((transformMatrix * pol.vertices[i + 1]).fromHomogeneous()));
 				// draw the lines
-				graphics->DrawLine(pen, ndc[i].x, ndc[i].y, ndc[i + 1].x, ndc[i + 1].y);
+				drawLine(ndc[i], ndc[i + 1]);
 			}
 			// draw the last line
-			graphics->DrawLine(pen, ndc[ndc.size() - 1].x, ndc[ndc.size() - 1].y, ndc[0].x, ndc[0].y);
+			drawLine(ndc[ndc.size() - 1], ndc[0]);
 		}
 	}
 
@@ -64,15 +67,42 @@ namespace GL {
 		graphics = g;
 	}
 
+	Color Renderer::getBGColor() {
+		return bgColor;
+	}
+
+	Color Renderer::getWFColor() {
+		return wfColor;
+	}
+
+	Color Renderer::getSelectedColor() {
+		return selectedColor;
+	}
+
+	void Renderer::setBGColor(Color _col) {
+		bgColor = _col;
+	}
+
+	void Renderer::setWFColor(Color _col) {
+		wfColor = _col;
+		wfPen->Color = wfColor;
+	}
+
+	void Renderer::setSelectedColor(Color _col) {
+		selectedColor = _col;
+		selectedPen->Color = selectedColor;
+		selectedBrush = gcnew SolidBrush(selectedColor);
+	}
+
 	void Renderer::drawLine(const Vector3 &from, const Vector3 &to) {
 		// test code
 		// TODO: implement line drawing algorithm
-		graphics->DrawLine(pen, from.x, from.y, to.x, to.y);
+		graphics->DrawLine(wfPen, from.x, from.y, to.x, to.y);
 	}
 
 	// TODO: Z-test
 	void Renderer::drawPoint(int x, int y) {
-		graphics->FillRectangle(brush, x, y, 1, 1);
+		graphics->FillRectangle(wfBrush, x, y, 1, 1);
 	}
 
 	// Remaps the coordinates from [-1, 1] to the [0, viewport] space. 
