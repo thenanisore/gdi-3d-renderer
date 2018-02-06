@@ -107,13 +107,48 @@ namespace GL {
 	//	return code;
 	//}
 
-	void Renderer::drawLine(const Vector3 &from, const Vector3 &to) {
-		// test code
-		// TODO: implement line drawing algorithm
-		graphics->DrawLine(wfPen, from.x, from.y, to.x, to.y);
+	// returns a signum of x
+	inline int sign(int x) {
+		return (x > 0) - (x < 0);
 	}
 
-	// TODO: Z-test
+	// swaps two numbers in-place
+	inline void swap(int &x, int &y) {
+		int t = x; x = y; y = t;
+	}
+
+	void Renderer::drawLine(const Vector3 &from, const Vector3 &to) {
+		int x = from.x, y = from.y;
+		Vector3 current(x, y, 0);
+
+		int dx = abs(to.x - x);
+		int dy = abs(to.y - y);
+		int sx = sign(to.x - x);
+		int sy = sign(to.y - y);
+
+		// swap the deltas if 2, 3, 6 or 7th octant
+		bool isSwap = dy > dx;
+		if (isSwap) swap(dx, dy);
+
+		int e = 2 * dy - dx;
+
+		// start drawing
+		for (int i = 1; i <= dx; i++, e += 2 * dy) {
+			drawPoint(x, y);
+
+			// determine if need to change the direction
+			while (e >= 0) {
+				if (isSwap) { x += sx; }
+				else { y += sy; }
+				e -= 2 * dx;
+			}
+
+			// increment y or x each step, depending on the octant
+			if (isSwap) { y += sy; }
+			else { x += sx; }
+		}
+	}
+
 	void Renderer::drawPoint(int x, int y) {
 		graphics->FillRectangle(wfBrush, x, y, 1, 1);
 	}
