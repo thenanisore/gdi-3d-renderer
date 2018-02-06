@@ -15,6 +15,7 @@ namespace GL {
 		// TODO: pass in graphics and mesh color, I don't know yet
 		Renderer(Graphics ^im, int viewportWidth, int viewportHeight);
 		void setViewport(int width, int height);
+		float getViewportAspect();
 		void drawAxes(Vector3 origin, Vector3 x_axis, Vector3 y_axis, Vector3 z_axis, bool grid);
 		void clearScreen();
 		void clearZBuffer();

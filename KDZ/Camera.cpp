@@ -3,72 +3,45 @@
 
 namespace GL {
 
-	Camera::Camera() : Camera(Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f)) { }
-
-	Camera::Camera(Vector3 _position, Vector3 _target, Vector3 _up)
-		: position(_position), target(_target), up(_up) {
-		recalculateBasis();
+	Camera::Camera(Vector3 _position, Vector3 _worldUp, Vector3 _rotation) : front(Vector3(0.0f, 0.0f, -1.0f)) {
+		position = _position;
+		worldUp = _worldUp;
+		rotation = _rotation;
+		updateVectors();
 	}
 
-	Matrix4 Camera::getLookAt() {
-		Matrix4 basis(std::vector<float> {
-			cameraRight.x, cameraRight.y, cameraRight.z, 0.0f,
-			cameraUp.x, cameraUp.y, cameraUp.z, 0.0f,
-			direction.x, direction.y, direction.z, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f
-		});
-		Matrix4 positional(std::vector<float> {
-			1.0f, 0.0f, 0.0f, -position.x,
-			0.0f, 1.0f, 0.0f, -position.y,
-			0.0f, 0.0f, 1.0f, -position.z,
-			0.0f, 0.0f, 0.0f, 1.0f
-		});
-		return basis * positional;
-	}
-
-	Matrix4 Camera::perspective(float fov, float aspect, float near, float far) {
-		// TODO: perspective matrix
-		float scale = 1.0f / tan(Util::degreesToRadians(fov) / 2.0f);
-		Matrix4 proj;
-		proj.set(0, 0, scale); // scale the x coordinates
-		proj.set(1, 1, scale); // scale the y coordinates
-		proj.set(2, 2, -far / (far - near)); // used to remap z to [0, 1]
-		proj.set(2, 3, -far * near / (far - near)); // used to remap z to [0, 1]
-		proj.set(3, 2, -1.0f); // w := -z
-		proj.set(3, 3, 0.0f);
-		return proj;
-	}
-
-	Matrix4 Camera::orthographic() {
-		// TODO: orthographic matrix
-		return Matrix4();
+	Matrix4 Camera::getViewMatrix() {
+		return Util::lookAt(position, position + front, up);
 	}
 
 	// Sets the camera's position.
 	void Camera::setPosition(const Vector3 &newPosition) {
 		position = newPosition;
-		recalculateBasis();
 	}
 
-	// TODO: rotation
+	// Sets the camera's rotation.
 	void Camera::setRotation(const Vector3 &newRotation) {
-		// TODO
+		rotation = newRotation;
+		updateVectors();
 	}
 
-	// Sets the default position (0, 0, -1), target (0, 0, 0) and up (0, 1, 0) vectors.
+	// Sets the default position (0, 0, 1), front (0, 0, -1) and up (0, 1, 0) vectors.
 	void Camera::reset() {
-		position = Vector3(0.0f, 0.0f, -1.0f);
-		target = Vector3(0.0f, 0.0f, 0.0f);
-		up = Vector3(0.0f, 0.0f, 1.0f);
-		recalculateBasis();
+		position = Vector3(0.0f, 0.0f, 1.0f);
+		front = Vector3(0.0f, 0.0f, -1.0f);
+		up = Vector3(0.0f, 1.0f, 0.0f);
+		updateVectors();
 	}
 
-	void Camera::recalculateBasis() {
-		// calculate the (reverse) direction vector
-		direction = (position - target).normalized();
-		// calculate the basis vector that points to the right
-		cameraRight = up.cross(direction).normalized();
-		// calculate the up basis vector
-		cameraUp = direction.cross(cameraRight);
+	void Camera::updateVectors() {
+		// calculate the front vector
+		Vector3 _front;
+		_front.x = cos(Util::degreesToRadians(rotation.y)) * cos(Util::degreesToRadians(rotation.x));
+		_front.y = sin(Util::degreesToRadians(rotation.x));
+		_front.z = sin(Util::degreesToRadians(rotation.y)) * cos(Util::degreesToRadians(rotation.x));
+		front = _front.normalized();
+		// re-calculate the right and up vectors
+		right = front.cross(worldUp).normalized();
+		up = right.cross(front).normalized();
 	}
 }

@@ -95,5 +95,50 @@ namespace GL {
 			// apply by multiplication
 			return scaleMatrix * mat;
 		}
+
+		// Returns a LookAt matrix.
+		Matrix4 lookAt(const Vector3 &position, const Vector3 &target, const Vector3 &up) {
+			// calculate the (reverse) direction vector
+			Vector3 direction = (position - target).normalized();
+			// calculate the basis vector that points to the right
+			Vector3 cameraRight = (up.normalized()).cross(direction).normalized();
+			// calculate the up basis vector
+			Vector3 cameraUp = direction.cross(cameraRight);
+			// calculate matrices
+			Matrix4 rotational(std::vector<float> {
+				cameraRight.x, cameraRight.y, cameraRight.z, 0.0f,
+				cameraUp.x, cameraUp.y, cameraUp.z, 0.0f,
+				direction.x, direction.y, direction.z, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			});
+			Matrix4 positional(std::vector<float> {
+				1.0f, 0.0f, 0.0f, -position.x,
+				0.0f, 1.0f, 0.0f, -position.y,
+				0.0f, 0.0f, 1.0f, -position.z,
+				0.0f, 0.0f, 0.0f, 1.0f
+			});
+
+			return rotational * positional;
+		}
+
+		// Returns a perspective projection matrix with the specified parameters.
+		Matrix4 perspective(float fov, float aspect, float near, float far) {
+			// TODO: perspective matrix
+			float scale = 1.0f / tan(Util::degreesToRadians(fov) / 2.0f);
+			Matrix4 proj;
+			proj.set(0, 0, scale); // scale the x coordinates
+			proj.set(1, 1, scale); // scale the y coordinates
+			proj.set(2, 2, -far / (far - near)); // used to remap z to [0, 1]
+			proj.set(2, 3, -far * near / (far - near)); // used to remap z to [0, 1]
+			proj.set(3, 2, -1.0f); // w := -z
+			proj.set(3, 3, 0.0f);
+			return proj;
+		}
+
+		// Returns an orthgraphic projection matrix with the specified parameters.
+		Matrix4 orthographic() {
+			// TODO: orthographic matrix
+			return Matrix4();
+		}
 	}
 }

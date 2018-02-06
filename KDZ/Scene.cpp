@@ -6,35 +6,24 @@ namespace GL {
 	using namespace System;
 	using namespace System::Drawing;
 
-	Scene::Scene() : camera(Vector3(0, 0, -5), Vector3(0, 0, 0), Vector3(0, 1, 0)) {
+	Scene::Scene() : camera(Vector3(0, 0, 5)) {
 		// test code
 		addCube();
 		selectedObject = 0;
 	}
 
 	void Scene::renderScene(Renderer ^renderer) {
-		// 1. clear Z buffer
 		renderer->clearZBuffer();
-
-		// 2. clear screen
 		renderer->clearScreen();
+		// TODO: draw axes/grid
 
-		// 3. draw axes/grid
-
-		// 4. model matrix transformations
+		// get transformation matrices
 		Matrix4 model = sceneObjects[selectedObject].getModelMatrix();
-		//model = Util::rotateY(model, 15.0f);
-		//model = Util::rotateX(model, 15.0f);
-		//model = Util::rotateZ(model, 15.0f);
-		//model = Util::scale(model, Vector3(1.0f, 1.0f, 1.0f));
-		//model = Util::translate(model, Vector3(0.0f, 0.0f, 0.0f));
+		Matrix4 view = camera.getViewMatrix();
+		Matrix4 projection = Util::perspective(45.0f, renderer->getViewportAspect(), 0.1f, 100.0f);
 
-		// 5. get view and projection matrices
-		Matrix4 view = camera.getLookAt();
-		Matrix4 projection = camera.perspective(60.0f, 0, 0.1f, 100.0f);
-
-		// 6. pass in a current object, a viewProjectin matrix and render
-		renderer->renderObject(sceneObjects[selectedObject], projection * view * model);
+		// pass the current object and a transformation matrix in a renderer
+		renderer->renderObject(sceneObjects[selectedObject], projection * view * model); 
 	}
 
 	void Scene::addObject(SceneObject obj) {
@@ -84,9 +73,9 @@ namespace GL {
 
 	// methods to manipulate the camera:
 
-	const float cameraPositionMultiplier = 0.1f;
+	const float cameraPositionMultiplier = 1.0f;
 	void Scene::setCameraPosition(int x_coord, int y_coord, int z_coord) {
-		camera.setPosition(Vector3(x_coord, y_coord, z_coord) * cameraPositionMultiplier);
+		camera.setPosition(Vector3(x_coord, y_coord, z_coord) * (1 + cameraPositionMultiplier));
 	}
 
 	const float camerRotationMultiplier = 1.0f;

@@ -110,9 +110,7 @@ System::Void MainForm::objRotZBar_Scroll(System::Object^  sender, System::EventA
 // Camera position scroll bars:
 
 System::Void MainForm::changeCameraPosition() {
-	mainScene->setCameraPosition(((TrackBar^)camPosXBar)->Value,
-								 ((TrackBar^)camPosYBar)->Value, 
-							  	 ((TrackBar^)camPosZBar)->Value);
+	mainScene->setCameraPosition(camPosXBar->Value, camPosYBar->Value, camPosZBar->Value);
 	renderScene();
 }
 
@@ -131,9 +129,7 @@ System::Void MainForm::camPosZBar_Scroll(System::Object^  sender, System::EventA
 // Camera rotation scroll bars:
 
 System::Void MainForm::changeCameraRotation() {
-	mainScene->setCameraRotation(camRotPitchBar->Value,
-								 camRotYawBar->Value, 
-							  	 camRotRollBar->Value);
+	mainScene->setCameraRotation(camRotPitchBar->Value, camRotYawBar->Value, 0.0f);
 	renderScene();
 }
 
@@ -142,10 +138,6 @@ System::Void MainForm::camRotPitchBar_Scroll(System::Object^  sender, System::Ev
 }
 
 System::Void MainForm::camRotYawBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
-	changeCameraRotation();
-}
-
-System::Void MainForm::camRotRollBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
 	changeCameraRotation();
 }
 
@@ -174,9 +166,9 @@ System::Void MainForm::resetObjButton_Click(System::Object^  sender, System::Eve
 	objPosXBar->Value = 0;
 	objPosYBar->Value = 0;
 	objPosZBar->Value = 0;
-	objScaleXBar->Value = 1;
-	objScaleYBar->Value = 1;
-	objScaleZBar->Value = 1;
+	objScaleXBar->Value = 10;
+	objScaleYBar->Value = 10;
+	objScaleZBar->Value = 10;
 	objRotXBar->Value = 0;
 	objRotYBar->Value = 0;
 	objRotZBar->Value = 0;
@@ -192,12 +184,13 @@ System::Void MainForm::resetCamButton_Click(System::Object^  sender, System::Eve
 	mainScene->resetCamera();
 
 	// reset camera's trackbars
+	isResettingScene = true;
 	camPosXBar->Value = 0;
 	camPosYBar->Value = 0;
 	camPosZBar->Value = -1;
 	camRotPitchBar->Value = 0;
-	camPosYBar->Value = 0;
-	camPosZBar->Value = 0;
+	camRotYawBar->Value = 0;
+	isResettingScene = false;
 
 	renderScene();
 }

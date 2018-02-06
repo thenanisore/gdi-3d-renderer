@@ -25,6 +25,10 @@ namespace GL {
 		viewportY = height;
 	}
 
+	float Renderer::getViewportAspect() {
+		return (float)viewportX / (float)viewportY;
+	}
+
 	void Renderer::drawAxes(Vector3 origin, Vector3 x_axis, Vector3 y_axis, Vector3 z_axis, bool grid) {
 		drawLine(origin, x_axis);
 		drawLine(origin, y_axis);

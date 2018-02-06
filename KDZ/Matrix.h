@@ -26,7 +26,13 @@ namespace GL {
 		Matrix4 reflectXZ(const Matrix4& mat);
 		// Reflects the object across the YZ plane.
 		Matrix4 reflectYZ(const Matrix4& mat);
-		// Scales the object by the magnitude vector;
+		// Scales the object by the magnitude vector.
 		Matrix4 scale(const Matrix4& mat, const Vector3 magnitude);
+		// Returns a LookAt matrix.
+		Matrix4 lookAt(const Vector3 &position, const Vector3 &target, const Vector3 &up);
+		// Returns a perspective projection matrix with the specified parameters.
+		Matrix4 perspective(float fov, float aspect, float near, float far);
+		// Returns an orthgraphic projection matrix with the specified parameters.
+		Matrix4 orthographic();
 	}
 }

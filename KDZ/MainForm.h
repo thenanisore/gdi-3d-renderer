@@ -72,7 +72,6 @@ namespace KDZ {
 		System::Void changeCameraRotation();
 		System::Void camRotPitchBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camRotYawBar_Scroll(System::Object^  sender, System::EventArgs^  e);
-		System::Void camRotRollBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		// buttons
 		System::Void nextObjButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void prevObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
@@ -178,9 +177,9 @@ private: System::Windows::Forms::TabControl^  tabControl;
 
 	private: System::Windows::Forms::Label^  camPosYLabel;
 	private: System::Windows::Forms::GroupBox^  camRotationGroupBox;
-	private: System::Windows::Forms::TrackBar^  camRotRollBar;
 
-	private: System::Windows::Forms::Label^  camRollLabel;
+
+
 	private: System::Windows::Forms::TrackBar^  camRotYawBar;
 
 	private: System::Windows::Forms::Label^  camYawLabel;
@@ -354,8 +353,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->orthoButton = (gcnew System::Windows::Forms::RadioButton());
 			this->perspectiveButton = (gcnew System::Windows::Forms::RadioButton());
 			this->camRotationGroupBox = (gcnew System::Windows::Forms::GroupBox());
-			this->camRotRollBar = (gcnew System::Windows::Forms::TrackBar());
-			this->camRollLabel = (gcnew System::Windows::Forms::Label());
 			this->camRotYawBar = (gcnew System::Windows::Forms::TrackBar());
 			this->camYawLabel = (gcnew System::Windows::Forms::Label());
 			this->camRotPitchBar = (gcnew System::Windows::Forms::TrackBar());
@@ -402,7 +399,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camPosXBar))->BeginInit();
 			this->camProjectionGroupBox->SuspendLayout();
 			this->camRotationGroupBox->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotRollBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotYawBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotPitchBar))->BeginInit();
 			this->otherTabPage->SuspendLayout();
@@ -1060,45 +1056,21 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->camRotationGroupBox->AutoSize = true;
 			this->camRotationGroupBox->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-			this->camRotationGroupBox->Controls->Add(this->camRotRollBar);
-			this->camRotationGroupBox->Controls->Add(this->camRollLabel);
 			this->camRotationGroupBox->Controls->Add(this->camRotYawBar);
 			this->camRotationGroupBox->Controls->Add(this->camYawLabel);
 			this->camRotationGroupBox->Controls->Add(this->camRotPitchBar);
 			this->camRotationGroupBox->Controls->Add(this->camPitchLabel);
 			this->camRotationGroupBox->Location = System::Drawing::Point(3, 373);
 			this->camRotationGroupBox->Name = L"camRotationGroupBox";
-			this->camRotationGroupBox->Size = System::Drawing::Size(224, 236);
+			this->camRotationGroupBox->Size = System::Drawing::Size(224, 177);
 			this->camRotationGroupBox->TabIndex = 4;
 			this->camRotationGroupBox->TabStop = false;
 			this->camRotationGroupBox->Text = L"Rotation";
 			// 
-			// camRotRollBar
-			// 
-			this->camRotRollBar->Location = System::Drawing::Point(6, 159);
-			this->camRotRollBar->Maximum = 360;
-			this->camRotRollBar->Name = L"camRotRollBar";
-			this->camRotRollBar->Size = System::Drawing::Size(212, 56);
-			this->camRotRollBar->TabIndex = 10;
-			this->camRotRollBar->TickStyle = System::Windows::Forms::TickStyle::None;
-			this->camRotRollBar->Scroll += gcnew System::EventHandler(this, &MainForm::camRotRollBar_Scroll);
-			// 
-			// camRollLabel
-			// 
-			this->camRollLabel->AutoSize = true;
-			this->camRollLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->camRollLabel->Location = System::Drawing::Point(6, 136);
-			this->camRollLabel->Name = L"camRollLabel";
-			this->camRollLabel->Size = System::Drawing::Size(32, 17);
-			this->camRollLabel->TabIndex = 11;
-			this->camRollLabel->Text = L"Roll";
-			this->camRollLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
 			// camRotYawBar
 			// 
 			this->camRotYawBar->Location = System::Drawing::Point(6, 100);
-			this->camRotYawBar->Maximum = 360;
+			this->camRotYawBar->Maximum = 359;
 			this->camRotYawBar->Name = L"camRotYawBar";
 			this->camRotYawBar->Size = System::Drawing::Size(212, 56);
 			this->camRotYawBar->TabIndex = 8;
@@ -1120,7 +1092,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// camRotPitchBar
 			// 
 			this->camRotPitchBar->Location = System::Drawing::Point(6, 41);
-			this->camRotPitchBar->Maximum = 360;
+			this->camRotPitchBar->Maximum = 45;
+			this->camRotPitchBar->Minimum = -45;
 			this->camRotPitchBar->Name = L"camRotPitchBar";
 			this->camRotPitchBar->Size = System::Drawing::Size(212, 56);
 			this->camRotPitchBar->TabIndex = 6;
@@ -1306,7 +1279,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camProjectionGroupBox->PerformLayout();
 			this->camRotationGroupBox->ResumeLayout(false);
 			this->camRotationGroupBox->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotRollBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotYawBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotPitchBar))->EndInit();
 			this->otherTabPage->ResumeLayout(false);
