@@ -26,10 +26,19 @@ namespace GL {
 		void setObjectReflection(bool xy, bool xz, bool yz);
 		void setObjectScale(int x_scale, int y_scale, int z_scale);
 
+		void resetObject();
+		void deleteObject();
+		void selectNextObject();
+		void selectPreviousObject();
+
 		// methods to manipulate camera:
 
 		void setCameraPosition(int x_coord, int y_coord, int z_coord);
 		void setCameraRotation(float pitch, float yawn, float roll);
+		void resetCamera();
+
+		// Returns true is the scene contains no objects.
+		bool isEmpty();
 
 		// test
 		void addCube();

@@ -95,3 +95,49 @@ System::Void MainForm::camRotYawBar_Scroll(System::Object^  sender, System::Even
 
 System::Void MainForm::camRotRollBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
 }
+
+// Buttons:
+
+System::Void MainForm::nextObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
+	mainScene->selectNextObject();
+	renderScene();
+}
+
+System::Void MainForm::prevObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
+	mainScene->selectPreviousObject();
+	renderScene();
+}
+
+System::Void MainForm::deleteObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
+	mainScene->deleteObject();
+	renderScene();
+}
+
+System::Void MainForm::resetObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
+	mainScene->resetObject();
+	renderScene();
+}
+
+System::Void MainForm::resetCamButton_Click(System::Object^  sender, System::EventArgs^  e) {
+	mainScene->resetCamera();
+	renderScene();
+}
+
+System::Void MainForm::changeObjectReflection() {
+	mainScene->setObjectReflection(objReflectionYZCheckbox->Checked, 
+		                           objReflectionYZCheckbox->Checked,
+		                           objReflectionYZCheckbox->Checked);
+	renderScene();
+}
+
+System::Void MainForm::objReflectionXYCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+	changeObjectReflection();
+}
+
+System::Void MainForm::objReflectionXZCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+	changeObjectReflection();
+}
+
+System::Void MainForm::objReflectionYZCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+	changeObjectReflection();
+}

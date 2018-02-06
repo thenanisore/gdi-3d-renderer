@@ -3,7 +3,8 @@
 namespace GL {
 
 	SceneObject::SceneObject(std::vector<Polygon> _polygons) 
-		: polygons(_polygons), position(), scale(), rotation() { }
+		: polygons(_polygons), position(), scale(1.0f, 1.0f, 1.0f), rotation(), 
+		  reflectionXY(false), reflectionXZ(false), reflectionYZ(false) { }
 
 	Vector3 SceneObject::getPosition() {
 		return Vector3(position);
@@ -27,6 +28,18 @@ namespace GL {
 
 	void SceneObject::setRotation(const Vector3 &newRotation) {
 		rotation = newRotation;
+	}
+
+	void SceneObject::setReflection(bool xy, bool xz, bool yz) {
+		reflectionXY = xy;
+		reflectionXZ = xz;
+		reflectionYZ = yz;
+	}
+
+	void SceneObject::reset() {
+		setPosition(Vector3());
+		setScale(Vector3(1.0f, 1.0f, 1.0f));
+		setRotation(Vector3());
 	}
 
 	void SceneObject::addPolygon(Polygon pol) {

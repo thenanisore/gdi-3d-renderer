@@ -8,10 +8,10 @@ namespace GL {
 
 	Scene::Scene() : camera(Vector3(0, 0, -5), Vector3(0, 0, 0), Vector3(0, 1, 0)) {
 		// 1. set up the camera
-		// 2. set up the renderer (or pass him in renderScene method?)
 
 		// test code
 		addCube();
+		selectedObject = 0;
 	}
 
 	void Scene::renderScene(Renderer ^renderer) {
@@ -25,18 +25,18 @@ namespace GL {
 
 		// 4. model matrix transformations
 		Matrix4 model;
-		Util::rotateY(model, 15.0f);
-		Util::rotateX(model, 15.0f);
-		Util::rotateZ(model, 15.0f);
-		Util::scale(model, Vector3(1.0f, 1.0f, 1.0f));
-		Util::translate(model, Vector3(0.0f, 0.0f, 1.0f));
+		model = Util::rotateY(model, 15.0f);
+		model = Util::rotateX(model, 15.0f);
+		model = Util::rotateZ(model, 15.0f);
+		model = Util::scale(model, Vector3(1.0f, 1.0f, 1.0f));
+		model = Util::translate(model, Vector3(0.0f, 0.0f, 0.0f));
 
 		// 5. get view and projection matrices
 		Matrix4 view = camera.getLookAt();
-		Matrix4 projection = camera.perspective(45.0f, 0, 0.1f, 100.0f);
+		Matrix4 projection = camera.perspective(60.0f, 0, 0.1f, 100.0f);
 
 		// 6. pass in a current object, a viewProjectin matrix and render
-		renderer->renderObject(sceneObjects[0], projection * view * model);
+		renderer->renderObject(sceneObjects[selectedObject], projection * view * model);
 	}
 
 	void Scene::addObject(SceneObject obj) {
@@ -46,28 +46,57 @@ namespace GL {
 	// methods to manipulate objects:
 
 	void Scene::setObjectPosition(int x_coord, int y_coord, int z_coord) {
+		sceneObjects[selectedObject].setPosition(Vector3(x_coord, y_coord, z_coord));
 	}
 
 	void Scene::setObjectRotation(float x_angle, float y_angle, float z_angle) {
-
+		sceneObjects[selectedObject].setRotation(Vector3(x_angle, y_angle, z_angle));
 	}
 
 	void Scene::setObjectReflection(bool xy, bool xz, bool yz) {
-
+		sceneObjects[selectedObject].setReflection(xy, xz, yz);
 	}
 
 	void Scene::setObjectScale(int x_scale, int y_scale, int z_scale) {
+		sceneObjects[selectedObject].setScale(Vector3(x_scale, y_scale, z_scale));
+	}
 
+	void Scene::resetObject() {
+		sceneObjects[selectedObject].reset();
+	}
+
+	void Scene::deleteObject() {
+		// TODO
+	}
+
+	void Scene::selectNextObject() {
+		if (selectedObject < sceneObjects.size()) {
+			selectedObject++;
+		}
+	}
+
+	void Scene::selectPreviousObject() {
+		if (selectedObject > 0) {
+			selectedObject--;
+		}
 	}
 
 	// methods to manipulate the camera:
 
 	void Scene::setCameraPosition(int x_coord, int y_coord, int z_coord) {
-
+		camera.setPosition(Vector3(x_coord, y_coord, z_coord));
 	}
 
 	void Scene::setCameraRotation(float pitch, float yawn, float roll) {
+		camera.setRotation(Vector3(pitch, yawn, roll));
+	}
 
+	void Scene::resetCamera() {
+		camera.reset();
+	}
+
+	bool Scene::isEmpty() {
+		return sceneObjects.size() == 0;
 	}
 
 	// test

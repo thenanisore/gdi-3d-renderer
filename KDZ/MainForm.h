@@ -26,12 +26,13 @@ namespace KDZ {
 
 	private: 
 		Bitmap^ bm;
-		// Main scene
+		 // Main scene
 		GL::Scene *mainScene;
 		System::Void setScene();
 		System::Void renderScene();
-		// Events
+		// Events:
 		System::Void MainForm_Shown(System::Object^  sender, System::EventArgs^  e);
+		// object scroll bars
 		System::Void objPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void objPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void objPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
@@ -41,13 +42,31 @@ namespace KDZ {
 		System::Void objRotXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void objRotYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void objRotZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		// camera scroll bars
 		System::Void camPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camRotPitchBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camRotYawBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camRotRollBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		// buttons
+		System::Void nextObjButton_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void prevObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
+		System::Void deleteObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
+		System::Void resetObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
+		System::Void resetCamButton_Click(System::Object^  sender, System::EventArgs^  e); 
+		// object reflection checkboxes:
+		System::Void changeObjectReflection();
+		System::Void objReflectionXYCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void objReflectionXZCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void objReflectionYZCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 
+	private: System::Windows::Forms::Button^  prevObjButton;
+	private: System::Windows::Forms::Button^  nextObjButton;
+	private: System::Windows::Forms::Button^  deleteObjButton;
+	private: System::Windows::Forms::Button^  resetObjButton;
+	private: System::Windows::Forms::TableLayoutPanel^  selectionTableLayoutPanel;
+	private: System::Windows::Forms::Button^  resetCamButton;
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
@@ -259,6 +278,11 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->tabControl = (gcnew System::Windows::Forms::TabControl());
 			this->objectTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->objFlowLayoutPanet = (gcnew System::Windows::Forms::FlowLayoutPanel());
+			this->selectionTableLayoutPanel = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->nextObjButton = (gcnew System::Windows::Forms::Button());
+			this->prevObjButton = (gcnew System::Windows::Forms::Button());
+			this->deleteObjButton = (gcnew System::Windows::Forms::Button());
+			this->resetObjButton = (gcnew System::Windows::Forms::Button());
 			this->objPosGroupBox = (gcnew System::Windows::Forms::GroupBox());
 			this->objPosZBar = (gcnew System::Windows::Forms::TrackBar());
 			this->objPosZLabel = (gcnew System::Windows::Forms::Label());
@@ -286,6 +310,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objReflectionXYCheckbox = (gcnew System::Windows::Forms::CheckBox());
 			this->cameraTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->camFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
+			this->resetCamButton = (gcnew System::Windows::Forms::Button());
 			this->cameraPosGroupBox = (gcnew System::Windows::Forms::GroupBox());
 			this->camPosZBar = (gcnew System::Windows::Forms::TrackBar());
 			this->camPosZLabel = (gcnew System::Windows::Forms::Label());
@@ -311,6 +336,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->tabControl->SuspendLayout();
 			this->objectTabPage->SuspendLayout();
 			this->objFlowLayoutPanet->SuspendLayout();
+			this->selectionTableLayoutPanel->SuspendLayout();
 			this->objPosGroupBox->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosZBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosYBar))->BeginInit();
@@ -430,6 +456,9 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// 
 			this->objFlowLayoutPanet->AutoScroll = true;
 			this->objFlowLayoutPanet->BackColor = System::Drawing::SystemColors::Control;
+			this->objFlowLayoutPanet->Controls->Add(this->selectionTableLayoutPanel);
+			this->objFlowLayoutPanet->Controls->Add(this->deleteObjButton);
+			this->objFlowLayoutPanet->Controls->Add(this->resetObjButton);
 			this->objFlowLayoutPanet->Controls->Add(this->objPosGroupBox);
 			this->objFlowLayoutPanet->Controls->Add(this->objScaleGroupBox);
 			this->objFlowLayoutPanet->Controls->Add(this->objRotationGroupBox);
@@ -441,6 +470,67 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objFlowLayoutPanet->Size = System::Drawing::Size(253, 607);
 			this->objFlowLayoutPanet->TabIndex = 6;
 			this->objFlowLayoutPanet->WrapContents = false;
+			// 
+			// selectionTableLayoutPanel
+			// 
+			this->selectionTableLayoutPanel->ColumnCount = 2;
+			this->selectionTableLayoutPanel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				50)));
+			this->selectionTableLayoutPanel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				50)));
+			this->selectionTableLayoutPanel->Controls->Add(this->nextObjButton, 1, 0);
+			this->selectionTableLayoutPanel->Controls->Add(this->prevObjButton, 0, 0);
+			this->selectionTableLayoutPanel->Location = System::Drawing::Point(3, 3);
+			this->selectionTableLayoutPanel->Name = L"selectionTableLayoutPanel";
+			this->selectionTableLayoutPanel->RowCount = 1;
+			this->selectionTableLayoutPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent,
+				100)));
+			this->selectionTableLayoutPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute,
+				46)));
+			this->selectionTableLayoutPanel->Size = System::Drawing::Size(224, 46);
+			this->selectionTableLayoutPanel->TabIndex = 18;
+			// 
+			// nextObjButton
+			// 
+			this->nextObjButton->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->nextObjButton->Location = System::Drawing::Point(115, 3);
+			this->nextObjButton->Name = L"nextObjButton";
+			this->nextObjButton->Size = System::Drawing::Size(106, 40);
+			this->nextObjButton->TabIndex = 14;
+			this->nextObjButton->Text = L"Next";
+			this->nextObjButton->UseVisualStyleBackColor = true;
+			this->nextObjButton->Click += gcnew System::EventHandler(this, &MainForm::nextObjButton_Click);
+			// 
+			// prevObjButton
+			// 
+			this->prevObjButton->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->prevObjButton->Location = System::Drawing::Point(3, 3);
+			this->prevObjButton->Name = L"prevObjButton";
+			this->prevObjButton->Size = System::Drawing::Size(106, 40);
+			this->prevObjButton->TabIndex = 15;
+			this->prevObjButton->Text = L"Previous";
+			this->prevObjButton->UseVisualStyleBackColor = true;
+			this->prevObjButton->Click += gcnew System::EventHandler(this, &MainForm::prevObjButton_Click);
+			// 
+			// deleteObjButton
+			// 
+			this->deleteObjButton->Location = System::Drawing::Point(3, 55);
+			this->deleteObjButton->Name = L"deleteObjButton";
+			this->deleteObjButton->Size = System::Drawing::Size(224, 23);
+			this->deleteObjButton->TabIndex = 13;
+			this->deleteObjButton->Text = L"Delete";
+			this->deleteObjButton->UseVisualStyleBackColor = true;
+			this->deleteObjButton->Click += gcnew System::EventHandler(this, &MainForm::deleteObjButton_Click);
+			// 
+			// resetObjButton
+			// 
+			this->resetObjButton->Location = System::Drawing::Point(3, 84);
+			this->resetObjButton->Name = L"resetObjButton";
+			this->resetObjButton->Size = System::Drawing::Size(224, 23);
+			this->resetObjButton->TabIndex = 16;
+			this->resetObjButton->Text = L"Reset";
+			this->resetObjButton->UseVisualStyleBackColor = true;
+			this->resetObjButton->Click += gcnew System::EventHandler(this, &MainForm::resetObjButton_Click);
 			// 
 			// objPosGroupBox
 			// 
@@ -454,7 +544,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objPosGroupBox->Controls->Add(this->objPosYLabel);
 			this->objPosGroupBox->Controls->Add(this->objPosXBar);
 			this->objPosGroupBox->Controls->Add(this->objPosXLabel);
-			this->objPosGroupBox->Location = System::Drawing::Point(3, 3);
+			this->objPosGroupBox->Location = System::Drawing::Point(3, 113);
 			this->objPosGroupBox->Name = L"objPosGroupBox";
 			this->objPosGroupBox->Size = System::Drawing::Size(224, 236);
 			this->objPosGroupBox->TabIndex = 3;
@@ -542,7 +632,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objScaleGroupBox->Controls->Add(this->objScaleYLabel);
 			this->objScaleGroupBox->Controls->Add(this->objScaleXBar);
 			this->objScaleGroupBox->Controls->Add(this->objScaleXLabel);
-			this->objScaleGroupBox->Location = System::Drawing::Point(3, 245);
+			this->objScaleGroupBox->Location = System::Drawing::Point(3, 355);
 			this->objScaleGroupBox->Name = L"objScaleGroupBox";
 			this->objScaleGroupBox->Size = System::Drawing::Size(224, 236);
 			this->objScaleGroupBox->TabIndex = 4;
@@ -630,7 +720,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objRotationGroupBox->Controls->Add(this->objRotYLabel);
 			this->objRotationGroupBox->Controls->Add(this->objRotXBar);
 			this->objRotationGroupBox->Controls->Add(this->objRotXLabel);
-			this->objRotationGroupBox->Location = System::Drawing::Point(3, 487);
+			this->objRotationGroupBox->Location = System::Drawing::Point(3, 597);
 			this->objRotationGroupBox->Name = L"objRotationGroupBox";
 			this->objRotationGroupBox->Size = System::Drawing::Size(224, 236);
 			this->objRotationGroupBox->TabIndex = 5;
@@ -712,7 +802,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objReflectionGroupBox->Controls->Add(this->objReflectionYZCheckbox);
 			this->objReflectionGroupBox->Controls->Add(this->objReflectionXZCheckbox);
 			this->objReflectionGroupBox->Controls->Add(this->objReflectionXYCheckbox);
-			this->objReflectionGroupBox->Location = System::Drawing::Point(3, 729);
+			this->objReflectionGroupBox->Location = System::Drawing::Point(3, 839);
 			this->objReflectionGroupBox->Name = L"objReflectionGroupBox";
 			this->objReflectionGroupBox->Size = System::Drawing::Size(224, 117);
 			this->objReflectionGroupBox->TabIndex = 12;
@@ -728,6 +818,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objReflectionYZCheckbox->TabIndex = 14;
 			this->objReflectionYZCheckbox->Text = L"Across YZ";
 			this->objReflectionYZCheckbox->UseVisualStyleBackColor = true;
+			this->objReflectionYZCheckbox->CheckedChanged += gcnew System::EventHandler(this, &MainForm::objReflectionYZCheckbox_CheckedChanged);
 			// 
 			// objReflectionXZCheckbox
 			// 
@@ -738,6 +829,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objReflectionXZCheckbox->TabIndex = 13;
 			this->objReflectionXZCheckbox->Text = L"Across XZ";
 			this->objReflectionXZCheckbox->UseVisualStyleBackColor = true;
+			this->objReflectionXZCheckbox->CheckedChanged += gcnew System::EventHandler(this, &MainForm::objReflectionXZCheckbox_CheckedChanged);
 			// 
 			// objReflectionXYCheckbox
 			// 
@@ -748,6 +840,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objReflectionXYCheckbox->TabIndex = 12;
 			this->objReflectionXYCheckbox->Text = L"Across XY";
 			this->objReflectionXYCheckbox->UseVisualStyleBackColor = true;
+			this->objReflectionXYCheckbox->CheckedChanged += gcnew System::EventHandler(this, &MainForm::objReflectionXYCheckbox_CheckedChanged);
 			// 
 			// cameraTabPage
 			// 
@@ -763,6 +856,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// camFlowLayoutPanel
 			// 
 			this->camFlowLayoutPanel->AutoScroll = true;
+			this->camFlowLayoutPanel->Controls->Add(this->resetCamButton);
 			this->camFlowLayoutPanel->Controls->Add(this->cameraPosGroupBox);
 			this->camFlowLayoutPanel->Controls->Add(this->camProjectionGroupBox);
 			this->camFlowLayoutPanel->Controls->Add(this->camRotationGroupBox);
@@ -773,6 +867,16 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camFlowLayoutPanel->Size = System::Drawing::Size(253, 607);
 			this->camFlowLayoutPanel->TabIndex = 5;
 			this->camFlowLayoutPanel->WrapContents = false;
+			// 
+			// resetCamButton
+			// 
+			this->resetCamButton->Location = System::Drawing::Point(3, 3);
+			this->resetCamButton->Name = L"resetCamButton";
+			this->resetCamButton->Size = System::Drawing::Size(224, 23);
+			this->resetCamButton->TabIndex = 17;
+			this->resetCamButton->Text = L"Reset";
+			this->resetCamButton->UseVisualStyleBackColor = true;
+			this->resetCamButton->Click += gcnew System::EventHandler(this, &MainForm::resetCamButton_Click);
 			// 
 			// cameraPosGroupBox
 			// 
@@ -786,7 +890,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->cameraPosGroupBox->Controls->Add(this->camPosYLabel);
 			this->cameraPosGroupBox->Controls->Add(this->camPosXBar);
 			this->cameraPosGroupBox->Controls->Add(this->camPosXLabel);
-			this->cameraPosGroupBox->Location = System::Drawing::Point(3, 3);
+			this->cameraPosGroupBox->Location = System::Drawing::Point(3, 32);
 			this->cameraPosGroupBox->Name = L"cameraPosGroupBox";
 			this->cameraPosGroupBox->Size = System::Drawing::Size(224, 236);
 			this->cameraPosGroupBox->TabIndex = 3;
@@ -870,7 +974,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camProjectionGroupBox->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->camProjectionGroupBox->Controls->Add(this->orthoButton);
 			this->camProjectionGroupBox->Controls->Add(this->perspectiveButton);
-			this->camProjectionGroupBox->Location = System::Drawing::Point(3, 245);
+			this->camProjectionGroupBox->Location = System::Drawing::Point(3, 274);
 			this->camProjectionGroupBox->Name = L"camProjectionGroupBox";
 			this->camProjectionGroupBox->Size = System::Drawing::Size(224, 93);
 			this->camProjectionGroupBox->TabIndex = 12;
@@ -911,7 +1015,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camRotationGroupBox->Controls->Add(this->camYawLabel);
 			this->camRotationGroupBox->Controls->Add(this->camRotPitchBar);
 			this->camRotationGroupBox->Controls->Add(this->camPitchLabel);
-			this->camRotationGroupBox->Location = System::Drawing::Point(3, 344);
+			this->camRotationGroupBox->Location = System::Drawing::Point(3, 373);
 			this->camRotationGroupBox->Name = L"camRotationGroupBox";
 			this->camRotationGroupBox->Size = System::Drawing::Size(224, 236);
 			this->camRotationGroupBox->TabIndex = 4;
@@ -1022,6 +1126,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objectTabPage->ResumeLayout(false);
 			this->objFlowLayoutPanet->ResumeLayout(false);
 			this->objFlowLayoutPanet->PerformLayout();
+			this->selectionTableLayoutPanel->ResumeLayout(false);
 			this->objPosGroupBox->ResumeLayout(false);
 			this->objPosGroupBox->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosZBar))->EndInit();

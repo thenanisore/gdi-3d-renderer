@@ -22,6 +22,8 @@ namespace GL {
 		void setPosition(const Vector3 &newPosition);
 		void setScale(const Vector3 &newScale);
 		void setRotation(const Vector3 &newRotation);
+		void setReflection(bool xy, bool xz, bool yz);
+		void reset();
 
 		std::vector<Polygon> polygons;
 
@@ -32,5 +34,11 @@ namespace GL {
 		Vector3 scale;
 		// Rotation angles (in the world space).
 		Vector3 rotation;
+
+		// reflection flags:
+
+		bool reflectionXY;
+		bool reflectionXZ;
+		bool reflectionYZ;
 	};
 }
