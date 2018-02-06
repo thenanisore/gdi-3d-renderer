@@ -12,7 +12,7 @@ namespace GL {
 	{
 	public:
 		// Initializes a scene camera with given position, and up vectors.
-		Camera(Vector3 _position = Vector3(0.0f, 0.0f, 0.0f), Vector3 _worldUp = Vector3(0.0f, 1.0f, 0.0f), Vector3 _rotation = Vector3(0.0f, -90.0f, 0.0f));
+		Camera(Vector3 _position = Vector3(0.0f, 0.0f, 10.0f), Vector3 _worldUp = Vector3(0.0f, 1.0f, 0.0f), Vector3 _rotation = Vector3(0.0f, 180.0f, 0.0f));
 
 		// Returns a LookAt matrix based on the Camera's current parameters.
 		Matrix4 getViewMatrix();
@@ -20,7 +20,7 @@ namespace GL {
 		void setPosition(const Vector3 &newPosition);
 		// Sets the camera's rotation.
 		void setRotation(const Vector3 &newRotation);
-		// Sets the default position (0, 0, -1), target (0, 0, 0) and up (0, 1, 0) vectors.
+		// Sets the default position (0, 0, 10), target (0, 0, 0) and up (0, 1, 0) vectors.
 		void reset();
 
 	private:

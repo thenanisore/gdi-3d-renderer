@@ -25,20 +25,21 @@ namespace GL {
 		updateVectors();
 	}
 
-	// Sets the default position (0, 0, 1), front (0, 0, -1) and up (0, 1, 0) vectors.
+	// Sets the default position (0, 0, 3), front (0, 0, -1) and up (0, 1, 0) vectors.
 	void Camera::reset() {
-		position = Vector3(0.0f, 0.0f, 1.0f);
+		position = Vector3(0.0f, 0.0f, 10.0f);
 		front = Vector3(0.0f, 0.0f, -1.0f);
-		up = Vector3(0.0f, 1.0f, 0.0f);
+		worldUp = Vector3(0.0f, 1.0f, 0.0f);
+		rotation = Vector3();
 		updateVectors();
 	}
 
 	void Camera::updateVectors() {
 		// calculate the front vector
 		Vector3 _front;
-		_front.x = cos(Util::degreesToRadians(rotation.y)) * cos(Util::degreesToRadians(rotation.x));
+		_front.x = sin(Util::degreesToRadians(rotation.y)) * cos(Util::degreesToRadians(rotation.x));
 		_front.y = sin(Util::degreesToRadians(rotation.x));
-		_front.z = sin(Util::degreesToRadians(rotation.y)) * cos(Util::degreesToRadians(rotation.x));
+		_front.z = -cos(Util::degreesToRadians(rotation.y)) * cos(Util::degreesToRadians(rotation.x));
 		front = _front.normalized();
 		// re-calculate the right and up vectors
 		right = front.cross(worldUp).normalized();

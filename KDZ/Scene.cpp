@@ -6,7 +6,7 @@ namespace GL {
 	using namespace System;
 	using namespace System::Drawing;
 
-	Scene::Scene() : camera(Vector3(0, 0, 5)) {
+	Scene::Scene() : camera() {
 		// test code
 		addCube();
 		selectedObject = 0;
@@ -27,7 +27,7 @@ namespace GL {
 		}
 		else {
 			// TODO: set parameters
-			projection = Util::orthographic();
+			projection = Util::orthographic(-10, 10, -10, 10, 0.1, 100);
 		}
 
 		// pass the current object and a transformation matrix in a renderer
@@ -83,7 +83,7 @@ namespace GL {
 
 	const float cameraPositionMultiplier = 1.0f;
 	void Scene::setCameraPosition(int x_coord, int y_coord, int z_coord) {
-		camera.setPosition(Vector3(x_coord, y_coord, z_coord) * (1 + cameraPositionMultiplier));
+		camera.setPosition(Vector3(x_coord, y_coord, z_coord) * cameraPositionMultiplier);
 	}
 
 	const float camerRotationMultiplier = 1.0f;

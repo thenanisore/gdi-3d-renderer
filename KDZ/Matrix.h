@@ -33,6 +33,6 @@ namespace GL {
 		// Returns a perspective projection matrix with the specified parameters.
 		Matrix4 perspective(float fov, float aspect, float near, float far);
 		// Returns an orthgraphic projection matrix with the specified parameters.
-		Matrix4 orthographic();
+		Matrix4 orthographic(float left, float right, float top, float bottom, float near, float far);
 	}
 }

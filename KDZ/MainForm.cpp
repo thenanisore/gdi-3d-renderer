@@ -47,9 +47,7 @@ System::Void MainForm::MainForm_ResizeEnd(System::Object^  sender, System::Event
 // Object position scroll bars:
 
 System::Void MainForm::changeObjectPosition() {
-	mainScene->setObjectPosition(((TrackBar^)objPosXBar)->Value,
-								 ((TrackBar^)objPosYBar)->Value, 
-							  	 ((TrackBar^)objPosZBar)->Value);
+	mainScene->setObjectPosition(objPosXBar->Value, objPosYBar->Value, objPosZBar->Value);
 	renderScene();
 }
 
@@ -68,9 +66,7 @@ System::Void MainForm::objPosZBar_Scroll(System::Object^  sender, System::EventA
 // Object scale scroll bars:
 
 System::Void MainForm::changeObjectScale() {
-	mainScene->setObjectScale(((TrackBar^)objScaleXBar)->Value,
-							  ((TrackBar^)objScaleYBar)->Value, 
-							  ((TrackBar^)objScaleZBar)->Value);
+	mainScene->setObjectScale(objScaleXBar->Value, objScaleYBar->Value, objScaleZBar->Value);
 	renderScene();
 }
 
@@ -89,9 +85,7 @@ System::Void MainForm::objScaleZBar_Scroll(System::Object^  sender, System::Even
 // Object rotation scroll bars:
 
 System::Void MainForm::changeObjectRotation() {
-	mainScene->setObjectRotation(((TrackBar^)objRotXBar)->Value,
-								 ((TrackBar^)objRotYBar)->Value, 
-							  	 ((TrackBar^)objRotZBar)->Value);
+	mainScene->setObjectRotation(objRotXBar->Value, objRotYBar->Value, objRotZBar->Value);
 	renderScene();
 }
 
@@ -187,9 +181,9 @@ System::Void MainForm::resetCamButton_Click(System::Object^  sender, System::Eve
 	isResettingScene = true;
 	camPosXBar->Value = 0;
 	camPosYBar->Value = 0;
-	camPosZBar->Value = -1;
+	camPosZBar->Value = 10;
 	camRotPitchBar->Value = 0;
-	camRotYawBar->Value = 0;
+	camRotYawBar->Value = 180;
 	isResettingScene = false;
 
 	renderScene();

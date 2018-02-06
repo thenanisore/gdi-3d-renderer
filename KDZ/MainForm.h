@@ -379,15 +379,15 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->wfColorLabel = (gcnew System::Windows::Forms::Label());
 			this->bgColorButton = (gcnew System::Windows::Forms::Button());
 			this->bgColorLabel = (gcnew System::Windows::Forms::Label());
+			this->drawingModeGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->bothRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->solidRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->wfRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->statusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripStatusLabel = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->bgColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->wfColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
-			this->drawingModeGroupBox = (gcnew System::Windows::Forms::GroupBox());
-			this->wfRadioButton = (gcnew System::Windows::Forms::RadioButton());
-			this->solidRadioButton = (gcnew System::Windows::Forms::RadioButton());
-			this->bothRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -421,8 +421,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->otherTabPage->SuspendLayout();
 			this->otherFlowLayoutPanel->SuspendLayout();
 			this->colorGroupBox->SuspendLayout();
-			this->statusStrip->SuspendLayout();
 			this->drawingModeGroupBox->SuspendLayout();
+			this->statusStrip->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// menuStrip
@@ -971,6 +971,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camPosZBar->Size = System::Drawing::Size(212, 56);
 			this->camPosZBar->TabIndex = 10;
 			this->camPosZBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->camPosZBar->Value = 10;
 			this->camPosZBar->Scroll += gcnew System::EventHandler(this, &MainForm::camPosZBar_Scroll);
 			// 
 			// camPosZLabel
@@ -1095,6 +1096,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camRotYawBar->Size = System::Drawing::Size(212, 56);
 			this->camRotYawBar->TabIndex = 8;
 			this->camRotYawBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->camRotYawBar->Value = 180;
 			this->camRotYawBar->Scroll += gcnew System::EventHandler(this, &MainForm::camRotYawBar_Scroll);
 			// 
 			// camYawLabel
@@ -1229,6 +1231,53 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->bgColorLabel->TabIndex = 0;
 			this->bgColorLabel->Text = L"Background";
 			// 
+			// drawingModeGroupBox
+			// 
+			this->drawingModeGroupBox->Controls->Add(this->bothRadioButton);
+			this->drawingModeGroupBox->Controls->Add(this->solidRadioButton);
+			this->drawingModeGroupBox->Controls->Add(this->wfRadioButton);
+			this->drawingModeGroupBox->Location = System::Drawing::Point(3, 128);
+			this->drawingModeGroupBox->Name = L"drawingModeGroupBox";
+			this->drawingModeGroupBox->Size = System::Drawing::Size(247, 110);
+			this->drawingModeGroupBox->TabIndex = 1;
+			this->drawingModeGroupBox->TabStop = false;
+			this->drawingModeGroupBox->Text = L"Drawing Mode";
+			// 
+			// bothRadioButton
+			// 
+			this->bothRadioButton->AutoSize = true;
+			this->bothRadioButton->Checked = true;
+			this->bothRadioButton->Location = System::Drawing::Point(7, 76);
+			this->bothRadioButton->Name = L"bothRadioButton";
+			this->bothRadioButton->Size = System::Drawing::Size(58, 21);
+			this->bothRadioButton->TabIndex = 2;
+			this->bothRadioButton->TabStop = true;
+			this->bothRadioButton->Text = L"Both";
+			this->bothRadioButton->UseVisualStyleBackColor = true;
+			this->bothRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::bothRadioButton_CheckedChanged);
+			// 
+			// solidRadioButton
+			// 
+			this->solidRadioButton->AutoSize = true;
+			this->solidRadioButton->Location = System::Drawing::Point(6, 49);
+			this->solidRadioButton->Name = L"solidRadioButton";
+			this->solidRadioButton->Size = System::Drawing::Size(60, 21);
+			this->solidRadioButton->TabIndex = 1;
+			this->solidRadioButton->Text = L"Solid";
+			this->solidRadioButton->UseVisualStyleBackColor = true;
+			this->solidRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::solidRadioButton_CheckedChanged);
+			// 
+			// wfRadioButton
+			// 
+			this->wfRadioButton->AutoSize = true;
+			this->wfRadioButton->Location = System::Drawing::Point(7, 22);
+			this->wfRadioButton->Name = L"wfRadioButton";
+			this->wfRadioButton->Size = System::Drawing::Size(94, 21);
+			this->wfRadioButton->TabIndex = 0;
+			this->wfRadioButton->Text = L"Wireframe";
+			this->wfRadioButton->UseVisualStyleBackColor = true;
+			this->wfRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::wfRadioButton_CheckedChanged);
+			// 
 			// statusStrip
 			// 
 			this->statusStrip->ImageScalingSize = System::Drawing::Size(20, 20);
@@ -1245,53 +1294,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->toolStripStatusLabel->Name = L"toolStripStatusLabel";
 			this->toolStripStatusLabel->Size = System::Drawing::Size(74, 20);
 			this->toolStripStatusLabel->Text = L"Objects: 0";
-			// 
-			// drawingModeGroupBox
-			// 
-			this->drawingModeGroupBox->Controls->Add(this->bothRadioButton);
-			this->drawingModeGroupBox->Controls->Add(this->solidRadioButton);
-			this->drawingModeGroupBox->Controls->Add(this->wfRadioButton);
-			this->drawingModeGroupBox->Location = System::Drawing::Point(3, 128);
-			this->drawingModeGroupBox->Name = L"drawingModeGroupBox";
-			this->drawingModeGroupBox->Size = System::Drawing::Size(247, 110);
-			this->drawingModeGroupBox->TabIndex = 1;
-			this->drawingModeGroupBox->TabStop = false;
-			this->drawingModeGroupBox->Text = L"Drawing Mode";
-			// 
-			// wfRadioButton
-			// 
-			this->wfRadioButton->AutoSize = true;
-			this->wfRadioButton->Location = System::Drawing::Point(7, 22);
-			this->wfRadioButton->Name = L"wfRadioButton";
-			this->wfRadioButton->Size = System::Drawing::Size(94, 21);
-			this->wfRadioButton->TabIndex = 0;
-			this->wfRadioButton->Text = L"Wireframe";
-			this->wfRadioButton->UseVisualStyleBackColor = true;
-			this->wfRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::wfRadioButton_CheckedChanged);
-			// 
-			// solidRadioButton
-			// 
-			this->solidRadioButton->AutoSize = true;
-			this->solidRadioButton->Location = System::Drawing::Point(6, 49);
-			this->solidRadioButton->Name = L"solidRadioButton";
-			this->solidRadioButton->Size = System::Drawing::Size(60, 21);
-			this->solidRadioButton->TabIndex = 1;
-			this->solidRadioButton->Text = L"Solid";
-			this->solidRadioButton->UseVisualStyleBackColor = true;
-			this->solidRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::solidRadioButton_CheckedChanged);
-			// 
-			// bothRadioButton
-			// 
-			this->bothRadioButton->AutoSize = true;
-			this->bothRadioButton->Checked = true;
-			this->bothRadioButton->Location = System::Drawing::Point(7, 76);
-			this->bothRadioButton->Name = L"bothRadioButton";
-			this->bothRadioButton->Size = System::Drawing::Size(58, 21);
-			this->bothRadioButton->TabIndex = 2;
-			this->bothRadioButton->TabStop = true;
-			this->bothRadioButton->Text = L"Both";
-			this->bothRadioButton->UseVisualStyleBackColor = true;
-			this->bothRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::bothRadioButton_CheckedChanged);
 			// 
 			// MainForm
 			// 
@@ -1353,10 +1355,10 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->otherFlowLayoutPanel->ResumeLayout(false);
 			this->colorGroupBox->ResumeLayout(false);
 			this->colorGroupBox->PerformLayout();
-			this->statusStrip->ResumeLayout(false);
-			this->statusStrip->PerformLayout();
 			this->drawingModeGroupBox->ResumeLayout(false);
 			this->drawingModeGroupBox->PerformLayout();
+			this->statusStrip->ResumeLayout(false);
+			this->statusStrip->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

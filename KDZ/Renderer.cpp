@@ -54,7 +54,7 @@ namespace GL {
 		for (GL::Polygon pol : obj.polygons) {
 			// the ndc vector memorizes the vectors already in clip space
 			std::vector<Vector3> ndc{
-				NDCtoViewport((transformMatrix * Vector4(pol.vertices[0])).fromHomogeneous())
+				NDCtoViewport((transformMatrix * pol.vertices[0]).fromHomogeneous())
 			};
 			for (int i = 0; i < pol.vertices.size() - 1; i++) {
 				// transform 3D world coordinates to the NDC
@@ -98,6 +98,15 @@ namespace GL {
 		selectedBrush = gcnew SolidBrush(selectedColor);
 	}
 
+	//int outCode(int x, int y, int X1, int X2, int Y1, int Y2) {
+	//	int code = 0;
+	//	if (x < X1) code |= 0x01;
+	//	if (x < X2) code |= 0x02;
+	//	if (x < Y1) code |= 0x04;
+	//	if (x < Y2) code |= 0x08;
+	//	return code;
+	//}
+
 	void Renderer::drawLine(const Vector3 &from, const Vector3 &to) {
 		// test code
 		// TODO: implement line drawing algorithm
@@ -111,6 +120,6 @@ namespace GL {
 
 	// Remaps the coordinates from [-1, 1] to the [0, viewport] space. 
 	Vector3 Renderer::NDCtoViewport(const Vector3 &vertex) {
-		return Vector3((1.0f + vertex.x) * viewportX / 2.0f, (1.0f - vertex.y) * viewportY / 2.0f, 0.0f);
+		return Vector3((1.0f + vertex.x) * viewportX / 2.0f, (1.0f - vertex.y) * viewportY / 2.0f, vertex.z);
 	}
 }

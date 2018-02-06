@@ -124,21 +124,27 @@ namespace GL {
 		// Returns a perspective projection matrix with the specified parameters.
 		Matrix4 perspective(float fov, float aspect, float near, float far) {
 			// TODO: perspective matrix
-			float scale = 1.0f / tan(Util::degreesToRadians(fov) / 2.0f);
+			float scale = atan(Util::degreesToRadians(fov) / 2.0f);
 			Matrix4 proj;
-			proj.set(0, 0, scale); // scale the x coordinates
+			proj.set(0, 0, scale / aspect); // scale the x coordinates
 			proj.set(1, 1, scale); // scale the y coordinates
-			proj.set(2, 2, -far / (far - near)); // used to remap z to [0, 1]
-			proj.set(2, 3, -far * near / (far - near)); // used to remap z to [0, 1]
-			proj.set(3, 2, -1.0f); // w := -z
+			proj.set(2, 2, (far + near) / (far - near)); // used to remap z to [0, 1]
+			proj.set(3, 2, -2 * far * near / (far - near)); // used to remap z to [0, 1]
+			proj.set(2, 3, 1.0f);
 			proj.set(3, 3, 0.0f);
 			return proj;
 		}
 
 		// Returns an orthgraphic projection matrix with the specified parameters.
-		Matrix4 orthographic() {
-			// TODO: orthographic matrix
-			return Matrix4();
+		Matrix4 orthographic(float left, float right, float top, float bottom, float near, float far) {
+			Matrix4 ortho;
+			ortho.set(0, 0, 2.0f / (right - left));
+			ortho.set(1, 1, 2.0f / (top - bottom));
+			ortho.set(2, 2, -2.0f / (far - near));
+			ortho.set(0, 3, -(right + left) / (right - left));
+			ortho.set(1, 3, -(top + bottom) / (top - bottom));
+			ortho.set(2, 3, -(far + near) / (far - near));
+			return ortho;
 		}
 	}
 }
