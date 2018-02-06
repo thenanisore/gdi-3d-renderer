@@ -20,7 +20,15 @@ namespace GL {
 		// get transformation matrices
 		Matrix4 model = sceneObjects[selectedObject].getModelMatrix();
 		Matrix4 view = camera.getViewMatrix();
-		Matrix4 projection = Util::perspective(45.0f, renderer->getViewportAspect(), 0.1f, 100.0f);
+		Matrix4 projection;
+		if (isPerspective) {
+			// TODO: regulate FoV
+			projection = Util::perspective(45.0f, renderer->getViewportAspect(), 0.1f, 100.0f);
+		}
+		else {
+			// TODO: set parameters
+			projection = Util::orthographic();
+		}
 
 		// pass the current object and a transformation matrix in a renderer
 		renderer->renderObject(sceneObjects[selectedObject], projection * view * model); 
@@ -85,6 +93,15 @@ namespace GL {
 
 	void Scene::resetCamera() {
 		camera.reset();
+	}
+
+	void Scene::setProjectionMode(bool perspective) {
+		isPerspective = perspective;
+	}
+
+	void Scene::setDrawingMode(bool wireframe, bool solid) {
+		drawWireframe = wireframe;
+		drawSolid = solid;
 	}
 
 	bool Scene::isEmpty() {

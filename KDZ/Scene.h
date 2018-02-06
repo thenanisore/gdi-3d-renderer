@@ -37,6 +37,10 @@ namespace GL {
 		void setCameraRotation(float pitch, float yawn, float roll);
 		void resetCamera();
 
+		// Sets projection mode: perspective if the parameter is true, orthographics otherwise.
+		void setProjectionMode(bool perspective);
+		// Sets drawing mode flags: wireframe and/or solid.
+		void setDrawingMode(bool wireframe, bool solid);
 		// Returns true is the scene contains no objects.
 		bool isEmpty();
 
@@ -45,6 +49,9 @@ namespace GL {
 
 	private:
 		int selectedObject;
+		bool isPerspective;
+		bool drawWireframe;
+		bool drawSolid;
 		std::vector<SceneObject> sceneObjects;
 		Camera camera;
 	};

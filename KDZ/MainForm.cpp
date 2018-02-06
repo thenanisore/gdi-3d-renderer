@@ -255,3 +255,39 @@ System::Void MainForm::selectedColorButton_Click(System::Object^  sender, System
 		renderScene();
 	}
 }
+
+// Projection radio buttons:
+
+System::Void MainForm::changeProjectionMode() {
+	mainScene->setProjectionMode(perspectiveButton->Checked);
+	renderScene();
+}
+
+System::Void KDZ::MainForm::perspectiveButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeProjectionMode();
+}
+
+System::Void KDZ::MainForm::orthoButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeProjectionMode();
+}
+
+// Drawing mode radio buttons:
+
+System::Void MainForm::changeDrawingMode() {
+	if (wfRadioButton->Checked) mainScene->setDrawingMode(true, false);
+	else if (solidRadioButton->Checked) mainScene->setDrawingMode(false, true);
+	else if (bothRadioButton->Checked) mainScene->setDrawingMode(true, true);
+	renderScene();
+}
+
+System::Void KDZ::MainForm::wfRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeDrawingMode();
+}
+
+System::Void KDZ::MainForm::solidRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeDrawingMode();
+}
+
+System::Void KDZ::MainForm::bothRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeDrawingMode();
+}

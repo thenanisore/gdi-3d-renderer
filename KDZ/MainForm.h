@@ -43,8 +43,12 @@ namespace KDZ {
 	private: System::Windows::Forms::ColorDialog^  bgColorDialog;
 	private: System::Windows::Forms::ColorDialog^  wfColorDialog;
 	private: System::Windows::Forms::ColorDialog^  selectedColorDialog;
+	private: System::Windows::Forms::GroupBox^  drawingModeGroupBox;
+	private: System::Windows::Forms::RadioButton^  bothRadioButton;
+	private: System::Windows::Forms::RadioButton^  solidRadioButton;
+	private: System::Windows::Forms::RadioButton^  wfRadioButton;
 
-			 // Main scene
+		 // Main scene
 		GL::Scene *mainScene;
 		System::Void setScene();
 		System::Void renderScene();
@@ -88,6 +92,15 @@ namespace KDZ {
 		System::Void bgColorButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void wfColorButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void selectedColorButton_Click(System::Object^  sender, System::EventArgs^  e);
+		// projection radio buttons
+		System::Void changeProjectionMode();
+		System::Void perspectiveButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void orthoButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		// drawing mode radio buttons
+		System::Void changeDrawingMode();
+		System::Void wfRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void solidRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void bothRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 
 	private: System::Windows::Forms::Button^  prevObjButton;
 	private: System::Windows::Forms::Button^  nextObjButton;
@@ -371,6 +384,10 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->bgColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->wfColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
+			this->drawingModeGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->wfRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->solidRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->bothRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -405,6 +422,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->otherFlowLayoutPanel->SuspendLayout();
 			this->colorGroupBox->SuspendLayout();
 			this->statusStrip->SuspendLayout();
+			this->drawingModeGroupBox->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// menuStrip
@@ -1037,6 +1055,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->orthoButton->TabIndex = 1;
 			this->orthoButton->Text = L"Orthographic";
 			this->orthoButton->UseVisualStyleBackColor = true;
+			this->orthoButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::orthoButton_CheckedChanged);
 			// 
 			// perspectiveButton
 			// 
@@ -1049,6 +1068,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->perspectiveButton->TabStop = true;
 			this->perspectiveButton->Text = L"Perspective";
 			this->perspectiveButton->UseVisualStyleBackColor = true;
+			this->perspectiveButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::perspectiveButton_CheckedChanged);
 			// 
 			// camRotationGroupBox
 			// 
@@ -1126,6 +1146,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// otherFlowLayoutPanel
 			// 
 			this->otherFlowLayoutPanel->Controls->Add(this->colorGroupBox);
+			this->otherFlowLayoutPanel->Controls->Add(this->drawingModeGroupBox);
 			this->otherFlowLayoutPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->otherFlowLayoutPanel->FlowDirection = System::Windows::Forms::FlowDirection::TopDown;
 			this->otherFlowLayoutPanel->Location = System::Drawing::Point(3, 3);
@@ -1225,6 +1246,53 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->toolStripStatusLabel->Size = System::Drawing::Size(74, 20);
 			this->toolStripStatusLabel->Text = L"Objects: 0";
 			// 
+			// drawingModeGroupBox
+			// 
+			this->drawingModeGroupBox->Controls->Add(this->bothRadioButton);
+			this->drawingModeGroupBox->Controls->Add(this->solidRadioButton);
+			this->drawingModeGroupBox->Controls->Add(this->wfRadioButton);
+			this->drawingModeGroupBox->Location = System::Drawing::Point(3, 128);
+			this->drawingModeGroupBox->Name = L"drawingModeGroupBox";
+			this->drawingModeGroupBox->Size = System::Drawing::Size(247, 110);
+			this->drawingModeGroupBox->TabIndex = 1;
+			this->drawingModeGroupBox->TabStop = false;
+			this->drawingModeGroupBox->Text = L"Drawing Mode";
+			// 
+			// wfRadioButton
+			// 
+			this->wfRadioButton->AutoSize = true;
+			this->wfRadioButton->Location = System::Drawing::Point(7, 22);
+			this->wfRadioButton->Name = L"wfRadioButton";
+			this->wfRadioButton->Size = System::Drawing::Size(94, 21);
+			this->wfRadioButton->TabIndex = 0;
+			this->wfRadioButton->Text = L"Wireframe";
+			this->wfRadioButton->UseVisualStyleBackColor = true;
+			this->wfRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::wfRadioButton_CheckedChanged);
+			// 
+			// solidRadioButton
+			// 
+			this->solidRadioButton->AutoSize = true;
+			this->solidRadioButton->Location = System::Drawing::Point(6, 49);
+			this->solidRadioButton->Name = L"solidRadioButton";
+			this->solidRadioButton->Size = System::Drawing::Size(60, 21);
+			this->solidRadioButton->TabIndex = 1;
+			this->solidRadioButton->Text = L"Solid";
+			this->solidRadioButton->UseVisualStyleBackColor = true;
+			this->solidRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::solidRadioButton_CheckedChanged);
+			// 
+			// bothRadioButton
+			// 
+			this->bothRadioButton->AutoSize = true;
+			this->bothRadioButton->Checked = true;
+			this->bothRadioButton->Location = System::Drawing::Point(7, 76);
+			this->bothRadioButton->Name = L"bothRadioButton";
+			this->bothRadioButton->Size = System::Drawing::Size(58, 21);
+			this->bothRadioButton->TabIndex = 2;
+			this->bothRadioButton->TabStop = true;
+			this->bothRadioButton->Text = L"Both";
+			this->bothRadioButton->UseVisualStyleBackColor = true;
+			this->bothRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::bothRadioButton_CheckedChanged);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -1287,6 +1355,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->colorGroupBox->PerformLayout();
 			this->statusStrip->ResumeLayout(false);
 			this->statusStrip->PerformLayout();
+			this->drawingModeGroupBox->ResumeLayout(false);
+			this->drawingModeGroupBox->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
