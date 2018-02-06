@@ -33,19 +33,24 @@ namespace KDZ {
 		// Events:
 		System::Void MainForm_Shown(System::Object^  sender, System::EventArgs^  e);
 		// object scroll bars
+		System::Void changeObjectPosition();
 		System::Void objPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void objPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void objPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void changeObjectScale();
 		System::Void objScaleXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void objScaleYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void objScaleZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void changeObjectRotation();
 		System::Void objRotXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void objRotYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void objRotZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		// camera scroll bars
+		System::Void changeCameraPosition();
 		System::Void camPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void changeCameraRotation();
 		System::Void camRotPitchBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camRotYawBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camRotRollBar_Scroll(System::Object^  sender, System::EventArgs^  e);
