@@ -1,11 +1,12 @@
 #include "Scene.h"
+#include "Matrix.h"
 
 namespace GL {
 
 	using namespace System;
 	using namespace System::Drawing;
 
-	Scene::Scene() : camera(Vector3(0, 0, 3), Vector3(0, 0, 0), Vector3(0, 1, 0)) {
+	Scene::Scene() : camera(Vector3(0, 0, -5), Vector3(0, 0, 0), Vector3(0, 1, 0)) {
 		// 1. set up the camera
 		// 2. set up the renderer (or pass him in renderScene method?)
 
@@ -22,29 +23,51 @@ namespace GL {
 
 		// 3. draw axes/grid
 
-		// 4. perform all model transformations
+		// 4. model matrix transformations
+		Matrix4 model;
+		Util::rotateY(model, 15.0f);
+		Util::rotateX(model, 15.0f);
+		Util::rotateZ(model, 15.0f);
+		Util::scale(model, Vector3(1.0f, 1.0f, 1.0f));
+		Util::translate(model, Vector3(0.0f, 0.0f, 1.0f));
 
-		// test code
-		sceneObjects[0].rotateY(45);
-		sceneObjects[0].rotateX(45);
-		//sceneObjects[0].rotateZ(45);
-		sceneObjects[0].scale(Vector3(1, 1, 1) * 80);
-		sceneObjects[0].translate(Vector3(200, 200, 0));
-		sceneObjects[0].transform(camera.getLookAt());
-		//sceneObjects[0].transformPolygons(camera.getProjection(0, 0, 0, 0));
-
-		// 5. get view and projection matrices, transform every object
+		// 5. get view and projection matrices
 		Matrix4 view = camera.getLookAt();
-		Matrix4 projection = camera.perspective(0, 0, 0, 0);
+		Matrix4 projection = camera.perspective(45.0f, 0, 0.1f, 100.0f);
 
-		// 6. apply all transformations, change polygon coordinates
-
-		// 7. render
-		renderer->renderObject(sceneObjects[0]);
+		// 6. pass in a current object, a viewProjectin matrix and render
+		renderer->renderObject(sceneObjects[0], projection * view * model);
 	}
 
 	void Scene::addObject(SceneObject obj) {
 		sceneObjects.push_back(obj);
+	}
+
+	// methods to manipulate objects:
+
+	void Scene::setObjectPosition(int x_coord, int y_coord, int z_coord) {
+	}
+
+	void Scene::setObjectRotation(float x_angle, float y_angle, float z_angle) {
+
+	}
+
+	void Scene::setObjectReflection(bool xy, bool xz, bool yz) {
+
+	}
+
+	void Scene::setObjectScale(int x_scale, int y_scale, int z_scale) {
+
+	}
+
+	// methods to manipulate the camera:
+
+	void Scene::setCameraPosition(int x_coord, int y_coord, int z_coord) {
+
+	}
+
+	void Scene::setCameraRotation(float pitch, float yawn, float roll) {
+
 	}
 
 	// test

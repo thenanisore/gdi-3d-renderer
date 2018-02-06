@@ -1,3 +1,4 @@
+#include "Matrix.h"
 #include "Camera.h"
 
 namespace GL {
@@ -29,7 +30,15 @@ namespace GL {
 
 	Matrix4 Camera::perspective(float fov, float aspect, float near, float far) {
 		// TODO: perspective matrix
-		return Matrix4();
+		float scale = 1.0f / tan(Util::degreesToRadians(fov) / 2.0f);
+		Matrix4 proj;
+		proj.set(0, 0, scale); // scale the x coordinates
+		proj.set(1, 1, scale); // scale the y coordinates
+		proj.set(2, 2, -far / (far - near)); // used to remap z to [0, 1]
+		proj.set(2, 3, -far * near / (far - near));
+		proj.set(3, 2, -1.0f); // w := -z
+		proj.set(3, 3, 0.0f);
+		return proj;
 	}
 
 	Matrix4 Camera::orthographic() {

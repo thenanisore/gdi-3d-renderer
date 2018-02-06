@@ -39,12 +39,23 @@ namespace GL {
 		}
 	}
 
-	void Renderer::renderObject(const SceneObject &obj) {
+	void Renderer::renderObject(const SceneObject &obj, const Matrix4& transformMatrix) {
+		// return if doesn't contain at least a triangle
+		if (obj.polygons.size() < 3) return;
+
 		for (GL::Polygon pol : obj.polygons) {
+			// the ndc vector memorizes the vectors already in clip space
+			std::vector<Vector3> ndc{
+				NDCtoViewport((transformMatrix * Vector4(pol.vertices[0])).fromHomogeneous())
+			};
 			for (int i = 0; i < pol.vertices.size() - 1; i++) {
-				graphics->DrawLine(pen, pol.vertices[i].x, pol.vertices[i].y, pol.vertices[i + 1].x, pol.vertices[i + 1].y);
+				// transform 3D world coordinates to the NDC
+				ndc.push_back(NDCtoViewport((transformMatrix * pol.vertices[i + 1]).fromHomogeneous()));
+				// draw the lines
+				graphics->DrawLine(pen, ndc[i].x, ndc[i].y, ndc[i + 1].x, ndc[i + 1].y);
 			}
-			graphics->DrawLine(pen, pol.vertices[pol.vertices.size() - 1].x, pol.vertices[pol.vertices.size() - 1].y, pol.vertices[0].x, pol.vertices[0].y);
+			// draw the last line
+			graphics->DrawLine(pen, ndc[ndc.size() - 1].x, ndc[ndc.size() - 1].y, ndc[0].x, ndc[0].y);
 		}
 	}
 
@@ -61,6 +72,6 @@ namespace GL {
 
 	// Remaps the coordinates from [-1, 1] to the [0, viewport] space. 
 	Vector3 Renderer::NDCtoViewport(const Vector3 &vertex) {
-		return Vector3((1.0f + vertex.x) * viewportX / 2.0f, (1.0f + vertex.y) * viewportY / 2.0f, 0.0f);
+		return Vector3((1.0f + vertex.x) * viewportX / 2.0f, (1.0f - vertex.y) * viewportY / 2.0f, 0.0f);
 	}
 }

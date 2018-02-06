@@ -36,5 +36,7 @@ namespace GL {
 		float dot(const Vector4 &vec) const;
 		// Returns a vector of the same direction with the length 1
 		Vector4 normalized() const;
+		// Returns a normalized Vector3, dividing the coordinates by w.
+		Vector3 fromHomogeneous();
 	};
 }

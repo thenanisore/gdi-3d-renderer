@@ -18,7 +18,7 @@ namespace GL {
 		void drawAxes(Vector3 origin, Vector3 x_axis, Vector3 y_axis, Vector3 z_axis, bool grid);
 		void clearScreen();
 		void clearZBuffer();
-		void renderObject(const SceneObject &obj);
+		void renderObject(const SceneObject &obj, const Matrix4 &transformMatrix);
 
 	private:
 		Graphics ^graphics;

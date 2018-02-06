@@ -1,5 +1,4 @@
 #pragma once
-#define PI 3.141592653589793238462643383279502884L
 
 #include "Polygon.h"
 
@@ -14,35 +13,24 @@ namespace GL {
 	public:
 		SceneObject(std::vector<Polygon> _polygons);
 
-		// matrix transformations (in local coordinates):
-
-		// Moves the object by the given movement vector.
-		void translate(const Vector3 &move);
-		// Rotates the object around the X-axis by a certain angle. 
-		void rotateX(float angle);
-		// Rotates the object around the Y-axis by a certain angle. 
-		void rotateY(float angle);
-		// Rotates the object around the Z-axis by a certain angle. 
-		void rotateZ(float angle);
-		// Reflects the object across the XY plane.
-		void reflectXY();
-		// Reflects the object across the XZ plane.
-		void reflectXZ();
-		// Reflects the object across the YZ plane.
-		void reflectYZ();
-		// Scales the object by the given magnitude vector.
-		void scale(const Vector3 magnitude);
-		// Applies a custom transformation specified by a Matrix4.
-		void transform(const Matrix4 &tr);
-		// Recalculates the coordinates of each polygon by applying the transformations.
-		void applyTransform();
 		// Adds a polygon to the SceneObject's mesh.
 		void addPolygon(Polygon pol);
+
+		Vector3 getPosition();
+		Vector3 getScale();
+		Vector3 getRotation();
+		void setPosition(const Vector3 &newPosition);
+		void setScale(const Vector3 &newScale);
+		void setRotation(const Vector3 &newRotation);
 
 		std::vector<Polygon> polygons;
 
 	private:
-		inline float degreesToRadians(float degrees);
-		Matrix4 transformationMatrix;
+		// Object's coordinates (in the world space).
+		Vector3 position;
+		// Scale multiplier (in the world space).
+		Vector3 scale;
+		// Rotation angles (in the world space).
+		Vector3 rotation;
 	};
 }

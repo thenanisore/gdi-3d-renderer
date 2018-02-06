@@ -32,8 +32,10 @@ namespace GL {
 		void reflectYZ();
 		// Scales the object by the given magnitude vector.
 		void scale(const Vector3 magnitude);
-		// Applies a given Matrix4 to all the SceneObject's polygons.
+		// Applies a custom transformation specified by a Matrix4.
 		void transform(const Matrix4 &tr);
+		// Recalculates the coordinates of each polygon by applying the transformations.
+		void applyTransform();
 		// Adds a polygon to the SceneObject's mesh.
 		void addPolygon(Polygon pol);
 
@@ -41,5 +43,6 @@ namespace GL {
 
 	private:
 		inline float degreesToRadians(float degrees);
+		Matrix4 model;
 	};
 }

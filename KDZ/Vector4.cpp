@@ -65,4 +65,8 @@ namespace GL {
 		// return a zero vector if already is one
 		return (*this) / (len == 0 ? 1 : len);
 	}
+
+	Vector3 Vector4::fromHomogeneous() {
+		return Vector3(x / w, y / w, z / w);
+	}
 }

@@ -3,7 +3,8 @@
 
 namespace GL {
 
-	SceneObject::SceneObject(std::vector<Polygon> _polygons) : polygons(_polygons) { }
+	SceneObject::SceneObject(std::vector<Polygon> _polygons)
+		: polygons(_polygons), model() { }
 
 	void SceneObject::translate(const Vector3 &move) {
 		// set translation matrix
@@ -11,8 +12,8 @@ namespace GL {
 		translationMatrix.set(0, 3, move.x);
 		translationMatrix.set(1, 3, move.y);
 		translationMatrix.set(2, 3, move.z);
-		// apply
-		transform(translationMatrix);
+		// apply to the current Model matrix
+		model = translationMatrix * model;
 	}
 
 	void SceneObject::rotateX(float degrees) {
@@ -23,8 +24,8 @@ namespace GL {
 		rotationMatrix.set(1, 2, -sin(angle));
 		rotationMatrix.set(2, 1, sin(angle));
 		rotationMatrix.set(2, 2, cos(angle));
-		// apply
-		transform(rotationMatrix);
+		// apply to the current Model matrix
+		model = rotationMatrix * model;
 	}
 
 	void SceneObject::rotateY(float degrees) {
@@ -35,8 +36,8 @@ namespace GL {
 		rotationMatrix.set(0, 2, sin(angle));
 		rotationMatrix.set(2, 0, -sin(angle));
 		rotationMatrix.set(2, 2, cos(angle));
-		// apply
-		transform(rotationMatrix);
+		// apply to the current Model matrix
+		model = rotationMatrix * model;
 	}
 
 	void SceneObject::rotateZ(float degrees) {
@@ -47,8 +48,8 @@ namespace GL {
 		rotationMatrix.set(0, 1, -sin(angle));
 		rotationMatrix.set(1, 0, sin(angle));
 		rotationMatrix.set(1, 1, cos(angle));
-		// apply
-		transform(rotationMatrix);
+		// apply to the current Model matrix
+		model = rotationMatrix * model;
 	}
 
 	// Reflects the object across the XY plane.
@@ -56,8 +57,8 @@ namespace GL {
 		// set reflection matrix
 		Matrix4 reflectionMatrix;
 		reflectionMatrix.set(2, 2, -1);
-		// apply
-		transform(reflectionMatrix);
+		// apply to the current Model matrix
+		model = reflectionMatrix * model;
 	}
 
 	// Reflects the object across the XZ plane.
@@ -65,8 +66,8 @@ namespace GL {
 		// set reflection matrix
 		Matrix4 reflectionMatrix;
 		reflectionMatrix.set(1, 1, -1);
-		// apply
-		transform(reflectionMatrix);
+		// apply to the current Model matrix
+		model = reflectionMatrix * model;
 	}
 
 	// Reflects the object across the YZ plane.
@@ -74,8 +75,8 @@ namespace GL {
 		// set reflection matrix
 		Matrix4 reflectionMatrix;
 		reflectionMatrix.set(0, 0, -1);
-		// apply
-		transform(reflectionMatrix);
+		// apply to the current Model matrix
+		model = reflectionMatrix * model;
 	}
 
 	void SceneObject::scale(const Vector3 magnitude) {
@@ -84,15 +85,23 @@ namespace GL {
 		scaleMatrix.set(0, 0, magnitude.x);
 		scaleMatrix.set(1, 1, magnitude.y);
 		scaleMatrix.set(2, 2, magnitude.z);
-		// apply
-		transform(scaleMatrix);
+		// apply to the current Model matrix
+		model = scaleMatrix * model;
+	}
+
+	// Recalculates the coordinates of each polygon by applying the transformations.
+	void SceneObject::applyTransform() {
+		// recalculate polygons
+		for (int i = 0; i < polygons.size(); i++) {
+			polygons[i].transform(model);
+		}
+		// reset the model matrix
+		model = Matrix4();
 	}
 
 	// Applies a transformation to every SceneObject's polygon.
 	void SceneObject::transform(const Matrix4 &tr) {
-		for (int i = 0; i < polygons.size(); i++) {
-			polygons[i].transform(tr);
-		}
+		model = tr * model;
 	}
 
 	void SceneObject::addPolygon(Polygon pol) {

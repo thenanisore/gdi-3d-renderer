@@ -111,14 +111,31 @@ void test1() {
 	print(t);
 }
 
-int main(array<System::String ^> ^args)
-{
+void camtest() {
 	GL::Camera cam(GL::Vector3(0, 0, 3), GL::Vector3(0, 0, 0), GL::Vector3(0, 1, 0));
 	print(cam.getLookAt());
 
 	GL::Camera cam1(GL::Vector3(0, 0, 3), GL::Vector3(0, 0, 0), GL::Vector3(0, -1, 0));
 	print(cam1.getLookAt());
+}
 
+int main(array<System::String ^> ^args)
+{
+	GL::Vector3 a(1, 4, -10);
+	GL::Vector3 b = a;
+	
+	print(a);
+	print(b);
+
+	a = a * 10;
+	
+	print(a);
+	print(b);
+
+	GL::Matrix4 m(std::vector<float> { 0.718762f, 0.615033f, -0.324214f, 0.0f, -0.393732f, 0.744416f, 0.539277f, 0.0f, 0.573024f, -0.259959f, 0.777216f, 0.0f, 0.526967f, 1.254234f, -2.53215f, 1.0f });
+	GL::Vector4 pv(-0.5, 0.5, -0.5, 1);
+	print(m.transposed() * pv);
+	
 	std::getchar();
     return 0;
 }

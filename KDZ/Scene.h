@@ -18,10 +18,24 @@ namespace GL {
 		Scene();
 		void renderScene(Renderer ^renderer);
 		void addObject(SceneObject obj);
+
+		// methods to manipulate objects;
+
+		void setObjectPosition(int x_coord, int y_coord, int z_coord);
+		void setObjectRotation(float x_angle, float y_angle, float z_angle);
+		void setObjectReflection(bool xy, bool xz, bool yz);
+		void setObjectScale(int x_scale, int y_scale, int z_scale);
+
+		// methods to manipulate camera:
+
+		void setCameraPosition(int x_coord, int y_coord, int z_coord);
+		void setCameraRotation(float pitch, float yawn, float roll);
+
 		// test
 		void addCube();
 
 	private:
+		int selectedObject;
 		std::vector<SceneObject> sceneObjects;
 		Camera camera;
 	};

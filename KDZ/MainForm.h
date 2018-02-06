@@ -1,5 +1,6 @@
-
 #pragma once
+
+#include "Scene.h"
 
 namespace KDZ {
 	using namespace System;
@@ -18,17 +19,34 @@ namespace KDZ {
 		MainForm(void)
 		{
 			InitializeComponent();
+			mainScene = new GL::Scene();
 			bm = gcnew Bitmap(pictureBox->Width, pictureBox->Height);
 			pictureBox->Image = bm;
 		}
 
 	private: 
 		Bitmap^ bm;
+		// Main scene
+		GL::Scene *mainScene;
 		System::Void setScene();
-
-	private: 
+		System::Void renderScene();
 		// Events
 		System::Void MainForm_Shown(System::Object^  sender, System::EventArgs^  e);
+		System::Void objPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void objPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void objPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void objScaleXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void objScaleYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void objScaleZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void objRotXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void objRotYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void objRotZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void camPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void camPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void camPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void camRotPitchBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void camRotYawBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void camRotRollBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 
 	protected:
 		/// <summary>
@@ -36,6 +54,7 @@ namespace KDZ {
 		/// </summary>
 		~MainForm()
 		{
+			delete mainScene;
 			if (components)
 			{
 				delete components;
@@ -451,6 +470,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objPosZBar->Size = System::Drawing::Size(212, 56);
 			this->objPosZBar->TabIndex = 10;
 			this->objPosZBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objPosZBar->Scroll += gcnew System::EventHandler(this, &MainForm::objPosZBar_Scroll);
 			// 
 			// objPosZLabel
 			// 
@@ -473,6 +493,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objPosYBar->Size = System::Drawing::Size(212, 56);
 			this->objPosYBar->TabIndex = 8;
 			this->objPosYBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objPosYBar->Scroll += gcnew System::EventHandler(this, &MainForm::objPosYBar_Scroll);
 			// 
 			// objPosYLabel
 			// 
@@ -495,6 +516,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objPosXBar->Size = System::Drawing::Size(212, 56);
 			this->objPosXBar->TabIndex = 6;
 			this->objPosXBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objPosXBar->Scroll += gcnew System::EventHandler(this, &MainForm::objPosXBar_Scroll);
 			// 
 			// objPosXLabel
 			// 
@@ -536,6 +558,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objScaleZBar->Size = System::Drawing::Size(212, 56);
 			this->objScaleZBar->TabIndex = 10;
 			this->objScaleZBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objScaleZBar->Scroll += gcnew System::EventHandler(this, &MainForm::objScaleZBar_Scroll);
 			// 
 			// objScaleZLabel
 			// 
@@ -558,6 +581,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objScaleYBar->Size = System::Drawing::Size(212, 56);
 			this->objScaleYBar->TabIndex = 8;
 			this->objScaleYBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objScaleYBar->Scroll += gcnew System::EventHandler(this, &MainForm::objScaleYBar_Scroll);
 			// 
 			// objScaleYLabel
 			// 
@@ -580,6 +604,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objScaleXBar->Size = System::Drawing::Size(212, 56);
 			this->objScaleXBar->TabIndex = 6;
 			this->objScaleXBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objScaleXBar->Scroll += gcnew System::EventHandler(this, &MainForm::objScaleXBar_Scroll);
 			// 
 			// objScaleXLabel
 			// 
@@ -620,6 +645,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objRotZBar->Size = System::Drawing::Size(212, 56);
 			this->objRotZBar->TabIndex = 10;
 			this->objRotZBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objRotZBar->Scroll += gcnew System::EventHandler(this, &MainForm::objRotZBar_Scroll);
 			// 
 			// objRotZLabel
 			// 
@@ -641,6 +667,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objRotYBar->Size = System::Drawing::Size(212, 56);
 			this->objRotYBar->TabIndex = 8;
 			this->objRotYBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objRotYBar->Scroll += gcnew System::EventHandler(this, &MainForm::objRotYBar_Scroll);
 			// 
 			// objRotYLabel
 			// 
@@ -662,6 +689,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->objRotXBar->Size = System::Drawing::Size(212, 56);
 			this->objRotXBar->TabIndex = 6;
 			this->objRotXBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->objRotXBar->Scroll += gcnew System::EventHandler(this, &MainForm::objRotXBar_Scroll);
 			// 
 			// objRotXLabel
 			// 
@@ -774,6 +802,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camPosZBar->Size = System::Drawing::Size(212, 56);
 			this->camPosZBar->TabIndex = 10;
 			this->camPosZBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->camPosZBar->Scroll += gcnew System::EventHandler(this, &MainForm::camPosZBar_Scroll);
 			// 
 			// camPosZLabel
 			// 
@@ -796,6 +825,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camPosYBar->Size = System::Drawing::Size(212, 56);
 			this->camPosYBar->TabIndex = 8;
 			this->camPosYBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->camPosYBar->Scroll += gcnew System::EventHandler(this, &MainForm::camPosYBar_Scroll);
 			// 
 			// camPosYLabel
 			// 
@@ -818,6 +848,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camPosXBar->Size = System::Drawing::Size(212, 56);
 			this->camPosXBar->TabIndex = 6;
 			this->camPosXBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->camPosXBar->Scroll += gcnew System::EventHandler(this, &MainForm::camPosXBar_Scroll);
 			// 
 			// camPosXLabel
 			// 
@@ -895,6 +926,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camRotRollBar->Size = System::Drawing::Size(212, 56);
 			this->camRotRollBar->TabIndex = 10;
 			this->camRotRollBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->camRotRollBar->Scroll += gcnew System::EventHandler(this, &MainForm::camRotRollBar_Scroll);
 			// 
 			// camRollLabel
 			// 
@@ -916,6 +948,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camRotYawBar->Size = System::Drawing::Size(212, 56);
 			this->camRotYawBar->TabIndex = 8;
 			this->camRotYawBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->camRotYawBar->Scroll += gcnew System::EventHandler(this, &MainForm::camRotYawBar_Scroll);
 			// 
 			// camYawLabel
 			// 
@@ -937,6 +970,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->camRotPitchBar->Size = System::Drawing::Size(212, 56);
 			this->camRotPitchBar->TabIndex = 6;
 			this->camRotPitchBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->camRotPitchBar->Scroll += gcnew System::EventHandler(this, &MainForm::camRotPitchBar_Scroll);
 			// 
 			// camPitchLabel
 			// 
