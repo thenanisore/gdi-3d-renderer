@@ -34,5 +34,7 @@ namespace GL {
 		Matrix4 perspective(float fov, float aspect, float near, float far);
 		// Returns an orthgraphic projection matrix with the specified parameters.
 		Matrix4 orthographic(float top, float right, float near, float far);
+		// Calculate barycentric coordinates (u, v, w) for point p with respect to triangle (a, b, c).
+		Vector3 barycentric(const Vector3 &p, const Vector3 &a, const Vector3 &b, const Vector3 &c);
 	}
 }

@@ -152,5 +152,20 @@ namespace GL {
 			ortho.set(2, 3, -(far + near) / (far - near));
 			return ortho;
 		}
+
+		// Calculate barycentric coordinates (u, v, w) for point p with respect to triangle (a, b, c).
+		Vector3 barycentric(const Vector3 &p, const Vector3 &a, const Vector3 &b, const Vector3 &c) {
+			Vector3 v0 = b - a, v1 = c - a, v2 = p - a;
+			float d00 = v0.dot(v0);
+			float d01 = v0.dot(v1);
+			float d11 = v1.dot(v1);
+			float d20 = v2.dot(v0);
+			float d21 = v2.dot(v1);
+			float denom = d00 * d11 - d01 * d01;
+			float v = (d11 * d20 - d01 * d21) / denom;
+			float w = (d00 * d21 - d01 * d20) / denom;
+			float u = 1.0f - v - w;
+			return Vector3(u, v, w);
+		}
 	}
 }

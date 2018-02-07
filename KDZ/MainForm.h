@@ -47,6 +47,9 @@ namespace KDZ {
 	private: System::Windows::Forms::RadioButton^  bothRadioButton;
 	private: System::Windows::Forms::RadioButton^  solidRadioButton;
 	private: System::Windows::Forms::RadioButton^  wfRadioButton;
+	private: System::Windows::Forms::ToolStripMenuItem^  aboutToolStripMenuItem;
+	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::Button^  button1;
 
 		 // Main scene
 		GL::Scene *mainScene;
@@ -252,7 +255,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionYZCheckbox;
 private: System::Windows::Forms::CheckBox^  objReflectionXZCheckbox;
 
 private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
-private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
+
 
 
 
@@ -316,7 +319,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->testToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tableLayoutPanel = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->pictureBox = (gcnew System::Windows::Forms::PictureBox());
 			this->tabControl = (gcnew System::Windows::Forms::TabControl());
@@ -388,6 +390,9 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->bgColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->wfColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
+			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -439,7 +444,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// 
 			this->fileToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
 				this->openToolStripMenuItem,
-					this->exitToolStripMenuItem, this->testToolStripMenuItem
+					this->exitToolStripMenuItem, this->aboutToolStripMenuItem
 			});
 			this->fileToolStripMenuItem->Name = L"fileToolStripMenuItem";
 			this->fileToolStripMenuItem->Size = System::Drawing::Size(44, 24);
@@ -448,20 +453,14 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// openToolStripMenuItem
 			// 
 			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
-			this->openToolStripMenuItem->Size = System::Drawing::Size(129, 26);
+			this->openToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->openToolStripMenuItem->Text = L"Open...";
 			// 
 			// exitToolStripMenuItem
 			// 
 			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
-			this->exitToolStripMenuItem->Size = System::Drawing::Size(129, 26);
+			this->exitToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->exitToolStripMenuItem->Text = L"Exit";
-			// 
-			// testToolStripMenuItem
-			// 
-			this->testToolStripMenuItem->Name = L"testToolStripMenuItem";
-			this->testToolStripMenuItem->Size = System::Drawing::Size(129, 26);
-			this->testToolStripMenuItem->Text = L"test";
 			// 
 			// tableLayoutPanel
 			// 
@@ -965,8 +964,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// camPosZBar
 			// 
 			this->camPosZBar->Location = System::Drawing::Point(6, 159);
-			this->camPosZBar->Maximum = 100;
-			this->camPosZBar->Minimum = -100;
+			this->camPosZBar->Maximum = 30;
+			this->camPosZBar->Minimum = 3;
 			this->camPosZBar->Name = L"camPosZBar";
 			this->camPosZBar->Size = System::Drawing::Size(212, 56);
 			this->camPosZBar->TabIndex = 10;
@@ -989,8 +988,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// camPosYBar
 			// 
 			this->camPosYBar->Location = System::Drawing::Point(6, 100);
-			this->camPosYBar->Maximum = 100;
-			this->camPosYBar->Minimum = -100;
+			this->camPosYBar->Minimum = -10;
 			this->camPosYBar->Name = L"camPosYBar";
 			this->camPosYBar->Size = System::Drawing::Size(212, 56);
 			this->camPosYBar->TabIndex = 8;
@@ -1012,8 +1010,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// camPosXBar
 			// 
 			this->camPosXBar->Location = System::Drawing::Point(6, 41);
-			this->camPosXBar->Maximum = 100;
-			this->camPosXBar->Minimum = -100;
+			this->camPosXBar->Minimum = -10;
 			this->camPosXBar->Name = L"camPosXBar";
 			this->camPosXBar->Size = System::Drawing::Size(212, 56);
 			this->camPosXBar->TabIndex = 6;
@@ -1091,7 +1088,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// camRotYawBar
 			// 
 			this->camRotYawBar->Location = System::Drawing::Point(6, 100);
-			this->camRotYawBar->Maximum = 359;
+			this->camRotYawBar->Maximum = 269;
+			this->camRotYawBar->Minimum = 91;
 			this->camRotYawBar->Name = L"camRotYawBar";
 			this->camRotYawBar->Size = System::Drawing::Size(212, 56);
 			this->camRotYawBar->TabIndex = 8;
@@ -1149,6 +1147,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			// 
 			this->otherFlowLayoutPanel->Controls->Add(this->colorGroupBox);
 			this->otherFlowLayoutPanel->Controls->Add(this->drawingModeGroupBox);
+			this->otherFlowLayoutPanel->Controls->Add(this->textBox1);
+			this->otherFlowLayoutPanel->Controls->Add(this->button1);
 			this->otherFlowLayoutPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->otherFlowLayoutPanel->FlowDirection = System::Windows::Forms::FlowDirection::TopDown;
 			this->otherFlowLayoutPanel->Location = System::Drawing::Point(3, 3);
@@ -1295,6 +1295,29 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			this->toolStripStatusLabel->Size = System::Drawing::Size(74, 20);
 			this->toolStripStatusLabel->Text = L"Objects: 0";
 			// 
+			// aboutToolStripMenuItem
+			// 
+			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
+			this->aboutToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->aboutToolStripMenuItem->Text = L"About";
+			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(3, 244);
+			this->textBox1->Multiline = true;
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(247, 286);
+			this->textBox1->TabIndex = 2;
+			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(3, 536);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->TabIndex = 3;
+			this->button1->Text = L"button1";
+			this->button1->UseVisualStyleBackColor = true;
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -1353,6 +1376,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  testToolStripMenuItem;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotPitchBar))->EndInit();
 			this->otherTabPage->ResumeLayout(false);
 			this->otherFlowLayoutPanel->ResumeLayout(false);
+			this->otherFlowLayoutPanel->PerformLayout();
 			this->colorGroupBox->ResumeLayout(false);
 			this->colorGroupBox->PerformLayout();
 			this->drawingModeGroupBox->ResumeLayout(false);

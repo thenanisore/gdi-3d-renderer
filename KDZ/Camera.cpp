@@ -34,7 +34,7 @@ namespace GL {
 		position = Vector3(0.0f, 0.0f, 10.0f);
 		front = Vector3(0.0f, 0.0f, -1.0f);
 		worldUp = Vector3(0.0f, 1.0f, 0.0f);
-		rotation = Vector3();
+		rotation = Vector3(0.f, 180.f, 0.f);
 		updateVectors();
 	}
 

@@ -94,8 +94,7 @@ void printh(GL::SceneObject so, GL::Matrix4 tr) {
 	std::cout << std::endl;
 }
 
-int main(array<System::String ^> ^args)
-{
+void test3() {
 	GL::SceneObject obj(std::vector<GL::Polygon> {
 		// center
 		GL::Polygon(GL::Vector3(0, 0, 0.0), GL::Vector3(1, 0, 0.0), GL::Vector3(0, 1, 0.0)),
@@ -154,6 +153,13 @@ int main(array<System::String ^> ^args)
 	print(obj, persp.transposed() * view2 * obj.getModelMatrix());
 	print("div2 (transposed)");
 	printh(obj, persp.transposed() * view2 * obj.getModelMatrix());
+}
+
+int main(array<System::String ^> ^args) {
+	GL::Vector3 a(0, 0, 0);
+	GL::Vector3 b(1, 0, 0);
+	GL::Vector3 c(0, 1, 0);
+
 	std::getchar();
     return 0;
 }

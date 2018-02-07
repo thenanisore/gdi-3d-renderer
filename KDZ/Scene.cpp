@@ -8,13 +8,13 @@ namespace GL {
 
 	Scene::Scene() : camera() {
 		// test code
-		addCube();
+		addPolygon();
 		selectedObject = 0;
 	}
 
 	void Scene::renderScene(Renderer ^renderer) {
-		renderer->clearZBuffer();
 		renderer->clearScreen();
+		renderer->clearZBuffer();
 		
 		Matrix4 view = camera.getViewMatrix();
 		Matrix4 projection;
@@ -141,6 +141,24 @@ namespace GL {
 			Polygon(Vector3(-1, -1, -1), Vector3(1, -1, 1), Vector3(1, -1, -1))
 		});
 		sceneObjects.push_back(cube);
+		selectedObject = sceneObjects.size() - 1;
+	}
+
+	void Scene::addPolygons() {
+		SceneObject polygon(std::vector<Polygon> {
+			Polygon(Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0)),
+			Polygon(Vector3(0, 0, 2), Vector3(1, 0, 2), Vector3(0, 1, 2)),
+			Polygon(Vector3(0, 0, -2), Vector3(1, 0, -2), Vector3(0, 1, -2)),
+		});
+		sceneObjects.push_back(polygon);
+		selectedObject = sceneObjects.size() - 1;
+	}
+
+	void Scene::addPolygon() {
+		SceneObject polygon(std::vector<Polygon> {
+			Polygon(Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0)),
+		});
+		sceneObjects.push_back(polygon);
 		selectedObject = sceneObjects.size() - 1;
 	}
 }

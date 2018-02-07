@@ -46,6 +46,8 @@ namespace GL {
 
 		// test
 		void addCube();
+		void addPolygon();
+		void addPolygons();
 
 	private:
 		int selectedObject;

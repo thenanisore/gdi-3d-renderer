@@ -1,6 +1,9 @@
 #include "Renderer.h"
+#include "Matrix.h"
 
 #include <climits>
+#include <iostream>
+#include <fstream>
 
 namespace GL {
 
@@ -15,7 +18,7 @@ namespace GL {
 		selectedBrush = gcnew SolidBrush(Color::Yellow);
 		surfaceBrush = gcnew SolidBrush(Color::LightBlue);
 		// initialize z-buffer
-		zbuffer = gcnew array<int, 2>(viewportWidth, viewportHeight);
+		zbuffer = gcnew array<float, 2>(viewportWidth, viewportHeight);
 		setViewport(viewportWidth, viewportHeight);
 	}
 
@@ -47,23 +50,45 @@ namespace GL {
 	void Renderer::clearZBuffer() {
 		for (int x = 0; x < zbuffer->GetLength(0); x++) {
 			for (int y = 0; y < zbuffer->GetLength(1); y++) {
-				zbuffer->SetValue(INT_MIN, x, y);
+				zbuffer->SetValue(INFINITY, x, y);
 			}
 		}
 	}
 
+
 	void Renderer::renderObject(const SceneObject &obj, const Matrix4& transformMatrix, bool wireframe, bool solid) {
+		int i = 0;
 		for (GL::Polygon pol : obj.polygons) {
 			GL::Polygon transformed = pol.transform(transformMatrix);
 			Vector3 first = NDCtoViewport(transformed.vertices[0].fromHomogeneous());
 			Vector3 second = NDCtoViewport(transformed.vertices[1].fromHomogeneous());
 			Vector3 third = NDCtoViewport(transformed.vertices[2].fromHomogeneous());
+			if (wireframe) drawPolygon(first, second, third);
 			if (solid) {
 				// TODO: lighting
-				fillPolygon(first, second, third, surfaceBrush);
+				if (i % 2) surfaceBrush->Color = Color::Yellow;
+				else surfaceBrush->Color = Color::Blue;
+				i++;
+				fillPolygon(first, second, third, pol.normals[0], surfaceBrush);
 			}
-			if (wireframe) drawPolygon(first, second, third);
 		}
+		ztofile();
+	}
+
+	void Renderer::ztofile() {
+			std::ofstream myfile;
+			myfile.open("log.txt");
+			for (int x = viewportX / 3; x < 2 * viewportX / 3; x++) {
+				for (int y = viewportY / 3; y < 2 * viewportY / 3; y++) {
+					if (zbuffer[x, y] == INFINITY) {
+						myfile << "| |";
+					} else {
+						myfile << "|" << zbuffer[x, y] << "|";
+					}
+				}
+				myfile << std::endl;
+			}
+			myfile.close();
 	}
 
 	void Renderer::setGraphics(Graphics ^g) {
@@ -114,10 +139,13 @@ namespace GL {
 		T t = x; x = y; y = t;
 	}
 
-	// Draws a line using the Bresenham's algorithm
+	float getZ(float x, float y, const Vector3 &p, const Vector3 &normal) {
+		return p.z - (normal.x * (x - p.x) + normal.y * (y - p.y)) / normal.z;
+	}
+
+	// Draws a line using the Bresenham's algorithm with Z-testing.
 	void Renderer::drawLine(const Vector3 &from, const Vector3 &to) {
 		int x = from.x, y = from.y;
-		Vector3 current(x, y, 0);
 
 		int dx = abs(to.x - x);
 		int dy = abs(to.y - y);
@@ -132,7 +160,10 @@ namespace GL {
 
 		// start drawing
 		for (int i = 1; i <= dx; i++, e += 2 * dy) {
-			drawPoint(x, y, wfBrush);
+			// calculate z-value in pixel
+			float t = (Vector3(x, y, 0.f) - Vector3(from.x, from.y, 0.f)).len / (Vector3(to.x, to.y, 0.f) - Vector3(from.x, from.y, 0.f)).len;
+			float z = (1 - t) * from.z + t * to.z;
+			drawPoint(x, y, z, wfBrush);
 
 			// determine if need to change the direction
 			while (e >= 0) {
@@ -147,8 +178,14 @@ namespace GL {
 		}
 	}
 
-	void Renderer::drawPoint(int x, int y, SolidBrush ^br) {
-		graphics->FillRectangle(br, x, y, 2, 2);
+	void Renderer::drawPoint(int x, int y, float z, SolidBrush ^br) {
+		if (x > 0 && x < viewportX && y > 0 && y < viewportY) {
+			// z test
+			if (z < zbuffer[x, y]) {
+				zbuffer[x, y] = z;
+				graphics->FillRectangle(br, x, y, 2, 2);
+			}
+		}
 	}
 
 	void Renderer::drawPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third) {
@@ -157,8 +194,10 @@ namespace GL {
 		drawLine(third, first);
 	}
 
-	void Renderer::fillPolygon(const Vector3 &_first, const Vector3 &_second, const Vector3 &_third, SolidBrush ^br) {
-		// TODO: optimize
+	float max(float a, float b) { return a > b ? a : b; }
+	float min(float a, float b) { return a < b ? a : b; }
+
+	void Renderer::fillPolygon(const Vector3 &_first, const Vector3 &_second, const Vector3 &_third, const Vector3 &normal, SolidBrush ^br) {
 		// deformed triangles not needed to be rendered
 		if (_first.y == _second.y && _first.y == _third.y) return;
 		// copy vectors first
@@ -169,6 +208,7 @@ namespace GL {
 		if (first.y > second.y) swap(first, second);
 		if (first.y > third.y) swap(first, third);
 		if (second.y > third.y) swap(second, third);
+		Vector3 zs(first.z, second.z, third.z);
 		int totalHeight = third.y - first.y;
 		for (int i = 0; i < totalHeight; i++) {
 			bool secondHalf = i > second.y - first.y || second.y == first.y;
@@ -179,7 +219,9 @@ namespace GL {
 			Vector3 B = secondHalf ? second + (third - second) * beta : first + (second - first) * beta;
 			if (A.x > B.x) swap(A, B);
 			for (int j = A.x; j <= B.x; j++) {
-				drawPoint(j, first.y + i, br);
+				Vector3 coordinates = Util::barycentric(Vector3(j, first.y + i, 0.f), _first, _second, _third);
+				float z = coordinates.dot(zs);
+				drawPoint(j, first.y + i, z, br);
 			}
 		}
 	}

@@ -19,6 +19,7 @@ namespace GL {
 		void clearScreen();
 		void clearZBuffer();
 		void renderObject(const SceneObject &obj, const Matrix4 &transformMatrix, bool wireframe, bool solid);
+		void ztofile();
 		void setGraphics(Graphics ^g);
 
 		// color getters/setters:
@@ -38,11 +39,11 @@ namespace GL {
 		SolidBrush ^surfaceBrush;
 		int viewportX;
 		int viewportY;
-		array<int, 2> ^zbuffer;
+		array<float, 2> ^zbuffer;
 		void drawLine(const Vector3 &from, const Vector3 &to);
-		void drawPoint(int x, int y, SolidBrush ^b);
+		void drawPoint(int x, int y, float z, SolidBrush ^b);
 		void drawPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third);
-		void fillPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third, SolidBrush ^br);
+		void fillPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third, const Vector3 &normal, SolidBrush ^br);
 		Vector3 NDCtoViewport(const Vector3 &vertex);
 	};
 }
