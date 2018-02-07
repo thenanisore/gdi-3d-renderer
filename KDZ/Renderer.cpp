@@ -105,8 +105,9 @@ namespace GL {
 	}
 
 	// swaps two numbers in-place
-	inline void swap(int &x, int &y) {
-		int t = x; x = y; y = t;
+	template<typename T>
+	void swap(T &x, T &y) {
+		T t = x; x = y; y = t;
 	}
 
 	// Draws a line using the Bresenham's algorithm
@@ -152,14 +153,30 @@ namespace GL {
 		drawLine(third, first);
 	}
 
-	void Renderer::fillPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third) {
-		// TODO: fill polygon
-		array<Point> ^points = gcnew array<Point> {
-			Point(first.x, first.y),
-			Point(second.x, second.y),
-			Point(third.x, third.y)
-		};
-		graphics->FillPolygon(wfBrush, points);
+	void Renderer::fillPolygon(const Vector3 &_first, const Vector3 &_second, const Vector3 &_third) {
+		// deformed triangles not needed to be rendered
+		if (_first.y == _second.y && _first.y == _third.y) return;
+		// copy vectors first
+		Vector3 first(_first);
+		Vector3 second(_second);
+		Vector3 third(_third);
+		// sort the vertices
+		if (first.y > second.y) swap(first, second);
+		if (first.y > third.y) swap(first, third);
+		if (second.y > third.y) swap(second, third);
+		int totalHeight = third.y - first.y;
+		for (int i = 0; i < totalHeight; i++) {
+			bool secondHalf = i > second.y - first.y || second.y == first.y;
+			int segmentHeight = secondHalf ? third.y - second.y : second.y - first.y;
+			float alpha = (float)i / totalHeight;
+			float beta = (float)(i - (secondHalf ? second.y - first.y : 0)) / segmentHeight;
+			Vector3 A = first + (third - first) * alpha;
+			Vector3 B = secondHalf ? second + (third - second) * beta : first + (second - first) * beta;
+			if (A.x > B.x) swap(A, B);
+			for (int j = A.x; j <= B.x; j++) {
+				drawPoint(j, first.y + i);
+			}
+		}
 	}
 
 	// Remaps the coordinates from [-1, 1] to the [0, viewport] space. 
