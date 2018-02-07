@@ -9,6 +9,7 @@ namespace GL {
 		vertices = std::vector<Vector4>{ first, second, third };
 		// colors are initially all zero
 		colors = std::vector<Vector4> { Vector4(), Vector4(), Vector4() };
+		calculateNormals();
 	}
 
 	void Polygon::setColors(const Vector4 &first, const Vector4 &second, const Vector4 &third) {
@@ -16,8 +17,10 @@ namespace GL {
 	}
 
 	void Polygon::calculateNormals() {
-		// TODO: calculate normals
-		normals = std::vector<Vector3> { Vector3(), Vector3(), Vector3() };
+		Vector3 a = (vertices[0] - vertices[1]).fromHomogeneous();
+		Vector3 b = (vertices[0] - vertices[2]).fromHomogeneous();
+		Vector3 normal = a.cross(b);
+		normals = std::vector<Vector3> { normal, normal, normal };
 	}
 
 	Polygon Polygon::transform(const Matrix4 &mat) {

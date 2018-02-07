@@ -154,6 +154,7 @@ namespace GL {
 	}
 
 	void Renderer::fillPolygon(const Vector3 &_first, const Vector3 &_second, const Vector3 &_third) {
+		// TODO: optimize
 		// deformed triangles not needed to be rendered
 		if (_first.y == _second.y && _first.y == _third.y) return;
 		// copy vectors first
