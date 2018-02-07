@@ -8,13 +8,12 @@ namespace GL {
 	using namespace System::Drawing;
 	using namespace System::Collections::Generic;
 
-	Renderer::Renderer(Graphics ^im, int viewportWidth, int viewportHeight) : graphics(im), 
-		bgColor(Color::White), wfColor(Color::Black), selectedColor(Color::Blue)
+	Renderer::Renderer(Graphics ^im, int viewportWidth, int viewportHeight) : graphics(im)
 	{
-		wfPen = gcnew Pen(wfColor, 3);
-		selectedPen = gcnew Pen(selectedColor, 3);
-		wfBrush = gcnew SolidBrush(wfColor);
-		selectedBrush = gcnew SolidBrush(selectedColor);
+		bgColor = Color::White;
+		wfBrush = gcnew SolidBrush(Color::Black);
+		selectedBrush = gcnew SolidBrush(Color::Yellow);
+		surfaceBrush = gcnew SolidBrush(Color::LightBlue);
 		// initialize z-buffer
 		zbuffer = gcnew array<int, 2>(viewportWidth, viewportHeight);
 		setViewport(viewportWidth, viewportHeight);
@@ -29,10 +28,16 @@ namespace GL {
 		return (float)viewportX / (float)viewportY;
 	}
 
-	void Renderer::drawAxes(Vector3 origin, Vector3 x_axis, Vector3 y_axis, Vector3 z_axis, bool grid) {
-		drawLine(origin, x_axis);
-		drawLine(origin, y_axis);
-		drawLine(origin, z_axis);
+	void Renderer::drawAxes(Matrix4 transformMatrix, bool grid) {
+		// TODO: rework
+		// get correct axes' coordinates 
+		Vector3 origin = NDCtoViewport((transformMatrix * Vector4(0.0f, 0.0f, 0.0f, 1.0f)).fromHomogeneous());
+		Vector3 x = NDCtoViewport((transformMatrix * Vector4(50.0f, 0.0f, 0.0f, 1.0f)).fromHomogeneous());
+		Vector3 y = NDCtoViewport((transformMatrix * Vector4(0.0f, 50.0f, 0.0f, 1.0f)).fromHomogeneous());
+		Vector3 z = NDCtoViewport((transformMatrix * Vector4(0.0f, 0.0f, 50.0f, 1.0f)).fromHomogeneous());
+		drawLine(origin, x);
+		drawLine(origin, y);
+		drawLine(origin, z);
 	}
 
 	void Renderer::clearScreen() {
@@ -53,8 +58,11 @@ namespace GL {
 			Vector3 first = NDCtoViewport(transformed.vertices[0].fromHomogeneous());
 			Vector3 second = NDCtoViewport(transformed.vertices[1].fromHomogeneous());
 			Vector3 third = NDCtoViewport(transformed.vertices[2].fromHomogeneous());
+			if (solid) {
+				// TODO: lighting
+				fillPolygon(first, second, third, surfaceBrush);
+			}
 			if (wireframe) drawPolygon(first, second, third);
-			if (solid) fillPolygon(first, second, third);
 		}
 	}
 
@@ -67,11 +75,11 @@ namespace GL {
 	}
 
 	Color Renderer::getWFColor() {
-		return wfColor;
+		return wfBrush->Color;
 	}
 
 	Color Renderer::getSelectedColor() {
-		return selectedColor;
+		return selectedBrush->Color;
 	}
 
 	void Renderer::setBGColor(Color _col) {
@@ -79,15 +87,11 @@ namespace GL {
 	}
 
 	void Renderer::setWFColor(Color _col) {
-		wfColor = _col;
-		wfPen->Color = wfColor;
-		wfBrush = gcnew SolidBrush(wfColor);
+		wfBrush->Color = _col;
 	}
 
 	void Renderer::setSelectedColor(Color _col) {
-		selectedColor = _col;
-		selectedPen->Color = selectedColor;
-		selectedBrush = gcnew SolidBrush(selectedColor);
+		selectedBrush->Color = _col;
 	}
 
 	//int outCode(int x, int y, int X1, int X2, int Y1, int Y2) {
@@ -128,7 +132,7 @@ namespace GL {
 
 		// start drawing
 		for (int i = 1; i <= dx; i++, e += 2 * dy) {
-			drawPoint(x, y);
+			drawPoint(x, y, wfBrush);
 
 			// determine if need to change the direction
 			while (e >= 0) {
@@ -143,8 +147,8 @@ namespace GL {
 		}
 	}
 
-	void Renderer::drawPoint(int x, int y) {
-		graphics->FillRectangle(wfBrush, x, y, 1, 1);
+	void Renderer::drawPoint(int x, int y, SolidBrush ^br) {
+		graphics->FillRectangle(br, x, y, 2, 2);
 	}
 
 	void Renderer::drawPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third) {
@@ -153,7 +157,7 @@ namespace GL {
 		drawLine(third, first);
 	}
 
-	void Renderer::fillPolygon(const Vector3 &_first, const Vector3 &_second, const Vector3 &_third) {
+	void Renderer::fillPolygon(const Vector3 &_first, const Vector3 &_second, const Vector3 &_third, SolidBrush ^br) {
 		// TODO: optimize
 		// deformed triangles not needed to be rendered
 		if (_first.y == _second.y && _first.y == _third.y) return;
@@ -175,7 +179,7 @@ namespace GL {
 			Vector3 B = secondHalf ? second + (third - second) * beta : first + (second - first) * beta;
 			if (A.x > B.x) swap(A, B);
 			for (int j = A.x; j <= B.x; j++) {
-				drawPoint(j, first.y + i);
+				drawPoint(j, first.y + i, br);
 			}
 		}
 	}

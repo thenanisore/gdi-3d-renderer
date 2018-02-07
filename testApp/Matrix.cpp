@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Matrix.h"
 #include "Matrix3.h"
 #include "Matrix4.h"
@@ -138,7 +139,6 @@ namespace GL {
 			return proj;
 		}
 
-		// TODO: height, get width via viewport
 		// Returns an orthgraphic projection matrix with the specified parameters.
 		Matrix4 orthographic(float top, float right, float near, float far) {
 			float left = -right;

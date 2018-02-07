@@ -21,31 +21,31 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\KDZ\Vector4.h">
+    <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\KDZ\Vector3.h">
+    <ClInclude Include="Matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\KDZ\SceneObject.h">
+    <ClInclude Include="Matrix3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\KDZ\Scene.h">
+    <ClInclude Include="Matrix4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\KDZ\Polygon.h">
+    <ClInclude Include="Polygon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\KDZ\Matrix4.h">
+    <ClInclude Include="Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\KDZ\Matrix3.h">
+    <ClInclude Include="SceneObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\KDZ\Matrix.h">
+    <ClInclude Include="Vector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\KDZ\Camera.h">
+    <ClInclude Include="Vector4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -64,31 +64,31 @@
     <ClCompile Include="testApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\KDZ\Vector4.cpp">
+    <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\KDZ\Camera.cpp">
+    <ClCompile Include="Matrix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\KDZ\Matrix.cpp">
+    <ClCompile Include="Matrix3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\KDZ\Matrix3.cpp">
+    <ClCompile Include="Matrix4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\KDZ\Matrix4.cpp">
+    <ClCompile Include="Polygon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\KDZ\Polygon.cpp">
+    <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\KDZ\Scene.cpp">
+    <ClCompile Include="SceneObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\KDZ\SceneObject.cpp">
+    <ClCompile Include="Vector3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\KDZ\Vector3.cpp">
+    <ClCompile Include="Vector4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

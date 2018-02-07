@@ -15,7 +15,7 @@ namespace GL {
 		Renderer(Graphics ^im, int viewportWidth, int viewportHeight);
 		void setViewport(int width, int height);
 		float getViewportAspect();
-		void drawAxes(Vector3 origin, Vector3 x_axis, Vector3 y_axis, Vector3 z_axis, bool grid);
+		void drawAxes(Matrix4 transformMatrix, bool grid);
 		void clearScreen();
 		void clearZBuffer();
 		void renderObject(const SceneObject &obj, const Matrix4 &transformMatrix, bool wireframe, bool solid);
@@ -33,19 +33,16 @@ namespace GL {
 	private:
 		Graphics ^graphics;
 		Color bgColor;
-		Color wfColor;
-		Color selectedColor;
-		Pen ^wfPen;
-		Pen ^selectedPen;
-		Brush ^wfBrush;
-		Brush ^selectedBrush;
+		SolidBrush ^wfBrush;
+		SolidBrush ^selectedBrush;
+		SolidBrush ^surfaceBrush;
 		int viewportX;
 		int viewportY;
 		array<int, 2> ^zbuffer;
 		void drawLine(const Vector3 &from, const Vector3 &to);
-		void drawPoint(int x, int y);
+		void drawPoint(int x, int y, SolidBrush ^b);
 		void drawPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third);
-		void fillPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third);
+		void fillPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third, SolidBrush ^br);
 		Vector3 NDCtoViewport(const Vector3 &vertex);
 	};
 }

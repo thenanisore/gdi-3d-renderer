@@ -137,32 +137,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\KDZ\Camera.h" />
-    <ClInclude Include="..\KDZ\Matrix.h" />
-    <ClInclude Include="..\KDZ\Matrix3.h" />
-    <ClInclude Include="..\KDZ\Matrix4.h" />
-    <ClInclude Include="..\KDZ\Polygon.h" />
-    <ClInclude Include="..\KDZ\Scene.h" />
-    <ClInclude Include="..\KDZ\SceneObject.h" />
-    <ClInclude Include="..\KDZ\Vector3.h" />
-    <ClInclude Include="..\KDZ\Vector4.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Matrix3.h" />
+    <ClInclude Include="Matrix4.h" />
+    <ClInclude Include="Polygon.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneObject.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\KDZ\Camera.cpp" />
-    <ClCompile Include="..\KDZ\Matrix.cpp" />
-    <ClCompile Include="..\KDZ\Matrix3.cpp" />
-    <ClCompile Include="..\KDZ\Matrix4.cpp" />
-    <ClCompile Include="..\KDZ\Polygon.cpp" />
-    <ClCompile Include="..\KDZ\Scene.cpp" />
-    <ClCompile Include="..\KDZ\SceneObject.cpp" />
-    <ClCompile Include="..\KDZ\Vector3.cpp" />
-    <ClCompile Include="..\KDZ\Vector4.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="Matrix3.cpp" />
+    <ClCompile Include="Matrix4.cpp" />
+    <ClCompile Include="Polygon.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -170,6 +168,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="testApp.cpp" />
+    <ClCompile Include="Vector3.cpp" />
+    <ClCompile Include="Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />

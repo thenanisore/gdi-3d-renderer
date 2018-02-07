@@ -1,4 +1,5 @@
 #include "Stdafx.h"
+#include "Matrix.h"
 #include "Matrix3.h"
 #include "Matrix4.h"
 #include "Vector3.h"
@@ -8,6 +9,7 @@
 #include "SceneObject.h"
 
 #include <iostream>
+#include <vector>
 
 using namespace System;
 
@@ -50,6 +52,20 @@ void print(const GL::Polygon &p) {
 	}
 }
 
+void print(const GL::Polygon &p, GL::Matrix4 tr) {
+	std::cout << "Poly:" << std::endl;
+	for (const GL::Vector4 &vert : p.vertices) {
+		print(tr * vert);
+	}
+}
+
+void printh(const GL::Polygon &p, GL::Matrix4 tr) {
+	std::cout << "Norm Poly:" << std::endl;
+	for (const GL::Vector4 &vert : p.vertices) {
+		print((tr * vert).fromHomogeneous());
+	}
+}
+
 void print(char* str) {
 	std::cout << str << std::endl;
 }
@@ -62,80 +78,82 @@ void print(GL::SceneObject so) {
 	std::cout << std::endl;
 }
 
-void test1() {
-	GL::Matrix4 trans(std::vector<float> { 1, 0, 0, 1, 0, 1, 0, 2, 0, 0, 1, 3, 0, 0, 0, 1 });
-	GL::Matrix4 scale(std::vector<float> { 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1 });
-	GL::Vector4 v1;
-	GL::Vector4 v2(5, -3, 1, 1);
-
-	print(trans);
-	print(scale);
-	print(v1);
-	print(v2);
-
-	print("\nmult:");
-	print(trans * scale);
-	print("v1:");
-	print(trans * v1);
-	print(scale * v1);
-	print("v2:");
-	print(trans * v2);
-	print(scale * v2);
-
-	GL::Polygon p1(std::vector<GL::Vector3> {
-		GL::Vector3(-1, 0, 1),
-		GL::Vector3(0, 0, -1),
-		GL::Vector3(1, 0, 1)
-	});
-	GL::Polygon p2(std::vector<GL::Vector3> {
-		GL::Vector3(0, 0, -1),
-		GL::Vector3(-1, 0, 1),
-		GL::Vector3(2, 1.25, 1)
-	});
-
-	// scene object
-	GL::SceneObject t(std::vector<GL::Polygon> { p1, p2 });
-	
-	print(t);
-
-	t.scale(GL::Vector3(3, -1, 1));
-
-	print(t);
-
-	t.reflectXY();
-
-	print(t);
-
-	t.translate(GL::Vector3(10, 10, -10));
-
-	print(t);
+void print(GL::SceneObject so, GL::Matrix4 tr) {
+	std::cout << "--- SceneObject ---" << std::endl;
+	for (const GL::Polygon &pol : so.polygons) {
+		print(pol, tr);
+	}
+	std::cout << std::endl;
 }
 
-void camtest() {
-	GL::Camera cam(GL::Vector3(0, 0, 3), GL::Vector3(0, 0, 0), GL::Vector3(0, 1, 0));
-	print(cam.getLookAt());
-
-	GL::Camera cam1(GL::Vector3(0, 0, 3), GL::Vector3(0, 0, 0), GL::Vector3(0, -1, 0));
-	print(cam1.getLookAt());
+void printh(GL::SceneObject so, GL::Matrix4 tr) {
+	std::cout << "--- SceneObject ---" << std::endl;
+	for (const GL::Polygon &pol : so.polygons) {
+		printh(pol, tr);
+	}
+	std::cout << std::endl;
 }
 
 int main(array<System::String ^> ^args)
 {
-	GL::Vector3 a(1, 4, -10);
-	GL::Vector3 b = a;
-	
-	print(a);
-	print(b);
+	GL::SceneObject obj(std::vector<GL::Polygon> {
+		// center
+		GL::Polygon(GL::Vector3(0, 0, 0.0), GL::Vector3(1, 0, 0.0), GL::Vector3(0, 1, 0.0)),
+			// far
+			GL::Polygon(GL::Vector3(0, 0, 0.2), GL::Vector3(1, 0, 0.3), GL::Vector3(0, 1, 0.3)),
+			GL::Polygon(GL::Vector3(0, 0, 50), GL::Vector3(1, 0, 50), GL::Vector3(0, 1, 50)),
+			GL::Polygon(GL::Vector3(0, 0, 100), GL::Vector3(1, 0, 100), GL::Vector3(0, 1, 100)),
+			GL::Polygon(GL::Vector3(0, 0, 150), GL::Vector3(1, 0, 150), GL::Vector3(0, 1, 150)),
+			// near (shouldn't be rendered)
+			GL::Polygon(GL::Vector3(0, 0, -0.1), GL::Vector3(1, 0, -0.1), GL::Vector3(0, 1, -0.1)),
+			GL::Polygon(GL::Vector3(0, 0, -0.2), GL::Vector3(1, 0, -0.2), GL::Vector3(0, 1, -0.2)),
+			GL::Polygon(GL::Vector3(0, 0, -1), GL::Vector3(1, 0, -1), GL::Vector3(0, 1, -1)),
+			GL::Polygon(GL::Vector3(0, 0, -2), GL::Vector3(1, 0, -2), GL::Vector3(0, 1, -2)),
+			GL::Polygon(GL::Vector3(0, 0, -3), GL::Vector3(1, 0, -3), GL::Vector3(0, 1, -3)),
+			GL::Polygon(GL::Vector3(0, 0, -50), GL::Vector3(1, 0, -50), GL::Vector3(0, 1, -50)),
+		GL::Polygon(GL::Vector3(0, 0, -100), GL::Vector3(1, 0, -100), GL::Vector3(0, 1, -100))
+	});
+	print(obj);
+	GL::Camera cam(GL::Vector3(0.0, 0.0, 0.0), GL::Vector3(0, 1, 0));
+	GL::Matrix4 view = cam.getViewMatrix();
+	GL::Camera cam2(GL::Vector3(0.0, 0.0, 10.0), GL::Vector3(0, 1, 0));
+	GL::Matrix4 view2 = cam2.getViewMatrix();
 
-	a = a * 10;
-	
-	print(a);
-	print(b);
+	print("model");
+	print(obj.getModelMatrix());
+	print("view");
+	print(view);
+	print("view2");
+	print(view2);
+	GL::Matrix4 persp = GL::Util::perspective(45.0f, 800.0f/600.0f, 0.1f, 100.0f);
+	//persp.set(2, 3, -0.2);
+	//persp.set(3, 2, -1);
+	//persp.set(2, 2, -1);
+	GL::Matrix4 ortho = GL::Util::orthographic(5, 5, 0.1, 100);
+	print("persp");
+	print(persp);
+	print("ortho");
+	print(ortho);
 
-	GL::Matrix4 m(std::vector<float> { 0.718762f, 0.615033f, -0.324214f, 0.0f, -0.393732f, 0.744416f, 0.539277f, 0.0f, 0.573024f, -0.259959f, 0.777216f, 0.0f, 0.526967f, 1.254234f, -2.53215f, 1.0f });
-	GL::Vector4 pv(-0.5, 0.5, -0.5, 1);
-	print(m.transposed() * pv);
-	
+	print("all");
+	print(view * obj.getModelMatrix());
+	print(persp * view * obj.getModelMatrix());
+	print("all2");
+	print(view * obj.getModelMatrix());
+	print(persp * view2 * obj.getModelMatrix());
+
+	print("\nafter all transf");
+	print(obj, persp * view * obj.getModelMatrix());
+	print("div");
+	printh(obj, persp * view * obj.getModelMatrix());
+	print("\nafter all transf2");
+	print(obj, persp * view2 * obj.getModelMatrix());
+	print("div2");
+	printh(obj, persp * view2 * obj.getModelMatrix());
+	print("\nafter all transf2 (transposed)");
+	print(obj, persp.transposed() * view2 * obj.getModelMatrix());
+	print("div2 (transposed)");
+	printh(obj, persp.transposed() * view2 * obj.getModelMatrix());
 	std::getchar();
     return 0;
 }

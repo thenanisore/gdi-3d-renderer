@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Matrix.h"
 #include "Camera.h"
 
@@ -17,10 +18,6 @@ namespace GL {
 	// Sets the camera's position.
 	void Camera::setPosition(const Vector3 &newPosition) {
 		position = newPosition;
-	}
-
-	Vector3 Camera::getPosition() {
-		return position;
 	}
 
 	// Sets the camera's rotation.

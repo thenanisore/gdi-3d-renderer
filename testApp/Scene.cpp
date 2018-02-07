@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Scene.h"
 #include "Matrix.h"
 
@@ -12,37 +13,37 @@ namespace GL {
 		selectedObject = 0;
 	}
 
-	void Scene::renderScene(Renderer ^renderer) {
-		renderer->clearZBuffer();
-		renderer->clearScreen();
-		
-		Matrix4 view = camera.getViewMatrix();
-		Matrix4 projection;
-		if (isPerspective) {
-			// TODO: regulate FoV
-			projection = Util::perspective(90.0f, renderer->getViewportAspect(), 0.1f, 100.0f);
-		}
-		else {
-			// TODO: set parameters
-			projection = Util::orthographic(5, 5, 0.1, 100);
-		}
+	//void Scene::renderScene(Renderer ^renderer) {
+	//	renderer->clearZBuffer();
+	//	renderer->clearScreen();
+	//	
+	//	Matrix4 view = camera.getViewMatrix();
+	//	Matrix4 projection;
+	//	if (isPerspective) {
+	//		// TODO: regulate FoV
+	//		projection = Util::perspective(45.0f, renderer->getViewportAspect(), 0.1f, 100.0f);
+	//	}
+	//	else {
+	//		// TODO: set parameters
+	//		projection = Util::orthographic(-10, 10, -10, 10, 0.1, 100);
+	//	}
 
-		//renderer->drawAxes(projection * view, false);
+	//	//renderer->drawAxes(projection * view, false);
 
-		if (!isEmpty()) {
-			// get transformation matrices
-			Matrix4 model = sceneObjects[selectedObject].getModelMatrix();
-			// TODO: render each object
-			// pass the current object and a transformation matrix in a renderer
-			renderer->renderObject(sceneObjects[selectedObject], projection * view * model, drawWireframe, drawSolid);
-		}
-	}
+	//	if (!isEmpty()) {
+	//		// get transformation matrices
+	//		Matrix4 model = sceneObjects[selectedObject].getModelMatrix();
+	//		// TODO: render each object
+	//		// pass the current object and a transformation matrix in a renderer
+	//		renderer->renderObject(sceneObjects[selectedObject], projection * view * model, drawWireframe, drawSolid);
+	//	}
+	//}
 
-	void Scene::addObject(SceneObject obj) {
-		sceneObjects.push_back(obj);
-		// select the added object
-		selectedObject = sceneObjects.size() - 1;
-	}
+	//void Scene::addObject(SceneObject obj) {
+	//	sceneObjects.push_back(obj);
+	//	// select the added object
+	//	selectedObject = sceneObjects.size() - 1;
+	//}
 
 	// methods to manipulate objects:
 
@@ -98,7 +99,7 @@ namespace GL {
 
 	const float camerRotationMultiplier = 1.0f;
 	void Scene::setCameraRotation(float pitch, float yawn, float roll) {
-		camera.setRotation(Vector3(pitch, -yawn, roll) * camerRotationMultiplier);
+		camera.setRotation(Vector3(pitch, yawn, roll) * camerRotationMultiplier);
 	}
 
 	void Scene::resetCamera() {
