@@ -156,6 +156,10 @@ namespace GL {
 		return selectedObject == sceneObjects.size() - 1 && !isEmpty();
 	}
 
+	unsigned int Scene::objectCount() {
+		return sceneObjects.size();
+	}
+
 	bool Scene::fromFile(String ^ file) {
 		String^ delimStr = "\r\n";
 		array<Char>^ delimiter = delimStr->ToCharArray();

@@ -25,6 +25,7 @@ System::Void MainForm::renderScene() {
 	try {
 		renderer->setGraphics(gr);
 		mainScene->renderScene(renderer);
+		updateStatusBar();
 	}
 	finally {
 		delete gr;
@@ -69,6 +70,10 @@ System::Void MainForm::checkButtons() {
 		objReflectionXZCheckbox->Enabled = true;
 		objReflectionYZCheckbox->Enabled = true;
 	}
+}
+
+System::Void MainForm::updateStatusBar() {
+	objCountLabel->Text = "Objects: " + mainScene->objectCount();
 }
 
 System::Void MainForm::openToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {

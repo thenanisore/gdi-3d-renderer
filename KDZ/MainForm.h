@@ -57,6 +57,7 @@ namespace KDZ {
 		System::Void setScene();
 		System::Void renderScene();
 		System::Void checkButtons();
+		System::Void updateStatusBar();
 		// menu strip
 		System::Void openToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
@@ -158,7 +159,8 @@ namespace KDZ {
 
 
 	private: System::Windows::Forms::StatusStrip^  statusStrip;
-	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel;
+private: System::Windows::Forms::ToolStripStatusLabel^  objCountLabel;
+
 	private: System::Windows::Forms::ToolStripMenuItem^  openToolStripMenuItem;
 private: System::Windows::Forms::TabControl^  tabControl;
 
@@ -327,8 +329,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tableLayoutPanel = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->pictureBox = (gcnew System::Windows::Forms::PictureBox());
 			this->tabControl = (gcnew System::Windows::Forms::TabControl());
@@ -396,7 +398,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->solidRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->wfRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->statusStrip = (gcnew System::Windows::Forms::StatusStrip());
-			this->toolStripStatusLabel = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+			this->objCountLabel = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->bgColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->wfColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
@@ -461,22 +463,22 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// openToolStripMenuItem
 			// 
 			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
-			this->openToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->openToolStripMenuItem->Size = System::Drawing::Size(129, 26);
 			this->openToolStripMenuItem->Text = L"Open...";
 			this->openToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::openToolStripMenuItem_Click);
-			// 
-			// exitToolStripMenuItem
-			// 
-			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
-			this->exitToolStripMenuItem->Size = System::Drawing::Size(181, 26);
-			this->exitToolStripMenuItem->Text = L"Exit";
-			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::exitToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
 			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
-			this->aboutToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->aboutToolStripMenuItem->Size = System::Drawing::Size(129, 26);
 			this->aboutToolStripMenuItem->Text = L"About";
+			// 
+			// exitToolStripMenuItem
+			// 
+			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
+			this->exitToolStripMenuItem->Size = System::Drawing::Size(129, 26);
+			this->exitToolStripMenuItem->Text = L"Exit";
+			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::exitToolStripMenuItem_Click);
 			// 
 			// tableLayoutPanel
 			// 
@@ -1295,7 +1297,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// statusStrip
 			// 
 			this->statusStrip->ImageScalingSize = System::Drawing::Size(20, 20);
-			this->statusStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->toolStripStatusLabel });
+			this->statusStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->objCountLabel });
 			this->statusStrip->Location = System::Drawing::Point(0, 671);
 			this->statusStrip->Name = L"statusStrip";
 			this->statusStrip->RightToLeft = System::Windows::Forms::RightToLeft::Yes;
@@ -1303,11 +1305,11 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->statusStrip->TabIndex = 3;
 			this->statusStrip->Text = L"statusStrip1";
 			// 
-			// toolStripStatusLabel
+			// objCountLabel
 			// 
-			this->toolStripStatusLabel->Name = L"toolStripStatusLabel";
-			this->toolStripStatusLabel->Size = System::Drawing::Size(74, 20);
-			this->toolStripStatusLabel->Text = L"Objects: 0";
+			this->objCountLabel->Name = L"objCountLabel";
+			this->objCountLabel->Size = System::Drawing::Size(74, 20);
+			this->objCountLabel->Text = L"Objects: 0";
 			// 
 			// openFileDialog
 			// 
