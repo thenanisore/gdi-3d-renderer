@@ -31,6 +31,7 @@ namespace GL {
 		void setWFColor(Color _col);
 		void setSelectedColor(Color _col);
 		bool isSelectedObject;
+		void setProjection(bool _perspective);
 
 	private:
 		Graphics ^graphics;
@@ -38,6 +39,7 @@ namespace GL {
 		SolidBrush ^wfBrush;
 		SolidBrush ^selectedBrush;
 		SolidBrush ^surfaceBrush;
+		bool perspective;
 		int viewportX;
 		int viewportY;
 		array<float, 2> ^zbuffer;

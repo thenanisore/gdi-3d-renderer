@@ -1,3 +1,4 @@
+#include "Util.h"
 #include "Vector3.h"
 
 namespace GL {
@@ -25,6 +26,10 @@ namespace GL {
 
 	bool Vector3::operator==(const Vector3 &vec) const {
 		return x == vec.x && y == vec.y && z == vec.z;
+	}
+
+	bool Vector3::equalEpsilon(const Vector3 &vec, float eps) const {
+		return Util::compareFloat(x, vec.x, eps) && Util::compareFloat(y, vec.y, eps) && Util::compareFloat(z, vec.z, eps);
 	}
 
 	bool Vector3::operator!=(const Vector3 &vec) const {

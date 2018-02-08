@@ -145,12 +145,12 @@ namespace GL {
 			float left = -right;
 			float bottom = -top;
 			Matrix4 ortho;
-			ortho.set(0, 0, 2.0f / (right - left));
-			ortho.set(1, 1, 2.0f / (top - bottom));
-			ortho.set(2, 2, -2.0f / (far - near));
+			ortho.set(0, 0, 2.f / (right - left));
+			ortho.set(1, 1, 2.f / (top - bottom));
+			ortho.set(2, 2, 1.f / (near - far));
 			ortho.set(0, 3, -(right + left) / (right - left));
 			ortho.set(1, 3, -(top + bottom) / (top - bottom));
-			ortho.set(2, 3, -(far + near) / (far - near));
+			ortho.set(2, 3, -near / (near - far));
 			return ortho;
 		}
 
@@ -200,6 +200,10 @@ namespace GL {
 				throw std::invalid_argument("Invalid string format (must be 3 numbers).");
 			}
 			return Vector3(nums);
+		}
+
+		bool compareFloat(float a, float b, float eps) {
+			return abs(a - b) < eps;
 		}
 	}
 }

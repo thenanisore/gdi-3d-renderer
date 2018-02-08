@@ -53,6 +53,7 @@ namespace GL {
 		bool isSelectedFirst();
 		bool isSelectedLast();
 		unsigned int objectCount();
+		unsigned int getSelected();
 		bool fromFile(String ^file);
 
 		// test

@@ -28,10 +28,12 @@ namespace GL {
 		Matrix4 projection;
 		if (isPerspective) {
 			// TODO: regulate FoV
-			projection = Util::perspective(90.0f, renderer->getViewportAspect(), 0.1f, 100.0f);
+			projection = Util::perspective(60.f, renderer->getViewportAspect(), 0.1f, 100.f);
+			renderer->setProjection(true);
 		}
 		else {
-			projection = Util::orthographic(5, 5, 0.1, 100);
+			projection = Util::orthographic(5, 5, 0.1f, 100.f);
+			renderer->setProjection(false);
 		}
 
 		//renderer->drawAxes(projection * view, false);
@@ -158,6 +160,10 @@ namespace GL {
 
 	unsigned int Scene::objectCount() {
 		return sceneObjects.size();
+	}
+
+	unsigned int Scene::getSelected() {
+		return selectedObject;
 	}
 
 	bool Scene::fromFile(String ^ file) {

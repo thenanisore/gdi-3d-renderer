@@ -132,6 +132,10 @@ namespace GL {
 		selectedBrush->Color = _col;
 	}
 
+	void Renderer::setProjection(bool _perspective) {
+		perspective = _perspective;
+	}
+
 	//int outCode(int x, int y, int X1, int X2, int Y1, int Y2) {
 	//	int code = 0;
 	//	if (x < X1) code |= 0x01;
@@ -243,7 +247,10 @@ namespace GL {
 			swap(secondColor, thirdColor);
 		}
 
+		// discard very narrow triangles
 		Vector3 zs(first.z, second.z, third.z);
+		first.z = second.z = third.z = 0.f;
+		if (first.equalEpsilon(second, 0.5f) || second.equalEpsilon(third, 0.5f) || third.equalEpsilon(first, 0.5f)) return;
 		int totalHeight = third.y - first.y;
 
 		for (int i = 0; i < totalHeight; i++) {

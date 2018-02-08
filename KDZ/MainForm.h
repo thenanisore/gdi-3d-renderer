@@ -1190,7 +1190,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			// selectedColorButton
 			// 
-			this->selectedColorButton->BackColor = System::Drawing::Color::Blue;
+			this->selectedColorButton->BackColor = System::Drawing::Color::Yellow;
 			this->selectedColorButton->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->selectedColorButton->Location = System::Drawing::Point(97, 78);
 			this->selectedColorButton->Name = L"selectedColorButton";

@@ -42,5 +42,7 @@ namespace GL {
 		Vector3 normal(const Vector3 &a, const Vector3 &b, const Vector3 &c);
 		// Parses a string containing of three floating-point numbers and returns a resulting Vector3.
 		Vector3 parseVec3(System::String^ str);
+		// Returns true is the difference between a and b is less than epsilon.
+		bool compareFloat(float a, float b, float eps);
 	}
 }
