@@ -219,7 +219,7 @@ namespace GL {
 			Vector3 B = secondHalf ? second + (third - second) * beta : first + (second - first) * beta;
 			if (A.x > B.x) swap(A, B);
 			for (int j = A.x; j <= B.x; j++) {
-				Vector3 coordinates = Util::barycentric(Vector3(j, first.y + i, 0.f), _first, _second, _third);
+				Vector3 coordinates = Util::barycentric2d(Vector3(j, first.y + i, 0.f), _first, _second, _third);
 				float z = coordinates.dot(zs);
 				drawPoint(j, first.y + i, z, br);
 			}

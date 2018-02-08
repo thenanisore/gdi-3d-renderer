@@ -155,8 +155,11 @@ namespace GL {
 		}
 
 		// Calculate barycentric coordinates (u, v, w) for point p with respect to triangle (a, b, c).
-		Vector3 barycentric(const Vector3 &p, const Vector3 &a, const Vector3 &b, const Vector3 &c) {
+		Vector3 barycentric2d(const Vector3 &p, const Vector3 &a, const Vector3 &b, const Vector3 &c) {
 			Vector3 v0 = b - a, v1 = c - a, v2 = p - a;
+			// disregard z-coordinates
+			v0.z = 0.f; v1.z = 0.f; v2.z = 0.f;
+			// Cramer's method
 			float d00 = v0.dot(v0);
 			float d01 = v0.dot(v1);
 			float d11 = v1.dot(v1);
@@ -167,6 +170,12 @@ namespace GL {
 			float w = (d00 * d21 - d01 * d20) / denom;
 			float u = 1.0f - v - w;
 			return Vector3(u, v, w);
+		}
+
+		// Returns true if a point p in located inside a triangle (a, b, c) in 2d space.
+		bool isInTriangle(const Vector3 &p, const Vector3 &a, const Vector3 &b, const Vector3 &c) {
+			Vector3 barycentrics = barycentric2d(p, a, b, c);
+			return barycentrics.x >= 0 && barycentrics.y >= 0 && barycentrics.z >= 0;
 		}
 
 		// Calculates a normal vector to a given triangle.

@@ -9,8 +9,8 @@ namespace GL {
 	Scene::Scene() : camera() {
 		// test code
 		//addPolygon();
-		//addCube();
-		addPolygons();
+		addCube();
+		//addPolygons();
 		selectedObject = 0;
 	}
 

@@ -35,7 +35,9 @@ namespace GL {
 		// Returns an orthgraphic projection matrix with the specified parameters.
 		Matrix4 orthographic(float top, float right, float near, float far);
 		// Calculate barycentric coordinates (u, v, w) for point p with respect to triangle (a, b, c).
-		Vector3 barycentric(const Vector3 &p, const Vector3 &a, const Vector3 &b, const Vector3 &c);
+		Vector3 barycentric2d(const Vector3 &p, const Vector3 &a, const Vector3 &b, const Vector3 &c);
+		// Returns true if a point p in located inside a triangle (a, b, c) in 2d space.
+		bool isInTriangle(const Vector3 &p, const Vector3 &a, const Vector3 &b, const Vector3 &c);
 		// Calculates a normal vector to a given triangle.
 		Vector3 normal(const Vector3 &a, const Vector3 &b, const Vector3 &c);
 	}

@@ -157,8 +157,14 @@ void test3() {
 
 int main(array<System::String ^> ^args) {
 	GL::Vector3 a(0, 0, 0);
-	GL::Vector3 b(1, 0, 0);
-	GL::Vector3 c(0, 1, 0);
+	GL::Vector3 b(2, 0, 0);
+	GL::Vector3 c(0, 2, 1);
+
+	print(GL::Util::normal(a, b, c));
+	print(GL::Util::barycentric2d(GL::Vector3(3, 0.5, 2), a, b, c));
+	std::cout << GL::Util::isInTriangle(GL::Vector3(0, 0, 2), a, b, c) << std::endl;
+	std::cout << GL::Util::isInTriangle(GL::Vector3(0, 1, 0), a, b, c) << std::endl;
+	std::cout << GL::Util::isInTriangle(GL::Vector3(3, 0.5, 2), a, b, c) << std::endl;
 
 	std::getchar();
     return 0;
