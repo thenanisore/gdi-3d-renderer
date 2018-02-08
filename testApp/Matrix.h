@@ -11,7 +11,7 @@ namespace GL {
 		const long double PI = 3.141592653589793238462643383279502884L;
 
 		// Converts degrees to radians.
-		float degreesToRadians(float degrees);
+		float degToRad(float degrees);
 		// Moves the object by the given movement vector.
 		Matrix4 translate(const Matrix4& mat, const Vector3 &move);
 		// Rotates the object around the X-axis.

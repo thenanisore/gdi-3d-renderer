@@ -50,7 +50,7 @@ namespace GL {
 	void Renderer::clearZBuffer() {
 		for (int x = 0; x < zbuffer->GetLength(0); x++) {
 			for (int y = 0; y < zbuffer->GetLength(1); y++) {
-				zbuffer->SetValue(INFINITY, x, y);
+				zbuffer->SetValue(-INFINITY, x, y);
 			}
 		}
 	}
@@ -59,7 +59,7 @@ namespace GL {
 	void Renderer::renderObject(const SceneObject &obj, const Matrix4& transformMatrix, bool wireframe, bool solid) {
 		int i = 0;
 		for (GL::Polygon pol : obj.polygons) {
-			GL::Polygon transformed = pol.transform(transformMatrix);
+			GL::Polygon transformed = pol.getTransformed(transformMatrix);
 			Vector3 first = NDCtoViewport(transformed.vertices[0].fromHomogeneous());
 			Vector3 second = NDCtoViewport(transformed.vertices[1].fromHomogeneous());
 			Vector3 third = NDCtoViewport(transformed.vertices[2].fromHomogeneous());
@@ -181,8 +181,8 @@ namespace GL {
 	void Renderer::drawPoint(int x, int y, float z, SolidBrush ^br) {
 		if (x > 0 && x < viewportX && y > 0 && y < viewportY) {
 			// z test
-			if (z < zbuffer[x, y]) {
-				zbuffer[x, y] = z;
+			if (1.f / z > zbuffer[x, y]) {
+				zbuffer[x, y] = 1.f / z;
 				graphics->FillRectangle(br, x, y, 2, 2);
 			}
 		}

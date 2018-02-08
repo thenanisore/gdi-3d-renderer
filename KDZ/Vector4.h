@@ -18,6 +18,8 @@ namespace GL {
 		Vector4::Vector4(const std::vector<float> &vec);
 		// Initializes a vector with the values of the given Vector3 with a w-coordinate.
 		Vector4(const Vector3 &vec, float _w);
+		// Initializes a vector with the values of the given Vector3 with w = 1.
+		Vector4(const Vector3 &vec);
 		// Copy constructor
 		Vector4(const Vector4 &vec);
 
@@ -37,6 +39,7 @@ namespace GL {
 		// Returns a vector of the same direction with the length 1
 		Vector4 normalized() const;
 		// Returns a normalized Vector3, dividing the coordinates by w.
-		Vector3 fromHomogeneous();
+		Vector3 fromHomogeneous() const;
+		Vector3 toVec3() const;
 	};
 }

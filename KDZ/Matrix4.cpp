@@ -91,4 +91,12 @@ namespace GL {
 		}
 		return Matrix4(newValues);
 	}
+
+	Matrix3 Matrix4::toMat3() const {
+		return Matrix3(std::vector<float> {
+			get(0, 0), get(0,1), get(0,2),
+			get(1, 0), get(1, 1), get(1, 2),
+			get(2, 0), get(2, 1), get(2, 2)
+		});
+	}
 }

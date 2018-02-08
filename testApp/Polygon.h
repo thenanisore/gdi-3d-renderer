@@ -19,7 +19,7 @@ namespace GL {
 		void setColors(const Vector4 &first, const Vector4 &second, const Vector4 &third);
 		void calculateNormals();
 		// Returns a Polygon with the given transformation applied.
-		Polygon transform(const Matrix4 &mat);
+		Polygon getTransformed(const Matrix4 &mat);
 
 		std::vector<Vector4> vertices;
 		std::vector<Vector4> colors;

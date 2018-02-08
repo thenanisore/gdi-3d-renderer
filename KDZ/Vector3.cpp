@@ -67,4 +67,8 @@ namespace GL {
 		// return a zero vector if already is one
 		return (*this) / (len == 0 ? 1 : len);
 	}
+
+	//Vector4 Vector3::toVec4() const {
+	//	return Vector4(x, y, z, 1.f);
+	//}
 }

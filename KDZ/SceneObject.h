@@ -37,7 +37,6 @@ namespace GL {
 		Vector3 rotation;
 
 		// reflection flags:
-
 		bool reflectionXY;
 		bool reflectionXZ;
 		bool reflectionYZ;

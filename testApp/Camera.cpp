@@ -38,8 +38,8 @@ namespace GL {
 	void Camera::updateVectors() {
 		// calculate the front vector
 		Vector3 _front;
-		double pitch = Util::degreesToRadians(rotation.x);
-		double yaw = Util::degreesToRadians(rotation.y);
+		double pitch = Util::degToRad(rotation.x);
+		double yaw = Util::degToRad(rotation.y);
 		_front.x = sin(yaw) * cos(pitch);
 		_front.y = sin(pitch);
 		_front.z = cos(yaw) * cos(pitch);

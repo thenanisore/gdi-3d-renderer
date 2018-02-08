@@ -35,5 +35,7 @@ namespace GL {
 		Vector3 cross(const Vector3 &vec) const;
 		// Returns a vector of the same direction with the length 1
 		Vector3 normalized() const;
+		// Returns a Vector4 with the same xyz-coordinates and w = 1
+		//Vector4 toVec4() const;
 	};
 }

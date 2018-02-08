@@ -29,7 +29,7 @@ namespace GL {
 		updateVectors();
 	}
 
-	// Sets the default position (0, 0, 3), front (0, 0, -1) and up (0, 1, 0) vectors.
+	// Sets the default position (0, 0, 10), front (0, 0, -1), up (0, 1, 0) and rotation (0, 180, 0) vectors.
 	void Camera::reset() {
 		position = Vector3(0.0f, 0.0f, 10.0f);
 		front = Vector3(0.0f, 0.0f, -1.0f);
@@ -41,8 +41,8 @@ namespace GL {
 	void Camera::updateVectors() {
 		// calculate the front vector
 		Vector3 _front;
-		double pitch = Util::degreesToRadians(rotation.x);
-		double yaw = Util::degreesToRadians(rotation.y);
+		double pitch = Util::degToRad(rotation.x);
+		double yaw = Util::degToRad(rotation.y);
 		_front.x = sin(yaw) * cos(pitch);
 		_front.y = sin(pitch);
 		_front.z = cos(yaw) * cos(pitch);

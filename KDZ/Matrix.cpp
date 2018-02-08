@@ -8,7 +8,7 @@ namespace GL {
 	namespace Util {
 
 		// Converts degrees to radians.
-		float degreesToRadians(float degrees) {
+		float degToRad(float degrees) {
 			return degrees * PI / 180.0f;
 		}
 
@@ -25,11 +25,11 @@ namespace GL {
 
 		Matrix4 rotateX(const Matrix4& mat, float degrees) {
 			// set rotation matrix
-			float angle = degreesToRadians(degrees);
+			float angle = degToRad(degrees);
 			Matrix4 rotationMatrix;
 			rotationMatrix.set(1, 1, cos(angle));
-			rotationMatrix.set(1, 2, -sin(angle));
-			rotationMatrix.set(2, 1, sin(angle));
+			rotationMatrix.set(2, 1, -sin(angle));
+			rotationMatrix.set(1, 2, sin(angle));
 			rotationMatrix.set(2, 2, cos(angle));
 			// apply by multiplication
 			return rotationMatrix * mat;
@@ -37,7 +37,7 @@ namespace GL {
 
 		Matrix4 rotateY(const Matrix4& mat, float degrees) {
 			// set rotation matrix
-			float angle = degreesToRadians(degrees);
+			float angle = degToRad(degrees);
 			Matrix4 rotationMatrix;
 			rotationMatrix.set(0, 0, cos(angle));
 			rotationMatrix.set(0, 2, sin(angle));
@@ -49,7 +49,7 @@ namespace GL {
 
 		Matrix4 rotateZ(const Matrix4& mat, float degrees) {
 			// set rotation matrix
-			float angle = degreesToRadians(degrees);
+			float angle = degToRad(degrees);
 			Matrix4 rotationMatrix;
 			rotationMatrix.set(0, 0, cos(angle));
 			rotationMatrix.set(0, 1, -sin(angle));
@@ -123,7 +123,7 @@ namespace GL {
 
 		// Returns a perspective projection matrix with the specified parameters.
 		Matrix4 perspective(float fov, float aspect, float near, float far) {
-			float top = near * tan(Util::degreesToRadians(fov) / 2.f);
+			float top = near * tan(Util::degToRad(fov) / 2.f);
 			float bottom = -top;
 			float right = top * aspect;
 			float left = -right;

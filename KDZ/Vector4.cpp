@@ -22,6 +22,8 @@ namespace GL {
 		x = vec.x; y = vec.y; z = vec.z; w = _w;
 	}
 
+	Vector4::Vector4(const Vector3 & vec) : Vector4(vec.x, vec.y, vec.z, 1.f) { }
+
 	Vector4& Vector4::operator=(const Vector4 &vec) {
 		x = vec.x; y = vec.y; z = vec.z; w = vec.w;
 		return *this;
@@ -66,7 +68,11 @@ namespace GL {
 		return (*this) / (len == 0 ? 1 : len);
 	}
 
-	Vector3 Vector4::fromHomogeneous() {
+	Vector3 Vector4::fromHomogeneous() const {
 		return Vector3(x / w, y / w, z / w);
+	}
+
+	Vector3 Vector4::toVec3() const {
+		return Vector3(x, y, z);
 	}
 }
