@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector4.h"
+#include "Matrix3.h"
 
 #include <vector>
 
@@ -32,6 +33,7 @@ namespace GL {
 		Vector4 getRow(int row) const;
 		Vector4 getColumn(int col) const;
 		Matrix4 transposed() const;
+		Matrix3 toMat3() const;
 
 	private:
 		std::vector<float> values;

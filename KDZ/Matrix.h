@@ -36,5 +36,7 @@ namespace GL {
 		Matrix4 orthographic(float top, float right, float near, float far);
 		// Calculate barycentric coordinates (u, v, w) for point p with respect to triangle (a, b, c).
 		Vector3 barycentric(const Vector3 &p, const Vector3 &a, const Vector3 &b, const Vector3 &c);
+		// Calculates a normal vector to a given triangle.
+		Vector3 normal(const Vector3 &a, const Vector3 &b, const Vector3 &c);
 	}
 }

@@ -58,6 +58,7 @@ namespace GL {
 		setPosition(Vector3());
 		setScale(Vector3(1.0f, 1.0f, 1.0f));
 		setRotation(Vector3());
+		setReflection(false, false, false);
 	}
 
 	void SceneObject::addPolygon(Polygon pol) {

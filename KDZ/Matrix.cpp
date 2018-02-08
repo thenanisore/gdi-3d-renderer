@@ -123,6 +123,7 @@ namespace GL {
 
 		// Returns a perspective projection matrix with the specified parameters.
 		Matrix4 perspective(float fov, float aspect, float near, float far) {
+			// OpenGL projection matrix:
 			float top = near * tan(Util::degToRad(fov) / 2.f);
 			float bottom = -top;
 			float right = top * aspect;
@@ -138,9 +139,9 @@ namespace GL {
 			return proj;
 		}
 
-		// TODO: height, get width via viewport
 		// Returns an orthgraphic projection matrix with the specified parameters.
 		Matrix4 orthographic(float top, float right, float near, float far) {
+			// OpenGL projection matrix;
 			float left = -right;
 			float bottom = -top;
 			Matrix4 ortho;
@@ -166,6 +167,13 @@ namespace GL {
 			float w = (d00 * d21 - d01 * d20) / denom;
 			float u = 1.0f - v - w;
 			return Vector3(u, v, w);
+		}
+
+		// Calculates a normal vector to a given triangle.
+		Vector3 normal(const Vector3 &a, const Vector3 &b, const Vector3 &c) {
+			Vector3 t1 = b - a;
+			Vector3 t2 = c - a;
+			return t1.cross(t2).normalized();
 		}
 	}
 }

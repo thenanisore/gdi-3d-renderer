@@ -1,4 +1,5 @@
 #include "Polygon.h"
+#include "Matrix.h"
 
 namespace GL {
 
@@ -29,9 +30,7 @@ namespace GL {
 	}
 
 	void Polygon::calculateNormals() {
-		Vector3 a = vertices[1].fromHomogeneous() - vertices[0].fromHomogeneous();
-		Vector3 b = vertices[2].fromHomogeneous() - vertices[0].fromHomogeneous();
-		Vector3 normal = a.cross(b).normalized();
+		Vector3 normal = Util::normal(vertices[0].fromHomogeneous(), vertices[1].fromHomogeneous(), vertices[2].fromHomogeneous());
 		normals = std::vector<Vector3> { normal, normal, normal };
 	}
 
