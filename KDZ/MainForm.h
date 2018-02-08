@@ -50,11 +50,14 @@ namespace KDZ {
 	private: System::Windows::Forms::ToolStripMenuItem^  aboutToolStripMenuItem;
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::OpenFileDialog^  openFileDialog;
 
 		 // Main scene
 		GL::Scene *mainScene;
 		System::Void setScene();
 		System::Void renderScene();
+		// menu strip
+		System::Void openToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		// mainform events
 		System::Void MainForm_Shown(System::Object^  sender, System::EventArgs^  e);
 		System::Void MainForm_ResizeEnd(System::Object^  sender, System::EventArgs^  e);
@@ -319,6 +322,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tableLayoutPanel = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->pictureBox = (gcnew System::Windows::Forms::PictureBox());
 			this->tabControl = (gcnew System::Windows::Forms::TabControl());
@@ -385,14 +389,14 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->bothRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->solidRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->wfRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->statusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripStatusLabel = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->bgColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->wfColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
-			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -455,12 +459,19 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
 			this->openToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->openToolStripMenuItem->Text = L"Open...";
+			this->openToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::openToolStripMenuItem_Click);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
 			this->exitToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->exitToolStripMenuItem->Text = L"Exit";
+			// 
+			// aboutToolStripMenuItem
+			// 
+			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
+			this->aboutToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->aboutToolStripMenuItem->Text = L"About";
 			// 
 			// tableLayoutPanel
 			// 
@@ -1278,6 +1289,23 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->wfRadioButton->UseVisualStyleBackColor = true;
 			this->wfRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::wfRadioButton_CheckedChanged);
 			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(3, 244);
+			this->textBox1->Multiline = true;
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(247, 286);
+			this->textBox1->TabIndex = 2;
+			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(3, 536);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->TabIndex = 3;
+			this->button1->Text = L"button1";
+			this->button1->UseVisualStyleBackColor = true;
+			// 
 			// statusStrip
 			// 
 			this->statusStrip->ImageScalingSize = System::Drawing::Size(20, 20);
@@ -1295,28 +1323,9 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->toolStripStatusLabel->Size = System::Drawing::Size(74, 20);
 			this->toolStripStatusLabel->Text = L"Objects: 0";
 			// 
-			// aboutToolStripMenuItem
+			// openFileDialog
 			// 
-			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
-			this->aboutToolStripMenuItem->Size = System::Drawing::Size(181, 26);
-			this->aboutToolStripMenuItem->Text = L"About";
-			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(3, 244);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(247, 286);
-			this->textBox1->TabIndex = 2;
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(3, 536);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
-			this->button1->TabIndex = 3;
-			this->button1->Text = L"button1";
-			this->button1->UseVisualStyleBackColor = true;
+			this->openFileDialog->Filter = L"Text files|*.txt|3D Object files|*.obj|All files|*.*";
 			// 
 			// MainForm
 			// 

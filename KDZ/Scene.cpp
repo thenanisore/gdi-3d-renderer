@@ -120,6 +120,10 @@ namespace GL {
 		return sceneObjects.size() == 0;
 	}
 
+	bool Scene::fromFile(String ^ file) {
+		return false;
+	}
+
 	// test
 	void Scene::addCube() {
 		SceneObject cube(std::vector<Polygon> {
@@ -140,7 +144,7 @@ namespace GL {
 			Polygon(Vector3(-1, 1, -1), Vector3(-1, 1, 1), Vector3(1, 1, 1)),
 			// bottom
 			Polygon(Vector3(-1, -1, -1), Vector3(1, -1, -1), Vector3(1, -1, 1)),
-			Polygon(Vector3(-1, -1, -1), Vector3(1, -1, 1), Vector3(1, -1, -1))
+			Polygon(Vector3(1, -1, 1), Vector3(-1, -1, 1), Vector3(-1, -1, -1))
 		});
 		cube.setPolygonColor(std::vector<Vector4> {
 			// front

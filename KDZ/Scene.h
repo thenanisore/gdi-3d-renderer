@@ -43,6 +43,7 @@ namespace GL {
 		void setDrawingMode(bool wireframe, bool solid);
 		// Returns true is the scene contains no objects.
 		bool isEmpty();
+		bool fromFile(String ^file);
 
 		// test
 		void addCube();

@@ -6,6 +6,7 @@
 
 using namespace KDZ;
 
+[STAThread]
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	Application::EnableVisualStyles();
@@ -29,6 +30,25 @@ System::Void MainForm::renderScene() {
 		delete gr;
 	}
 	pictureBox->Refresh();
+}
+
+System::Void MainForm::openToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	if (openFileDialog->ShowDialog() == ::DialogResult::OK) {
+		IO::StreamReader ^sr = gcnew IO::StreamReader(openFileDialog->FileName);
+		try {;
+			if (mainScene->fromFile(sr->ReadToEnd())) {
+				// object loaded successfully
+				renderScene();
+			}
+			else {
+				// something went wrong
+				MessageBox::Show(L"Invalid file format.", L"Error");
+			}
+		}
+		finally {
+			sr->Close();
+		}
+	}
 }
 
 // Sets scene after the MainForm is shown.
