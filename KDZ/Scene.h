@@ -17,7 +17,6 @@ namespace GL {
 	public:
 		Scene();
 		void renderScene(Renderer ^renderer);
-		void addObject(SceneObject obj);
 
 		// methods to manipulate objects;
 
@@ -51,6 +50,7 @@ namespace GL {
 		void addPolygons();
 
 	private:
+		void addObject(SceneObject &obj);
 		int selectedObject;
 		bool isPerspective;
 		bool drawWireframe;

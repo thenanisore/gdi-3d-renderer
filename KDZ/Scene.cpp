@@ -1,5 +1,5 @@
 #include "Scene.h"
-#include "Matrix.h"
+#include "Util.h"
 
 namespace GL {
 
@@ -40,7 +40,7 @@ namespace GL {
 		}
 	}
 
-	void Scene::addObject(SceneObject obj) {
+	void Scene::addObject(SceneObject &obj) {
 		sceneObjects.push_back(obj);
 		// select the added object
 		selectedObject = sceneObjects.size() - 1;
@@ -121,7 +121,58 @@ namespace GL {
 	}
 
 	bool Scene::fromFile(String ^ file) {
-		return false;
+		String^ delimStr = "\r\n";
+		array<Char>^ delimiter = delimStr->ToCharArray();
+		array<String^>^ lines = file->Split(delimiter);
+		// parse each line
+		std::vector<Vector3> vertices;
+		std::vector<Vector3> colors;
+		std::vector<Vector3> indices;
+		for (int i = 0; i < lines->Length; i++) {
+			String^ trimmed = lines[i]->Trim();
+			// discard empty lines and comments
+			if (!String::IsNullOrWhiteSpace(trimmed) && trimmed[0] != '#') {
+				// parse
+				// TODO: exception handling
+				Vector3 data = Util::parseVec3(trimmed->Substring(2));
+				switch (trimmed[0]) {
+				case 'v':
+					// vertex
+					vertices.push_back(data);
+					break;
+				case 'c':
+					// color
+					colors.push_back(data);
+					break;
+				case 'p':
+					// polygon indices
+					indices.push_back(data);
+					break;
+				default:
+					// wrong format file?
+					return false;
+				}
+			}
+		}
+		// construct a SceneObject
+		SceneObject newObj;
+		for (int i = 0; i < indices.size(); i++) {
+			newObj.addPolygon(GL::Polygon(
+				vertices[(int)indices[i].x],
+				vertices[(int)indices[i].y],
+				vertices[(int)indices[i].z]
+			));
+			if (colors.size() == vertices.size()) {
+				newObj.polygons[newObj.polygons.size() - 1].setColors(
+					colors[(int)indices[i].x],
+					colors[(int)indices[i].y],
+					colors[(int)indices[i].z]
+				);
+			}
+		}
+		addObject(newObj);
+
+		return true;
 	}
 
 	// test

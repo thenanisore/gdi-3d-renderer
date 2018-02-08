@@ -1325,7 +1325,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			// openFileDialog
 			// 
-			this->openFileDialog->Filter = L"Text files|*.txt|3D Object files|*.obj|All files|*.*";
+			this->openFileDialog->Filter = L"3D Object files|*.object|Text files|*.txt|All files|*.*";
 			// 
 			// MainForm
 			// 

@@ -11,6 +11,7 @@ namespace GL {
 	class SceneObject
 	{
 	public:
+		SceneObject();
 		SceneObject(std::vector<Polygon> _polygons);
 
 		// Adds a polygon to the SceneObject's mesh.

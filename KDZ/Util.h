@@ -40,5 +40,7 @@ namespace GL {
 		bool isInTriangle(const Vector3 &p, const Vector3 &a, const Vector3 &b, const Vector3 &c);
 		// Calculates a normal vector to a given triangle.
 		Vector3 normal(const Vector3 &a, const Vector3 &b, const Vector3 &c);
+		// Parses a string containing of three floating-point numbers and returns a resulting Vector3.
+		Vector3 parseVec3(System::String^ str);
 	}
 }

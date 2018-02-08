@@ -1,9 +1,11 @@
 #include "SceneObject.h"
-#include "Matrix.h"
+#include "Util.h"
 
 namespace GL {
 
-	SceneObject::SceneObject(std::vector<Polygon> _polygons) 
+	SceneObject::SceneObject() : SceneObject::SceneObject(std::vector<Polygon>()) { }
+
+	SceneObject::SceneObject(std::vector<Polygon> _polygons)
 		: polygons(_polygons), position(), scale(1.0f, 1.0f, 1.0f), rotation(), 
 		  reflectionXY(false), reflectionXZ(false), reflectionYZ(false) { }
 

@@ -1,4 +1,4 @@
-#include "Matrix.h"
+#include "Util.h"
 #include "Matrix3.h"
 #include "Matrix4.h"
 
@@ -183,6 +183,23 @@ namespace GL {
 			Vector3 t1 = b - a;
 			Vector3 t2 = c - a;
 			return t1.cross(t2).normalized();
+		}
+
+		// Parses a string containing of three floating-point numbers and returns a resulting Vector3.
+		Vector3 parseVec3(System::String^ str) {
+			array<wchar_t, 1>^ delim = { ' ' };
+			array<System::String^>^ strs = str->Split(delim);
+			std::vector<float> nums;
+			for (int i = 0; i < strs->Length; i++) {
+				if (!System::String::IsNullOrWhiteSpace(strs[i])) {
+					// culture info is provided for parsing dots correctly ("1.0")
+					nums.push_back(float::Parse(strs[i], System::Globalization::CultureInfo::InvariantCulture));
+				}
+			}
+			if (nums.size() != 3) {
+				throw std::invalid_argument("Invalid string format (must be 3 numbers).");
+			}
+			return Vector3(nums);
 		}
 	}
 }
