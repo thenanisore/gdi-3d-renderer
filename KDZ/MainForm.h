@@ -52,6 +52,7 @@ namespace KDZ {
 
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog;
 
+
 		 // Main scene
 		GL::Scene *mainScene;
 		System::Void setScene();
@@ -1300,10 +1301,9 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->statusStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->objCountLabel });
 			this->statusStrip->Location = System::Drawing::Point(0, 671);
 			this->statusStrip->Name = L"statusStrip";
-			this->statusStrip->RightToLeft = System::Windows::Forms::RightToLeft::Yes;
 			this->statusStrip->Size = System::Drawing::Size(914, 25);
 			this->statusStrip->TabIndex = 3;
-			this->statusStrip->Text = L"statusStrip1";
+			this->statusStrip->Text = L"statusStrip";
 			// 
 			// objCountLabel
 			// 

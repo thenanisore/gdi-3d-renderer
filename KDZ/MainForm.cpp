@@ -16,7 +16,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 }
 
 System::Void MainForm::setScene() {
-	// TODO: init code
+	checkButtons();
+	updateObjectParams();
 	renderScene();
 }
 
@@ -53,8 +54,8 @@ System::Void MainForm::checkButtons() {
 		objReflectionYZCheckbox->Enabled = false;
 	}
 	else {
-		prevObjButton->Enabled = !mainScene->isSelectedFirst();
-		nextObjButton->Enabled = !mainScene->isSelectedLast();
+		prevObjButton->Enabled = mainScene->objectCount() > 1 && !mainScene->isSelectedFirst();
+		nextObjButton->Enabled = mainScene->objectCount() > 1 && !mainScene->isSelectedLast();
 		resetObjButton->Enabled = true;
 		deleteObjButton->Enabled = true;
 		objPosXBar->Enabled = true;
@@ -73,7 +74,21 @@ System::Void MainForm::checkButtons() {
 }
 
 System::Void MainForm::updateStatusBar() {
-	objCountLabel->Text = "Objects: " + mainScene->objectCount();
+	String^ info = "Objects : " + mainScene->objectCount() + " | ";
+	// get the current object's and camera's info
+	if (!mainScene->isEmpty()) {
+		GL::Vector3 pos = mainScene->getObjectPosition(true);
+		info += "Pos : (" + pos.x + ", " + pos.y + ", " + pos.z + ") | ";
+		GL::Vector3 rot = mainScene->getObjectRotation(true);
+		info += "Rot : (" + rot.x + ", " + rot.y + ", " + rot.z + ") | ";
+		GL::Vector3 sca = mainScene->getObjectScale(true);
+		info += "Scale : (" + sca.x + ", " + sca.y + ", " + sca.z + ") | ";
+	}
+	GL::Vector3 camPos = mainScene->getCameraPosition(true);
+	info += "Camera | Pos : (" + camPos.x + ", " + camPos.y + ", " + camPos.z + ") | ";
+	GL::Vector3 camRot = mainScene->getCameraRotation(true);
+	info += "Pitch : " + camRot.x + " | Yaw : " + camRot.y + " |";
+	objCountLabel->Text = info;
 }
 
 System::Void MainForm::openToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
@@ -131,16 +146,16 @@ System::Void MainForm::setCameraParams(int camPosX, int camPosY, int camPosZ, in
 }
 
 System::Void MainForm::updateObjectParams() {
-	GL::Vector3 pos = mainScene->getObjectPosition();
-	GL::Vector3 rot = mainScene->getObjectRotation();
-	GL::Vector3 sc = mainScene->getObjectScale();
+	GL::Vector3 pos = mainScene->getObjectPosition(false);
+	GL::Vector3 rot = mainScene->getObjectRotation(false);
+	GL::Vector3 sc = mainScene->getObjectScale(false);
 	GL::Vector3 refl = mainScene->getObjectReflection();
 	setObjectsParams(pos.x, pos.y, pos.z, sc.x, sc.y, sc.z, rot.x, rot.y, rot.z, refl.z, refl.y, refl.x);
 }
 
 System::Void MainForm::updateCameraParams() {
-	GL::Vector3 pos = mainScene->getCameraPosition();
-	GL::Vector3 rot = mainScene->getCameraRotation();
+	GL::Vector3 pos = mainScene->getCameraPosition(false);
+	GL::Vector3 rot = mainScene->getCameraRotation(false);
 	setCameraParams(pos.x, pos.y, pos.z, rot.x, rot.y);
 }
 

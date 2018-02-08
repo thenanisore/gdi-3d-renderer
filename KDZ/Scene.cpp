@@ -63,32 +63,32 @@ namespace GL {
 		sceneObjects[selectedObject].setScale(Vector3(x_scale, y_scale, z_scale) * scaleMultiplier);
 	}
 
-	Vector3 Scene::getObjectPosition() const {
-		return sceneObjects[selectedObject].getPosition() / positionMultiplier;
+	void Scene::setObjectReflection(bool xy, bool xz, bool yz) {
+		sceneObjects[selectedObject].setReflection(xy, xz, yz);
 	}
 
-	Vector3 Scene::getObjectRotation() const {
-		return sceneObjects[selectedObject].getRotation() / rotationMultiplier;
+	Vector3 Scene::getObjectPosition(bool worldCoords) const {
+		return sceneObjects[selectedObject].getPosition() / (worldCoords ? 1.f : positionMultiplier);
+	}
+
+	Vector3 Scene::getObjectRotation(bool worldCoords) const {
+		return sceneObjects[selectedObject].getRotation() / (worldCoords ? 1.f : rotationMultiplier);
 	}
 
 	Vector3 Scene::getObjectReflection() const {
 		return sceneObjects[selectedObject].getReflection();
 	}
 
-	Vector3 Scene::getObjectScale() const {
-		return sceneObjects[selectedObject].getScale() / scaleMultiplier;
+	Vector3 Scene::getObjectScale(bool worldCoords) const {
+		return sceneObjects[selectedObject].getScale() / (worldCoords ? 1.f : scaleMultiplier);
 	}
 
-	Vector3 Scene::getCameraPosition() const {
-		return camera.getPosition() / cameraPositionMultiplier;
+	Vector3 Scene::getCameraPosition(bool worldCoords) const {
+		return camera.getPosition() / (worldCoords ? 1.f : cameraPositionMultiplier);
 	}
 
-	Vector3 Scene::getCameraRotation() const {
-		return camera.getRotation() / camerRotationMultiplier;
-	}
-
-	void Scene::setObjectReflection(bool xy, bool xz, bool yz) {
-		sceneObjects[selectedObject].setReflection(xy, xz, yz);
+	Vector3 Scene::getCameraRotation(bool worldCoords) const {
+		return camera.getRotation() / (worldCoords ? 1.f : camerRotationMultiplier);
 	}
 
 	void Scene::resetObject() {
