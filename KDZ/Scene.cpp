@@ -8,8 +8,8 @@ namespace GL {
 
 	Scene::Scene() : camera() {
 		// test code
-		//addPolygon();
-		addCube();
+		addPolygon();
+		//addCube();
 		//addPolygons();
 		selectedObject = 0;
 	}
@@ -160,6 +160,7 @@ namespace GL {
 		SceneObject polygon(std::vector<Polygon> {
 			Polygon(Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0)),
 		});
+		polygon.polygons[0].setColors(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1));
 		sceneObjects.push_back(polygon);
 		selectedObject = sceneObjects.size() - 1;
 	}

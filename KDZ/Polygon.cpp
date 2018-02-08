@@ -38,6 +38,8 @@ namespace GL {
 		Polygon transformed(vertices[0], vertices[1], vertices[2]);
 		for (int i = 0; i < vertices.size(); i++) {
 			transformed.vertices[i] = mat * vertices[i];
+			transformed.colors[i] = colors[i];
+			// TODO: transform normals
 		}
 		return transformed;
 	}

@@ -11,8 +11,7 @@ namespace GL {
 	using namespace System::Drawing;
 	using namespace System::Collections::Generic;
 
-	Renderer::Renderer(Graphics ^im, int viewportWidth, int viewportHeight) : graphics(im)
-	{
+	Renderer::Renderer(Graphics ^im, int viewportWidth, int viewportHeight) : graphics(im) {
 		bgColor = Color::White;
 		wfBrush = gcnew SolidBrush(Color::Black);
 		selectedBrush = gcnew SolidBrush(Color::Yellow);
@@ -50,31 +49,32 @@ namespace GL {
 	void Renderer::clearZBuffer() {
 		for (int x = 0; x < zbuffer->GetLength(0); x++) {
 			for (int y = 0; y < zbuffer->GetLength(1); y++) {
-				zbuffer->SetValue(-INFINITY, x, y);
+				zbuffer->SetValue(INFINITY, x, y);
 			}
 		}
 	}
 
 
 	void Renderer::renderObject(const SceneObject &obj, const Matrix4& transformMatrix, bool wireframe, bool solid) {
-		int i = 0;
 		for (GL::Polygon pol : obj.polygons) {
+			// get the polygon transformed 
 			GL::Polygon transformed = pol.getTransformed(transformMatrix);
-			Vector3 first = NDCtoViewport(transformed.vertices[0].fromHomogeneous());
-			Vector3 second = NDCtoViewport(transformed.vertices[1].fromHomogeneous());
-			Vector3 third = NDCtoViewport(transformed.vertices[2].fromHomogeneous());
-			if (wireframe) drawPolygon(first, second, third);
+			transformed.vertices[0] = NDCtoViewport(transformed.vertices[0].fromHomogeneous());
+			transformed.vertices[1] = NDCtoViewport(transformed.vertices[1].fromHomogeneous());
+			transformed.vertices[2] = NDCtoViewport(transformed.vertices[2].fromHomogeneous());
+
+			// draw
+			if (wireframe) {
+				drawPolygon(transformed);
+			}
 			if (solid) {
 				// TODO: lighting
-				if (i % 2) surfaceBrush->Color = Color::Yellow;
-				else surfaceBrush->Color = Color::Blue;
-				i++;
-				fillPolygon(first, second, third, pol.normals[0], surfaceBrush);
+				fillPolygon(transformed);
 			}
 		}
-		ztofile();
 	}
 
+	// test code
 	void Renderer::ztofile() {
 			std::ofstream myfile;
 			myfile.open("log.txt");
@@ -179,36 +179,50 @@ namespace GL {
 	}
 
 	void Renderer::drawPoint(int x, int y, float z, SolidBrush ^br) {
-		if (x > 0 && x < viewportX && y > 0 && y < viewportY) {
-			// z test
-			if (1.f / z > zbuffer[x, y]) {
-				zbuffer[x, y] = 1.f / z;
-				graphics->FillRectangle(br, x, y, 2, 2);
-			}
-		}
+		//if (x > 0 && x < viewportX && y > 0 && y < viewportY) {
+		//	// z test
+		//	if (1.f / z > zbuffer[x, y]) {
+		//		zbuffer[x, y] = 1.f / z;
+				graphics->FillRectangle(br, x, y, 1, 1);
+			//}
+		//}
 	}
 
-	void Renderer::drawPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third) {
-		drawLine(first, second);
-		drawLine(second, third);
-		drawLine(third, first);
+	void Renderer::drawPolygon(const GL::Polygon &pol) {
+		drawLine(pol.vertices[0].toVec3(), pol.vertices[1].toVec3());
+		drawLine(pol.vertices[1].toVec3(), pol.vertices[2].toVec3());
+		drawLine(pol.vertices[2].toVec3(), pol.vertices[0].toVec3());
 	}
 
 	float max(float a, float b) { return a > b ? a : b; }
 	float min(float a, float b) { return a < b ? a : b; }
 
-	void Renderer::fillPolygon(const Vector3 &_first, const Vector3 &_second, const Vector3 &_third, const Vector3 &normal, SolidBrush ^br) {
-		// deformed triangles not needed to be rendered
-		if (_first.y == _second.y && _first.y == _third.y) return;
+	void Renderer::fillPolygon(const Polygon &pol) {
 		// copy vectors first
-		Vector3 first(_first);
-		Vector3 second(_second);
-		Vector3 third(_third);
+		Vector3 first = pol.vertices[0].toVec3();
+		Vector3 second = pol.vertices[1].toVec3();
+		Vector3 third = pol.vertices[2].toVec3();
+		Vector4 firstColor = pol.colors[0];
+		Vector4 secondColor = pol.colors[1];
+		Vector4 thirdColor = pol.colors[2];
+		// deformed triangles not needed to be rendered
+		if (first.y == second.y && first.y == third.y) return;
 		// sort the vertices
-		if (first.y > second.y) swap(first, second);
-		if (first.y > third.y) swap(first, third);
-		if (second.y > third.y) swap(second, third);
+		if (first.y > second.y) {
+			swap(first, second);
+			swap(firstColor, secondColor);
+		}
+		if (first.y > third.y) {
+			swap(first, third);
+			swap(firstColor, thirdColor);
+		}
+		if (second.y > third.y) {
+			swap(second, third);
+			swap(secondColor, thirdColor);
+		}
+
 		Vector3 zs(first.z, second.z, third.z);
+
 		int totalHeight = third.y - first.y;
 		for (int i = 0; i < totalHeight; i++) {
 			bool secondHalf = i > second.y - first.y || second.y == first.y;
@@ -219,15 +233,22 @@ namespace GL {
 			Vector3 B = secondHalf ? second + (third - second) * beta : first + (second - first) * beta;
 			if (A.x > B.x) swap(A, B);
 			for (int j = A.x; j <= B.x; j++) {
-				Vector3 coordinates = Util::barycentric2d(Vector3(j, first.y + i, 0.f), _first, _second, _third);
-				float z = coordinates.dot(zs);
-				drawPoint(j, first.y + i, z, br);
+				// determine a color
+				Vector3 coordinates = Util::barycentric2d(Vector3(j, first.y + i, 0.f), first, second, third);
+				if (coordinates.x >= 0 && coordinates.y >= 0 && coordinates.z >= 0) {
+					Vector4 col = firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z;
+					surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
+					float z = coordinates.dot(zs);
+					drawPoint(j, first.y + i, z, surfaceBrush);
+				}
 			}
 		}
 	}
 
 	// Remaps the coordinates from [-1, 1] to the [0, viewport] space. 
 	Vector3 Renderer::NDCtoViewport(const Vector3 &vertex) {
-		return Vector3((1.0f + vertex.x) * viewportX / 2.0f, (1.0f - vertex.y) * viewportY / 2.0f, vertex.z);
+		return Vector3((1.f + vertex.x) * viewportX / 2.f, 
+			           (1.f - vertex.y) * viewportY / 2.f,
+			            vertex.z);
 	}
 }

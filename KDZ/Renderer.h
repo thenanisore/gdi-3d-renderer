@@ -42,8 +42,8 @@ namespace GL {
 		array<float, 2> ^zbuffer;
 		void drawLine(const Vector3 &from, const Vector3 &to);
 		void drawPoint(int x, int y, float z, SolidBrush ^b);
-		void drawPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third);
-		void fillPolygon(const Vector3 &first, const Vector3 &second, const Vector3 &third, const Vector3 &normal, SolidBrush ^br);
+		void drawPolygon(const GL::Polygon &pol);
+		void fillPolygon(const GL::Polygon &pol);
 		Vector3 NDCtoViewport(const Vector3 &vertex);
 	};
 }
