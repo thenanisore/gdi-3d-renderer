@@ -25,6 +25,14 @@ namespace GL {
 		void setObjectReflection(bool xy, bool xz, bool yz);
 		void setObjectScale(int x_scale, int y_scale, int z_scale);
 
+		Vector3 getObjectPosition() const;
+		Vector3 getObjectRotation() const;
+		Vector3 getObjectReflection() const;
+		Vector3 getObjectScale() const;
+
+		Vector3 getCameraPosition() const;
+		Vector3 getCameraRotation() const;
+
 		void resetObject();
 		void deleteObject();
 		void selectNextObject();

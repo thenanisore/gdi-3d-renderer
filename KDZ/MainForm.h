@@ -23,7 +23,7 @@ namespace KDZ {
 			bm = gcnew Bitmap(pictureBox->Width, pictureBox->Height);
 			renderer = gcnew GL::Renderer(Graphics::FromImage(bm), pictureBox->Width, pictureBox->Height);
 			pictureBox->Image = bm;
-			isResettingScene = false;
+			isSettingParams = false;
 		}
 
 	private: 
@@ -82,14 +82,18 @@ namespace KDZ {
 		System::Void changeCameraRotation();
 		System::Void camRotPitchBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void camRotYawBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void updateObjectParams();
+		System::Void updateCameraParams();
 		// buttons
 		System::Void nextObjButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void prevObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
-		System::Void deleteObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
+		System::Void deleteObjButton_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void setObjectsParams(int objPosX, int objPosY, int objPosZ, int objScaleX, int objScaleY, int objScaleZ, int objRotX, int objRotY, int objRotZ, bool objReflXY, bool objReflXZ, bool objReflYZ);
+		System::Void setCameraParams(int camPosX, int camPosY, int camPosZ, int camPitch, int camYaw);
 		System::Void resetObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		System::Void resetCamButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		// object reflection checkboxes:
-		bool isResettingScene;
+		bool isSettingParams;
 		System::Void changeObjectReflection();
 		System::Void objReflectionXYCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void objReflectionXZCheckbox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);

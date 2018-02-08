@@ -18,9 +18,10 @@ namespace GL {
 		Matrix4 getViewMatrix();
 		// Sets the camera's position.
 		void setPosition(const Vector3 &newPosition);
-		Vector3 getPosition();
 		// Sets the camera's rotation.
 		void setRotation(const Vector3 &newRotation);
+		Vector3 getPosition() const;
+		Vector3 getRotation() const;
 		// Sets the default position (0, 0, 10), target (0, 0, 0) and up (0, 1, 0) vectors.
 		void reset();
 

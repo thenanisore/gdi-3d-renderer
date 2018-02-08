@@ -30,6 +30,7 @@ namespace GL {
 		void setBGColor(Color _col);
 		void setWFColor(Color _col);
 		void setSelectedColor(Color _col);
+		bool isSelectedObject;
 
 	private:
 		Graphics ^graphics;

@@ -9,16 +9,20 @@ namespace GL {
 		: polygons(_polygons), position(), scale(1.0f, 1.0f, 1.0f), rotation(), 
 		  reflectionXY(false), reflectionXZ(false), reflectionYZ(false) { }
 
-	Vector3 SceneObject::getPosition() {
+	Vector3 SceneObject::getPosition() const {
 		return Vector3(position);
 	}
 
-	Vector3 SceneObject::getScale() {
+	Vector3 SceneObject::getScale() const {
 		return Vector3(scale);
 	}
 
-	Vector3 SceneObject::getRotation() {
+	Vector3 SceneObject::getRotation() const {
 		return Vector3(rotation);
+	}
+	
+	Vector3 SceneObject::getReflection() const {
+		return Vector3(reflectionYZ, reflectionXZ, reflectionXY);
 	}
 
 	void SceneObject::setPosition(const Vector3 &newPosition) {
@@ -45,7 +49,7 @@ namespace GL {
 		}
 	}
 
-	Matrix4 SceneObject::getModelMatrix() {
+	Matrix4 SceneObject::getModelMatrix() const {
 		Matrix4 model;
 		// multiplication order: T * R * S * identity
 		model = Util::scale(model, scale);

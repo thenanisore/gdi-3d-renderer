@@ -38,6 +38,7 @@ System::Void MainForm::openToolStripMenuItem_Click(System::Object ^ sender, Syst
 		try {;
 			if (mainScene->fromFile(sr->ReadToEnd())) {
 				// object loaded successfully
+				updateObjectParams();
 				renderScene();
 			}
 			else {
@@ -49,6 +50,49 @@ System::Void MainForm::openToolStripMenuItem_Click(System::Object ^ sender, Syst
 			sr->Close();
 		}
 	}
+}
+
+System::Void MainForm::setObjectsParams(int objPosX, int objPosY, int objPosZ, int objScaleX, int objScaleY, int objScaleZ, int objRotX, int objRotY, int objRotZ, bool objReflXY, bool objReflXZ, bool objReflYZ) {
+	isSettingParams = true;
+	// set object's trackbars
+	objPosXBar->Value = objPosX;
+	objPosYBar->Value = objPosY;
+	objPosZBar->Value = objPosZ;
+	objScaleXBar->Value = objScaleX;
+	objScaleYBar->Value = objScaleY;
+	objScaleZBar->Value = objScaleZ;
+	objRotXBar->Value = objRotX;
+	objRotYBar->Value = objRotY;
+	objRotZBar->Value = objRotZ;
+	objReflectionXYCheckbox->Checked = objReflXY;
+	objReflectionXZCheckbox->Checked = objReflXZ;
+	objReflectionYZCheckbox->Checked = objReflYZ;
+	isSettingParams = false;
+}
+
+System::Void MainForm::setCameraParams(int camPosX, int camPosY, int camPosZ, int camPitch, int camYaw) {
+	// set camera's trackbars
+	isSettingParams = true;
+	camPosXBar->Value = camPosX;
+	camPosYBar->Value = camPosY;
+	camPosZBar->Value = camPosZ;
+	camRotPitchBar->Value = camPitch;
+	camRotYawBar->Value = camYaw;
+	isSettingParams = false;
+}
+
+System::Void MainForm::updateObjectParams() {
+	GL::Vector3 pos = mainScene->getObjectPosition();
+	GL::Vector3 rot = mainScene->getObjectRotation();
+	GL::Vector3 sc = mainScene->getObjectScale();
+	GL::Vector3 refl = mainScene->getObjectReflection();
+	setObjectsParams(pos.x, pos.y, pos.z, sc.x, sc.y, sc.z, rot.x, rot.y, rot.z, refl.z, refl.y, refl.x);
+}
+
+System::Void MainForm::updateCameraParams() {
+	GL::Vector3 pos = mainScene->getCameraPosition();
+	GL::Vector3 rot = mainScene->getCameraRotation();
+	setCameraParams(pos.x, pos.y, pos.z, rot.x, rot.y);
 }
 
 // Sets scene after the MainForm is shown.
@@ -159,11 +203,13 @@ System::Void MainForm::camRotYawBar_Scroll(System::Object^  sender, System::Even
 
 System::Void MainForm::nextObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	mainScene->selectNextObject();
+	updateObjectParams();
 	renderScene();
 }
 
 System::Void MainForm::prevObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	mainScene->selectPreviousObject();
+	updateObjectParams();
 	renderScene();
 }
 
@@ -174,48 +220,21 @@ System::Void MainForm::deleteObjButton_Click(System::Object^  sender, System::Ev
 
 System::Void MainForm::resetObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	mainScene->resetObject();
-
-	isResettingScene = true;
-	// reset object's trackbars
-	objPosXBar->Value = 0;
-	objPosYBar->Value = 0;
-	objPosZBar->Value = 0;
-	objScaleXBar->Value = 10;
-	objScaleYBar->Value = 10;
-	objScaleZBar->Value = 10;
-	objRotXBar->Value = 0;
-	objRotYBar->Value = 0;
-	objRotZBar->Value = 0;
-	objReflectionXYCheckbox->Checked = false;
-	objReflectionXZCheckbox->Checked = false;
-	objReflectionYZCheckbox->Checked = false;
-	isResettingScene = false;
-
+	updateObjectParams();
 	renderScene();
 }
 
 System::Void MainForm::resetCamButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	mainScene->resetCamera();
-
-	// reset camera's trackbars
-	isResettingScene = true;
-	camPosXBar->Value = 0;
-	camPosYBar->Value = 0;
-	camPosZBar->Value = 10;
-	camRotPitchBar->Value = 0;
-	camRotYawBar->Value = 180;
-	isResettingScene = false;
-
+	updateCameraParams();
 	renderScene();
 }
 
 // Object reflection checkboxes:
 
 System::Void MainForm::changeObjectReflection() {
-	if (!isResettingScene) {
-		mainScene->setObjectReflection(objReflectionXYCheckbox->Checked, 
-									   objReflectionXZCheckbox->Checked,
-									   objReflectionYZCheckbox->Checked);
+	if (!isSettingParams) {
+		mainScene->setObjectReflection(objReflectionXYCheckbox->Checked, objReflectionXZCheckbox->Checked, objReflectionYZCheckbox->Checked);
 		renderScene();
 	}
 }

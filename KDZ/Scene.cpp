@@ -6,6 +6,12 @@ namespace GL {
 	using namespace System;
 	using namespace System::Drawing;
 
+	const float positionMultiplier = 0.1f;
+	const float rotationMultiplier = 1.0f;
+	const float scaleMultiplier = 0.1f;
+	const float cameraPositionMultiplier = 1.0f;
+	const float camerRotationMultiplier = 1.0f;
+
 	Scene::Scene() : camera() {
 		// test code
 		//addPolygon();
@@ -32,11 +38,13 @@ namespace GL {
 		//renderer->drawAxes(projection * view, false);
 
 		if (!isEmpty()) {
-			// get transformation matrices
-			Matrix4 model = sceneObjects[selectedObject].getModelMatrix();
-			// TODO: render each object
-			// pass the current object and a transformation matrix in a renderer
-			renderer->renderObject(sceneObjects[selectedObject], projection * view * model, drawWireframe, drawSolid);
+			for (const SceneObject &object : sceneObjects) {
+				// get transformation matrices
+				Matrix4 model = object.getModelMatrix();
+				// TODO: render each object
+				// pass the current object and a transformation matrix in a renderer
+				renderer->renderObject(object, projection * view * model, drawWireframe, drawSolid);
+			}
 		}
 	}
 
@@ -48,19 +56,40 @@ namespace GL {
 
 	// methods to manipulate objects:
 
-	const float positionMultiplier = 0.1f;
 	void Scene::setObjectPosition(int x_coord, int y_coord, int z_coord) {
 		sceneObjects[selectedObject].setPosition(Vector3(x_coord, y_coord, z_coord) * positionMultiplier);
 	}
 
-	const float rotationMultiplier = 1.0f;
 	void Scene::setObjectRotation(float x_angle, float y_angle, float z_angle) {
 		sceneObjects[selectedObject].setRotation(Vector3(x_angle, y_angle, z_angle) * rotationMultiplier);
 	}
 
-	const float scaleMultiplier = 0.1f;
 	void Scene::setObjectScale(int x_scale, int y_scale, int z_scale) {
 		sceneObjects[selectedObject].setScale(Vector3(x_scale, y_scale, z_scale) * scaleMultiplier);
+	}
+
+	Vector3 Scene::getObjectPosition() const {
+		return sceneObjects[selectedObject].getPosition() / positionMultiplier;
+	}
+
+	Vector3 Scene::getObjectRotation() const {
+		return sceneObjects[selectedObject].getRotation() / rotationMultiplier;
+	}
+
+	Vector3 Scene::getObjectReflection() const {
+		return sceneObjects[selectedObject].getReflection();
+	}
+
+	Vector3 Scene::getObjectScale() const {
+		return sceneObjects[selectedObject].getScale() / scaleMultiplier;
+	}
+
+	Vector3 Scene::getCameraPosition() const {
+		return camera.getPosition() / cameraPositionMultiplier;
+	}
+
+	Vector3 Scene::getCameraRotation() const {
+		return camera.getRotation() / camerRotationMultiplier;
 	}
 
 	void Scene::setObjectReflection(bool xy, bool xz, bool yz) {
@@ -93,12 +122,10 @@ namespace GL {
 
 	// methods to manipulate the camera:
 
-	const float cameraPositionMultiplier = 1.0f;
 	void Scene::setCameraPosition(int x_coord, int y_coord, int z_coord) {
 		camera.setPosition(Vector3(x_coord, y_coord, z_coord) * cameraPositionMultiplier);
 	}
 
-	const float camerRotationMultiplier = 1.0f;
 	void Scene::setCameraRotation(float pitch, float yawn, float roll) {
 		camera.setRotation(Vector3(pitch, -yawn, roll) * camerRotationMultiplier);
 	}

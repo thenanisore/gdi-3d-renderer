@@ -14,20 +14,23 @@ namespace GL {
 		SceneObject();
 		SceneObject(std::vector<Polygon> _polygons);
 
-		// Adds a polygon to the SceneObject's mesh.
-		void addPolygon(Polygon pol);
+		Vector3 getPosition() const;
+		Vector3 getScale() const;
+		Vector3 getRotation() const;
+		Vector3 getReflection() const;
 
-		Vector3 getPosition();
-		Vector3 getScale();
-		Vector3 getRotation();
 		void setPosition(const Vector3 &newPosition);
 		void setScale(const Vector3 &newScale);
 		void setRotation(const Vector3 &newRotation);
 		void setReflection(bool xy, bool xz, bool yz);
+
 		void setPolygonColor(const std::vector<Vector4> cols);
-		Matrix4 getModelMatrix();
+
+		Matrix4 getModelMatrix() const;
 		void reset();
 
+		// Adds a polygon to the SceneObject's mesh.
+		void addPolygon(Polygon pol);
 		std::vector<Polygon> polygons;
 
 	private:

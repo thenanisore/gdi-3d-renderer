@@ -19,8 +19,12 @@ namespace GL {
 		position = newPosition;
 	}
 
-	Vector3 Camera::getPosition() {
+	Vector3 Camera::getPosition() const {
 		return position;
+	}
+	
+	Vector3 Camera::getRotation() const {
+		return rotation;
 	}
 
 	// Sets the camera's rotation.

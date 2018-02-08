@@ -163,7 +163,7 @@ namespace GL {
 			// calculate z-value in pixel
 			float t = (Vector3(x, y, 0.f) - Vector3(from.x, from.y, 0.f)).len / (Vector3(to.x, to.y, 0.f) - Vector3(from.x, from.y, 0.f)).len;
 			float z = (1 - t) * from.z + t * to.z;
-			drawPoint(x, y, z, wfBrush);
+			drawPoint(x, y, z, isSelectedObject ? selectedBrush : wfBrush);
 
 			// determine if need to change the direction
 			while (e >= 0) {
