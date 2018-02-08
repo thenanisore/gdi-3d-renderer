@@ -16,6 +16,7 @@ namespace GL {
 		Polygon(const Vector3 &first, const Vector3 &second, const Vector3 &third);
 		Polygon(const Vector4 &first, const Vector4 &second, const Vector4 &third);
 
+		void setColor(const Vector4 &col);
 		void setColors(const Vector4 &first, const Vector4 &second, const Vector4 &third);
 		void setColors(const Vector3 & first, const Vector3 & second, const Vector3 & third);
 		void setNormals(const Vector4 & first, const Vector4 & second, const Vector4 & third);

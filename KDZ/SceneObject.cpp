@@ -37,6 +37,12 @@ namespace GL {
 		reflectionYZ = yz;
 	}
 
+	void SceneObject::setPolygonColor(const std::vector<Vector4> cols) {
+		for (int i = 0; i < cols.size(); i++) {
+			polygons[i].setColor(cols[i]);
+		}
+	}
+
 	Matrix4 SceneObject::getModelMatrix() {
 		Matrix4 model;
 		// multiplication order: T * R * S * identity

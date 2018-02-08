@@ -179,13 +179,13 @@ namespace GL {
 	}
 
 	void Renderer::drawPoint(int x, int y, float z, SolidBrush ^br) {
-		//if (x > 0 && x < viewportX && y > 0 && y < viewportY) {
-		//	// z test
-		//	if (1.f / z > zbuffer[x, y]) {
-		//		zbuffer[x, y] = 1.f / z;
+		if (x > 0 && x < viewportX && y > 0 && y < viewportY) {
+			// z test
+			if (z < zbuffer[x, y]) {
+				zbuffer[x, y] = z;
 				graphics->FillRectangle(br, x, y, 1, 1);
-			//}
-		//}
+			}
+		}
 	}
 
 	void Renderer::drawPolygon(const GL::Polygon &pol) {
@@ -222,8 +222,8 @@ namespace GL {
 		}
 
 		Vector3 zs(first.z, second.z, third.z);
-
 		int totalHeight = third.y - first.y;
+
 		for (int i = 0; i < totalHeight; i++) {
 			bool secondHalf = i > second.y - first.y || second.y == first.y;
 			int segmentHeight = secondHalf ? third.y - second.y : second.y - first.y;
@@ -237,8 +237,9 @@ namespace GL {
 				Vector3 coordinates = Util::barycentric2d(Vector3(j, first.y + i, 0.f), first, second, third);
 				if (coordinates.x >= 0 && coordinates.y >= 0 && coordinates.z >= 0) {
 					Vector4 col = firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z;
-					surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
 					float z = coordinates.dot(zs);
+					surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
+					//surfaceBrush->Color = Color::FromArgb(255, z * 255, z * 255, z * 255);
 					drawPoint(j, first.y + i, z, surfaceBrush);
 				}
 			}

@@ -13,6 +13,10 @@ namespace GL {
 		calculateNormals();
 	}
 
+	void Polygon::setColor(const Vector4 & col) {
+		colors = std::vector<Vector4> { col, col, col };
+	}
+
 	void Polygon::setColors(const Vector4 &first, const Vector4 &second, const Vector4 &third) {
 		colors = std::vector<Vector4> { first, second, third };
 	}
