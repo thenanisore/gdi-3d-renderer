@@ -48,16 +48,18 @@ namespace KDZ {
 	private: System::Windows::Forms::RadioButton^  solidRadioButton;
 	private: System::Windows::Forms::RadioButton^  wfRadioButton;
 	private: System::Windows::Forms::ToolStripMenuItem^  aboutToolStripMenuItem;
-	private: System::Windows::Forms::TextBox^  textBox1;
-	private: System::Windows::Forms::Button^  button1;
+
+
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog;
 
 		 // Main scene
 		GL::Scene *mainScene;
 		System::Void setScene();
 		System::Void renderScene();
+		System::Void checkButtons();
 		// menu strip
 		System::Void openToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		// mainform events
 		System::Void MainForm_Shown(System::Object^  sender, System::EventArgs^  e);
 		System::Void MainForm_ResizeEnd(System::Object^  sender, System::EventArgs^  e);
@@ -393,8 +395,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->bothRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->solidRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->wfRadioButton = (gcnew System::Windows::Forms::RadioButton());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->statusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripStatusLabel = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->bgColorDialog = (gcnew System::Windows::Forms::ColorDialog());
@@ -452,7 +452,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->fileToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
 				this->openToolStripMenuItem,
-					this->exitToolStripMenuItem, this->aboutToolStripMenuItem
+					this->aboutToolStripMenuItem, this->exitToolStripMenuItem
 			});
 			this->fileToolStripMenuItem->Name = L"fileToolStripMenuItem";
 			this->fileToolStripMenuItem->Size = System::Drawing::Size(44, 24);
@@ -470,6 +470,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
 			this->exitToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->exitToolStripMenuItem->Text = L"Exit";
+			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::exitToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
@@ -1162,8 +1163,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->otherFlowLayoutPanel->Controls->Add(this->colorGroupBox);
 			this->otherFlowLayoutPanel->Controls->Add(this->drawingModeGroupBox);
-			this->otherFlowLayoutPanel->Controls->Add(this->textBox1);
-			this->otherFlowLayoutPanel->Controls->Add(this->button1);
 			this->otherFlowLayoutPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->otherFlowLayoutPanel->FlowDirection = System::Windows::Forms::FlowDirection::TopDown;
 			this->otherFlowLayoutPanel->Location = System::Drawing::Point(3, 3);
@@ -1293,23 +1292,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->wfRadioButton->UseVisualStyleBackColor = true;
 			this->wfRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::wfRadioButton_CheckedChanged);
 			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(3, 244);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(247, 286);
-			this->textBox1->TabIndex = 2;
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(3, 536);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
-			this->button1->TabIndex = 3;
-			this->button1->Text = L"button1";
-			this->button1->UseVisualStyleBackColor = true;
-			// 
 			// statusStrip
 			// 
 			this->statusStrip->ImageScalingSize = System::Drawing::Size(20, 20);
@@ -1389,7 +1371,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotPitchBar))->EndInit();
 			this->otherTabPage->ResumeLayout(false);
 			this->otherFlowLayoutPanel->ResumeLayout(false);
-			this->otherFlowLayoutPanel->PerformLayout();
 			this->colorGroupBox->ResumeLayout(false);
 			this->colorGroupBox->PerformLayout();
 			this->drawingModeGroupBox->ResumeLayout(false);

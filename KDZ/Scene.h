@@ -50,6 +50,8 @@ namespace GL {
 		void setDrawingMode(bool wireframe, bool solid);
 		// Returns true is the scene contains no objects.
 		bool isEmpty();
+		bool isSelectedFirst();
+		bool isSelectedLast();
 		bool fromFile(String ^file);
 
 		// test

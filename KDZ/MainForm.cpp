@@ -32,12 +32,52 @@ System::Void MainForm::renderScene() {
 	pictureBox->Refresh();
 }
 
+System::Void MainForm::checkButtons() {
+	if (mainScene->isEmpty()) {
+		prevObjButton->Enabled = false;
+		nextObjButton->Enabled = false;
+		resetObjButton->Enabled = false;
+		deleteObjButton->Enabled = false;
+		objPosXBar->Enabled = false;
+		objPosYBar->Enabled = false;
+		objPosZBar->Enabled = false;
+		objRotXBar->Enabled = false;
+		objRotYBar->Enabled = false;
+		objRotZBar->Enabled = false;
+		objScaleXBar->Enabled = false;
+		objScaleYBar->Enabled = false;
+		objScaleZBar->Enabled = false;
+		objReflectionXYCheckbox->Enabled = false;
+		objReflectionXZCheckbox->Enabled = false;
+		objReflectionYZCheckbox->Enabled = false;
+	}
+	else {
+		prevObjButton->Enabled = !mainScene->isSelectedFirst();
+		nextObjButton->Enabled = !mainScene->isSelectedLast();
+		resetObjButton->Enabled = true;
+		deleteObjButton->Enabled = true;
+		objPosXBar->Enabled = true;
+		objPosYBar->Enabled = true;
+		objPosZBar->Enabled = true;
+		objRotXBar->Enabled = true;
+		objRotYBar->Enabled = true;
+		objRotZBar->Enabled = true;
+		objScaleXBar->Enabled = true;
+		objScaleYBar->Enabled = true;
+		objScaleZBar->Enabled = true;
+		objReflectionXYCheckbox->Enabled = true;
+		objReflectionXZCheckbox->Enabled = true;
+		objReflectionYZCheckbox->Enabled = true;
+	}
+}
+
 System::Void MainForm::openToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
 	if (openFileDialog->ShowDialog() == ::DialogResult::OK) {
 		IO::StreamReader ^sr = gcnew IO::StreamReader(openFileDialog->FileName);
 		try {;
 			if (mainScene->fromFile(sr->ReadToEnd())) {
 				// object loaded successfully
+				checkButtons();
 				updateObjectParams();
 				renderScene();
 			}
@@ -50,6 +90,10 @@ System::Void MainForm::openToolStripMenuItem_Click(System::Object ^ sender, Syst
 			sr->Close();
 		}
 	}
+}
+
+System::Void MainForm::exitToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	Application::Exit();
 }
 
 System::Void MainForm::setObjectsParams(int objPosX, int objPosY, int objPosZ, int objScaleX, int objScaleY, int objScaleZ, int objRotX, int objRotY, int objRotZ, bool objReflXY, bool objReflXZ, bool objReflYZ) {
@@ -203,18 +247,21 @@ System::Void MainForm::camRotYawBar_Scroll(System::Object^  sender, System::Even
 
 System::Void MainForm::nextObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	mainScene->selectNextObject();
+	checkButtons();
 	updateObjectParams();
 	renderScene();
 }
 
 System::Void MainForm::prevObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	mainScene->selectPreviousObject();
+	checkButtons();
 	updateObjectParams();
 	renderScene();
 }
 
 System::Void MainForm::deleteObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	mainScene->deleteObject();
+	checkButtons();
 	renderScene();
 }
 

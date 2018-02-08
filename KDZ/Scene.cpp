@@ -31,7 +31,6 @@ namespace GL {
 			projection = Util::perspective(90.0f, renderer->getViewportAspect(), 0.1f, 100.0f);
 		}
 		else {
-			// TODO: set parameters
 			projection = Util::orthographic(5, 5, 0.1, 100);
 		}
 
@@ -39,19 +38,15 @@ namespace GL {
 
 		if (!isEmpty()) {
 			for (const SceneObject &object : sceneObjects) {
-				// get transformation matrices
+				// get transformation matrix
 				Matrix4 model = object.getModelMatrix();
-				// TODO: render each object
+				// notify the renderer if the current object is selected
+				renderer->isSelectedObject = (&sceneObjects[selectedObject] == &object);
 				// pass the current object and a transformation matrix in a renderer
 				renderer->renderObject(object, projection * view * model, drawWireframe, drawSolid);
+				renderer->isSelectedObject = false;
 			}
 		}
-	}
-
-	void Scene::addObject(SceneObject &obj) {
-		sceneObjects.push_back(obj);
-		// select the added object
-		selectedObject = sceneObjects.size() - 1;
 	}
 
 	// methods to manipulate objects:
@@ -102,6 +97,12 @@ namespace GL {
 		}
 	}
 
+	void Scene::addObject(SceneObject &obj) {
+		sceneObjects.push_back(obj);
+		// select the added object
+		selectedObject = sceneObjects.size() - 1;
+	}
+
 	void Scene::deleteObject() {
 		if (!isEmpty()) {
 			sceneObjects.erase(sceneObjects.begin() + selectedObject);
@@ -145,6 +146,14 @@ namespace GL {
 
 	bool Scene::isEmpty() {
 		return sceneObjects.size() == 0;
+	}
+
+	bool Scene::isSelectedFirst() {
+		return selectedObject == 0 && !isEmpty();
+	}
+
+	bool Scene::isSelectedLast() {
+		return selectedObject == sceneObjects.size() - 1 && !isEmpty();
 	}
 
 	bool Scene::fromFile(String ^ file) {

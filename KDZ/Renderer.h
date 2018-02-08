@@ -41,6 +41,7 @@ namespace GL {
 		int viewportX;
 		int viewportY;
 		array<float, 2> ^zbuffer;
+		bool toClip(const Polygon & pol);
 		void drawLine(const Vector3 &from, const Vector3 &to);
 		void drawPoint(int x, int y, float z, SolidBrush ^b);
 		void drawPolygon(const GL::Polygon &pol);

@@ -17,13 +17,13 @@ namespace GL {
 		selectedBrush = gcnew SolidBrush(Color::Yellow);
 		surfaceBrush = gcnew SolidBrush(Color::LightBlue);
 		// initialize z-buffer
-		zbuffer = gcnew array<float, 2>(viewportWidth, viewportHeight);
 		setViewport(viewportWidth, viewportHeight);
 	}
 
 	void Renderer::setViewport(int width, int height) {
 		viewportX = width;
 		viewportY = height;
+		zbuffer = gcnew array<float, 2>(viewportX, viewportY);
 	}
 
 	float Renderer::getViewportAspect() {
@@ -54,6 +54,17 @@ namespace GL {
 		}
 	}
 
+	bool Renderer::toClip(const Polygon &pol) {
+		// don't draw a poly if it's entirely outside
+		for (const Vector4 &vert : pol.vertices) {
+			if (vert.x >= 0 || vert.x < viewportX || vert.y >= 0 || vert.y < viewportY) {
+				// draw a poly if at least one vertex is inside
+				return false;
+			}
+		}
+		return true;
+	}
+
 
 	void Renderer::renderObject(const SceneObject &obj, const Matrix4& transformMatrix, bool wireframe, bool solid) {
 		for (GL::Polygon pol : obj.polygons) {
@@ -63,13 +74,15 @@ namespace GL {
 			transformed.vertices[1] = NDCtoViewport(transformed.vertices[1].fromHomogeneous());
 			transformed.vertices[2] = NDCtoViewport(transformed.vertices[2].fromHomogeneous());
 
-			// draw
-			if (wireframe) {
-				drawPolygon(transformed);
-			}
-			if (solid) {
-				// TODO: lighting
-				fillPolygon(transformed);
+			if (!toClip(transformed)) {
+				// draw
+				if (wireframe) {
+					drawPolygon(transformed);
+				}
+				if (solid) {
+					// TODO: lighting
+					fillPolygon(transformed);
+				}
 			}
 		}
 	}
@@ -179,7 +192,7 @@ namespace GL {
 	}
 
 	void Renderer::drawPoint(int x, int y, float z, SolidBrush ^br) {
-		if (x > 0 && x < viewportX && y > 0 && y < viewportY) {
+		if (x >= 0 && x < viewportX && y >= 0 && y < viewportY && z > 0 && z < 1) {
 			// z test
 			if (z < zbuffer[x, y]) {
 				zbuffer[x, y] = z;
@@ -196,6 +209,15 @@ namespace GL {
 
 	float max(float a, float b) { return a > b ? a : b; }
 	float min(float a, float b) { return a < b ? a : b; }
+
+	void clampVec(Vector3 &vec, float min, float max) {
+		if (vec.x < min) vec.x = min;
+		if (vec.y < min) vec.y = min;
+		if (vec.z < min) vec.z = min;
+		if (vec.x > max) vec.x = max;
+		if (vec.y > max) vec.y = max;
+		if (vec.z > max) vec.z = max;
+	}
 
 	void Renderer::fillPolygon(const Polygon &pol) {
 		// copy vectors first
@@ -235,13 +257,12 @@ namespace GL {
 			for (int j = A.x; j <= B.x; j++) {
 				// determine a color
 				Vector3 coordinates = Util::barycentric2d(Vector3(j, first.y + i, 0.f), first, second, third);
-				if (coordinates.x >= 0 && coordinates.y >= 0 && coordinates.z >= 0) {
-					Vector4 col = firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z;
-					float z = coordinates.dot(zs);
-					surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
-					//surfaceBrush->Color = Color::FromArgb(255, z * 255, z * 255, z * 255);
-					drawPoint(j, first.y + i, z, surfaceBrush);
-				}
+				Vector3 col = (firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z).toVec3();
+				clampVec(col, 0, 1.f);
+				float z = coordinates.dot(zs);
+				surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
+				//surfaceBrush->Color = Color::FromArgb(255, z * 255, z * 255, z * 255);
+				drawPoint(j, first.y + i, z, surfaceBrush);
 			}
 		}
 	}
