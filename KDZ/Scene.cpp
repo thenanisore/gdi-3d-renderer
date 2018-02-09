@@ -18,6 +18,7 @@ namespace GL {
 		addCube();
 		//addPolygons();
 		selectedObject = 0;
+		lightPos = camera.getPosition();
 	}
 
 	void Scene::renderScene(Renderer ^renderer) {
@@ -46,7 +47,8 @@ namespace GL {
 				// notify the renderer if the current object is selected
 				renderer->isSelectedObject = (&sceneObjects[selectedObject] == &object);
 				// pass the current object and transformation matrices in the renderer
-				renderer->renderObject(object, model, view, projection, drawWireframe, drawSolid);
+				renderer->renderObject(object, model, view, projection, camera.getPosition(), 
+					lightPos, drawWireframe, drawSolid);
 				renderer->isSelectedObject = false;
 			}
 		}
@@ -136,6 +138,18 @@ namespace GL {
 
 	void Scene::resetCamera() {
 		camera.reset();
+	}
+
+	Vector3 Scene::getLightPosition() {
+		return lightPos;
+	}
+
+	void Scene::setLightPosition(int x_coord, int y_coord, int z_coord) {
+		lightPos = Vector3(x_coord, y_coord, z_coord);
+	}
+
+	void Scene::resetLighting() {
+		// TODO: reset lighting
 	}
 
 	void Scene::setProjectionMode(bool _perspective) {

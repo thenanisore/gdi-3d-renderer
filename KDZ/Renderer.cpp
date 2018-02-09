@@ -14,6 +14,7 @@ namespace GL {
 	Renderer::Renderer(Graphics ^im, int viewportWidth, int viewportHeight) : graphics(im) {
 		// initialize colors
 		bgColor = DEFAULT_BG_COLOR;
+		lightColor = DEFAULT_LIGHT_COLOR;
 		wfBrush = gcnew SolidBrush(DEFAULT_WF_COLOR);
 		selectedBrush = gcnew SolidBrush(DEFAULT_SELECTED_COLOR);
 		surfaceBrush = gcnew SolidBrush(Color::Black);
@@ -76,77 +77,30 @@ namespace GL {
 		return visible;
 	}
 
-	void Renderer::renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4& proj, bool wireframe, bool solid) {
+	void Renderer::renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4& proj, 
+		const Vector3 &cameraPos, const Vector3 &lightPos, bool wireframe, bool solid) 
+	{
 		Matrix4 modelView = view * model;
 		Matrix3 normalTransform = modelView.inverted().transposed().toMat3();
 		for (const GL::Polygon &pol : obj.polygons) {
-			// get the polygon transformed (world coords).
-			GL::Polygon worldTransformed = pol.getTransformed(modelView, normalTransform);
+			// get the polygon transformed (world and camera coords).
+			GL::Polygon cameraTransformed = pol.getTransformed(modelView, normalTransform);
 			// check visibility is back-culling is on, don't draw if is a back face
-			if (cullFace && !isVisible(worldTransformed)) {
+			if (cullFace && !isVisible(cameraTransformed)) {
 				continue;
 			}
 			// get the polygon transformed (clip space). if ortho, don't forget to apply the view matrix.
-			GL::Polygon transformed = worldTransformed.getTransformed(perspective ? proj : proj * view, Matrix3());
+			GL::Polygon transformed = cameraTransformed.getTransformed(perspective ? proj : proj * view, Matrix3());
 			viewportTransform(transformed);
 			if (!toClip(transformed)) {
 				if (wireframe) { drawPolygon(transformed); }
-				if (solid) { fillPolygon(transformed); }
+				if (solid) { 
+					// another one for lighting calculations
+					GL::Polygon worldTransformed = pol.getTransformed(modelView, normalTransform);
+					fillPolygon(transformed, worldTransformed, cameraPos, lightPos);
+				}
 			}
 		}
-	}
-
-	// test code
-	void Renderer::ztofile() {
-			std::ofstream myfile;
-			myfile.open("log.txt");
-			for (int x = viewportX / 3; x < 2 * viewportX / 3; x++) {
-				for (int y = viewportY / 3; y < 2 * viewportY / 3; y++) {
-					if (zbuffer[x, y] == INFINITY) {
-						myfile << "| |";
-					} else {
-						myfile << "|" << zbuffer[x, y] << "|";
-					}
-				}
-				myfile << std::endl;
-			}
-			myfile.close();
-	}
-
-	void Renderer::setGraphics(Graphics ^g) {
-		graphics = g;
-	}
-
-	Color Renderer::getBGColor() {
-		return bgColor;
-	}
-
-	Color Renderer::getWFColor() {
-		return wfBrush->Color;
-	}
-
-	Color Renderer::getSelectedColor() {
-		return selectedBrush->Color;
-	}
-
-	void Renderer::setBGColor(Color _col) {
-		bgColor = _col;
-	}
-
-	void Renderer::setWFColor(Color _col) {
-		wfBrush->Color = _col;
-	}
-
-	void Renderer::setSelectedColor(Color _col) {
-		selectedBrush->Color = _col;
-	}
-
-	void Renderer::setProjection(bool _perspective) {
-		perspective = _perspective;
-	}
-
-	void Renderer::setFaceCulling(bool _cullFace) {
-		cullFace = _cullFace;
 	}
 
 	// returns a signum of x
@@ -227,14 +181,14 @@ namespace GL {
 		if (vec.z > max) vec.z = max;
 	}
 
-	void Renderer::fillPolygon(const Polygon &pol) {
+	void Renderer::fillPolygon(const Polygon &poly, const Polygon &worldPoly, const Vector3 &cameraPos, const Vector3 &lightPos) {
 		// copy vectors first
-		Vector3 first = pol.vertices[0].toVec3();
-		Vector3 second = pol.vertices[1].toVec3();
-		Vector3 third = pol.vertices[2].toVec3();
-		Vector4 firstColor = pol.colors[0];
-		Vector4 secondColor = pol.colors[1];
-		Vector4 thirdColor = pol.colors[2];
+		Vector3 first = poly.vertices[0].toVec3(), second = poly.vertices[1].toVec3(), third = poly.vertices[2].toVec3();
+		// in world coordinates (for lighting calculations) 
+		Vector3 firstW = worldPoly.vertices[0].toVec3(), secondW = worldPoly.vertices[1].toVec3(), thirdW = worldPoly.vertices[2].toVec3();
+		// normals (in world coordinates, for lighting calculations)
+		Vector3 firstNorm = worldPoly.normals[0], secondNorm = worldPoly.normals[1], thirdNorm = worldPoly.normals[2];
+		Vector4 firstColor = poly.colors[0], secondColor = poly.colors[1], thirdColor = poly.colors[2];
 
 		// deformed triangles not needed to be rendered
 		if ((first.y == second.y && first.y == third.y) || (first.x == second.x && first.x == third.x))
@@ -243,15 +197,21 @@ namespace GL {
 		// sort the vertices, third -> second -> first
 		if (first.y > second.y) {
 			swap(first, second);
+			swap(firstW, secondW);
 			swap(firstColor, secondColor);
+			swap(firstNorm, secondNorm);
 		}
 		if (first.y > third.y) {
 			swap(first, third);
+			swap(firstW, thirdW);
 			swap(firstColor, thirdColor);
+			swap(firstNorm, thirdNorm);
 		}
 		if (second.y > third.y) {
 			swap(second, third);
+			swap(secondW, thirdW);
 			swap(secondColor, thirdColor);
+			swap(secondNorm, thirdNorm);
 		}
 
 		// memorize z-values
@@ -279,12 +239,35 @@ namespace GL {
 			if (A.x > B.x) swap(A, B);
 			// fill the line between A and B
 			for (int j = A.x; j <= B.x; j++) {
-				// determine a color
+				// find barycentric coordinates for interpolation
 				Vector3 coordinates = Util::barycentric2d(Vector3(j, first.y + i, 0.f), first, second, third);
+				// determine a color
 				Vector3 col = (firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z).toVec3();
+				// determine a fragment position (in world coords)
+				Vector3 fragPos = (firstW * coordinates.x + secondW * coordinates.y + thirdW * coordinates.z);
+				// determine an interpolated normal
+				Vector3 fragNormal = (firstNorm * coordinates.x + secondNorm * coordinates.y + thirdNorm * coordinates.z).normalized();
 				// map negative colors to 0, >1 to 1
+
+				// lighting calculations
+				float ambientStrength = 0.1f;
+				Vector3 ambient = Util::colorToVec(lightColor).toVec3() * ambientStrength;
+				// diffuse lighting
+				float diffuseStrength = 0.5f;
+				Vector3 lightDir = (lightPos - fragPos).normalized();
+				float diff = max(fragNormal.dot(lightDir), 0.f);
+				Vector3 diffuse = Util::colorToVec(lightColor).toVec3() * diff * diffuseStrength;
+				// specular lighting
+				float specularStrength = 0.5f;
+				Vector3 viewDir = -fragPos;
+				Vector3 reflectDir = Util::reflect(-lightDir, fragNormal);
+				float spec = pow(max(viewDir.dot(reflectDir), 0.f), 32);
+				Vector3 specular = Util::colorToVec(lightColor).toVec3() * specularStrength * spec;
+				// resulting
+				col = (diffuse + ambient) * col;
 				clampVec(col, 0, 1.f);
 				surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
+
 				// find interpolated z-value
 				float z = coordinates.dot(zs);
 				//surfaceBrush->Color = Color::FromArgb(255, z * 255, z * 255, z * 255);
@@ -306,4 +289,67 @@ namespace GL {
 			           (int)((1.f - vertex.y) * viewportY / 2.f),
 			            vertex.z);
 	}
+
+
+	// test code
+	void Renderer::ztofile() {
+			std::ofstream myfile;
+			myfile.open("log.txt");
+			for (int x = viewportX / 3; x < 2 * viewportX / 3; x++) {
+				for (int y = viewportY / 3; y < 2 * viewportY / 3; y++) {
+					if (zbuffer[x, y] == INFINITY) {
+						myfile << "| |";
+					} else {
+						myfile << "|" << zbuffer[x, y] << "|";
+					}
+				}
+				myfile << std::endl;
+			}
+			myfile.close();
+	}
+
+	void Renderer::setGraphics(Graphics ^g) {
+		graphics = g;
+	}
+
+	Color Renderer::getBGColor() {
+		return bgColor;
+	}
+
+	Color Renderer::getWFColor() {
+		return wfBrush->Color;
+	}
+
+	Color Renderer::getLightColor() {
+		return lightColor;
+	}
+
+	Color Renderer::getSelectedColor() {
+		return selectedBrush->Color;
+	}
+
+	void Renderer::setBGColor(Color _col) {
+		bgColor = _col;
+	}
+
+	void Renderer::setWFColor(Color _col) {
+		wfBrush->Color = _col;
+	}
+
+	void Renderer::setLightColor(Color _col) {
+		lightColor = _col;
+	}
+
+	void Renderer::setSelectedColor(Color _col) {
+		selectedBrush->Color = _col;
+	}
+
+	void Renderer::setProjection(bool _perspective) {
+		perspective = _perspective;
+	}
+
+	void Renderer::setFaceCulling(bool _cullFace) {
+		cullFace = _cullFace;
+	}
+
 }

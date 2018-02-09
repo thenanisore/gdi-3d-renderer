@@ -18,7 +18,8 @@ namespace GL {
 		void drawAxes(Matrix4 transformMatrix, bool grid);
 		void clearScreen();
 		void clearZBuffer();
-		void renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4 &proj, bool wireframe, bool solid);
+		void renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4 &proj, 
+			const Vector3 &cameraPos, const Vector3 &lightPos, bool wireframe, bool solid);
 		void ztofile();
 		void setGraphics(Graphics ^g);
 
@@ -26,9 +27,11 @@ namespace GL {
 
 		Color getBGColor();
 		Color getWFColor();
+		Color getLightColor();
 		Color getSelectedColor();
 		void setBGColor(Color _col);
 		void setWFColor(Color _col);
+		void setLightColor(Color _col);
 		void setSelectedColor(Color _col);
 		bool isSelectedObject;
 		void setProjection(bool _perspective);
@@ -37,10 +40,12 @@ namespace GL {
 		const Color DEFAULT_BG_COLOR = Color::Black;
 		const Color DEFAULT_WF_COLOR = Color::White;
 		const Color DEFAULT_SELECTED_COLOR = Color::Blue;
+		const Color DEFAULT_LIGHT_COLOR = Color::White;
 
 	private:
 		Graphics ^graphics;
 		Color bgColor;
+		Color lightColor;
 		SolidBrush ^wfBrush;
 		SolidBrush ^selectedBrush;
 		SolidBrush ^surfaceBrush;
@@ -49,12 +54,12 @@ namespace GL {
 		int viewportX;
 		int viewportY;
 		array<float, 2> ^zbuffer;
-		bool toClip(const Polygon & pol);
-		bool isVisible(const Polygon & pol);
+		bool toClip(const Polygon & poly);
+		bool isVisible(const Polygon & poly);
 		void drawLine(const Vector3 &from, const Vector3 &to);
 		void drawPoint(int x, int y, float z, SolidBrush ^b);
-		void drawPolygon(const GL::Polygon &pol);
-		void fillPolygon(const GL::Polygon &pol);
+		void drawPolygon(const GL::Polygon &poly);
+		void fillPolygon(const GL::Polygon &poly, const GL::Polygon &worldPoly, const Vector3 &cameraPos, const Vector3 &lightPos);
 		void viewportTransform(GL::Polygon & poly);
 		Vector3 NDCtoViewport(const Vector3 &vertex);
 	};

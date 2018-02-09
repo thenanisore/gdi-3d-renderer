@@ -44,5 +44,11 @@ namespace GL {
 		Vector3 parseVec3(System::String^ str);
 		// Returns true is the difference between a and b is less than epsilon.
 		bool compareFloat(float a, float b, float eps);
+		// Returns a Color object with the RGBA values from the col vector.
+		System::Drawing::Color vecToColor(const Vector4 &col);
+		// Returns a Vector4 object with the RGBA values from the Color object
+		Vector4 colorToVec(System::Drawing::Color ^col);
+		// Returns a reflection direction for a given incident vector and a normal.
+		Vector3 reflect(const Vector3 &inc, const Vector3 &norm);
 	}
 }

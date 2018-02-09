@@ -33,6 +33,7 @@ namespace GL {
 		Vector4 operator-(const Vector4 &vec) const;
 		Vector4 operator-() const;
 		Vector4 operator*(float s) const;
+		Vector4 operator*(const Vector4 &vec) const;
 		Vector4 operator/(float s) const;
 		// Returns a length of the vector.
 		float length() const;

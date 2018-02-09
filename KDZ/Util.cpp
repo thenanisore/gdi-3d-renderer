@@ -205,5 +205,19 @@ namespace GL {
 		bool compareFloat(float a, float b, float eps) {
 			return abs(a - b) < eps;
 		}
+
+		// Returns a Color object with the RGBA values from the col vector.
+		System::Drawing::Color vecToColor(const Vector4 &col) {
+			return System::Drawing::Color::FromArgb(col.w, col.x, col.y, col.z);
+		}
+
+		// Returns a Vector4 object with the RGBA values from the Color object
+		Vector4 colorToVec(System::Drawing::Color ^col) {
+			return Vector4(col->R / 255.f, col->G / 255.f, col->B / 255.f, col->A / 255.f);
+		}
+
+		Vector3 reflect(const Vector3 & inc, const Vector3 & norm) {
+			return inc - norm * (2.f * norm.dot(inc));
+		}
 	}
 }

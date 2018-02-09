@@ -30,9 +30,6 @@ namespace GL {
 		Vector3 getObjectReflection() const;
 		Vector3 getObjectScale(bool worldCoords) const;
 
-		Vector3 getCameraPosition(bool worldCoords) const;
-		Vector3 getCameraRotation(bool worldCoords) const;
-
 		void resetObject();
 		void deleteObject();
 		void selectNextObject();
@@ -42,7 +39,16 @@ namespace GL {
 
 		void setCameraPosition(int x_coord, int y_coord, int z_coord);
 		void setCameraRotation(float pitch, float yawn, float roll);
+		Vector3 getCameraPosition(bool worldCoords) const;
+		Vector3 getCameraRotation(bool worldCoords) const;
+
 		void resetCamera();
+
+		// methods to manipulate lighting:
+
+		Vector3 getLightPosition();
+		void setLightPosition(int x_coord, int y_coord, int z_coord);
+		void resetLighting();
 
 		// Sets projection mode: perspective if the parameter is true, orthographics otherwise.
 		void setProjectionMode(bool perspective);
@@ -68,6 +74,7 @@ namespace GL {
 
 	private:
 		void addObject(SceneObject &obj);
+		Vector3 lightPos;
 		Camera camera;
 		std::vector<SceneObject> sceneObjects;
 		int selectedObject;

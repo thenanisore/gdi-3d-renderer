@@ -172,26 +172,9 @@ void test4() {
 }
 
 int main(array<System::String ^> ^args) {
-
-	GL::Matrix3 ma(std::vector<float> {
-		1, 4, 7, 3, 0, 5, -1, 9, 11
-	});
-	print(ma);
-	print(ma.determinant());
-
-	GL::Matrix3 mb(std::vector<float> {
-		7, 4, 9, 0, 6, -3, 4, -10, -4
-	});
-	print(mb);
-	print(mb.determinant());
-
-	GL::Matrix4 mc(std::vector<float> {
-		6, -5, 8, 4, 9, 7, 5, 2, 7, 5, 3, 7, -4, 8, -8, -3
-	});
-	print(mc);
-	print(mc.determinant());
-	print(mc.inverted());
-	print(mc.inverted() * mc);
+	GL::Vector3 norm(0, -1, 0);
+	GL::Vector3 a(1.5, 2.f, 0);
+	print(a - norm * (2.f * norm.dot(a)));
 
 	std::getchar();
     return 0;

@@ -51,6 +51,10 @@ namespace GL {
 		return Vector4(s * x, s * y, s * z, s * w);
 	}
 
+	Vector4 Vector4::operator*(const Vector4 & vec) const {
+		return Vector4(x * vec.x, y * vec.y, z * vec.z, w * vec.w);
+	}
+
 	Vector4 Vector4::operator/(float s) const {
 		if (s == 0)
 			throw std::invalid_argument("Division by zero");
