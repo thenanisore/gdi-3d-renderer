@@ -214,29 +214,33 @@ namespace GL {
 			if (!String::IsNullOrWhiteSpace(trimmed) && trimmed[0] != '#') {
 				// parse
 				// TODO: exception handling
-				Vector3 data = Util::parseVec3(trimmed->Substring(2));
+				Vector3 data;
 				switch (trimmed[0]) {
 				case 'v':
 					// vertex
+					data = Util::parseVec3(trimmed->Substring(2));
 					vertices.push_back(data);
 					break;
 				case 'c':
 					// color
+					data = Util::parseVec3(trimmed->Substring(2));
 					colors.push_back(data);
 					break;
-				case 'p':
+				case 'f':
 					// polygon indices
+					data = Util::parseVec3(trimmed->Substring(2));
 					indices.push_back(data);
 					break;
 				default:
-					// wrong format file?
-					return false;
+					// do nothing?
+					continue;
 				}
 			}
 		}
 		// construct a SceneObject
 		SceneObject newObj;
 		for (int i = 0; i < indices.size(); i++) {
+			indices[i] = indices[i] - 1;
 			newObj.addPolygon(GL::Polygon(
 				vertices[(int)indices[i].x],
 				vertices[(int)indices[i].y],

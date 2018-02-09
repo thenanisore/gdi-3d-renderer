@@ -30,7 +30,9 @@ namespace GL {
 		bool operator==(const Vector4 &vec) const;
 		bool operator!=(const Vector4 &vec) const;
 		Vector4 operator+(const Vector4 &vec) const;
+		Vector4 operator+(float s) const;
 		Vector4 operator-(const Vector4 &vec) const;
+		Vector4 operator-(float s) const;
 		Vector4 operator-() const;
 		Vector4 operator*(float s) const;
 		Vector4 operator*(const Vector4 &vec) const;

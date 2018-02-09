@@ -26,6 +26,8 @@ namespace GL {
 		bool equalEpsilon(const Vector3 &vec, float eps) const;
 		bool operator!=(const Vector3 &vec) const;
 		Vector3 operator+(const Vector3 &vec) const;
+		Vector3 operator+(float s) const;
+		Vector3 operator-(float s) const;
 		Vector3 operator-(const Vector3 &vec) const;
 		Vector3 operator-() const;
 		Vector3 operator*(float s) const;

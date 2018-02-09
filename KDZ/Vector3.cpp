@@ -42,6 +42,14 @@ namespace GL {
 		return Vector3(x + vec.x, y + vec.y, z + vec.z);
 	}
 
+	Vector3 Vector3::operator+(float s) const {
+		return Vector3(x + s, y + s, z + s);
+	}
+
+	Vector3 Vector3::operator-(float s) const {
+		return Vector3(x - s, y - s, z - s);
+	}
+
 	Vector3 Vector3::operator-(const Vector3 &vec) const {
 		return Vector3(x - vec.x, y - vec.y, z - vec.z);
 	}

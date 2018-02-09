@@ -39,8 +39,16 @@ namespace GL {
 		return Vector4(x + vec.x, y + vec.y, z + vec.z, w + vec.w);
 	}
 
+	Vector4 Vector4::operator+(float s) const {
+		return Vector4(x + s, y + s, z + s, w + s);
+	}
+
 	Vector4 Vector4::operator-(const Vector4 &vec) const {
 		return Vector4(x - vec.x, y - vec.y, z - vec.z, w - vec.w);
+	}
+
+	Vector4 Vector4::operator-(float s) const {
+		return Vector4(x - s, y - s, z - s, w - s);
 	}
 
 	Vector4 Vector4::operator-() const {
