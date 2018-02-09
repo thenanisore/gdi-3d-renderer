@@ -76,6 +76,8 @@ namespace KDZ {
 	private: System::Windows::Forms::TrackBar^  lightDiffuseBar;
 	private: System::Windows::Forms::Label^  lightDiffuseLabel;
 	private: System::Windows::Forms::ColorDialog^  lightColorDialog;
+	private: System::Windows::Forms::TrackBar^  trackBar1;
+	private: System::Windows::Forms::Label^  specLightLabel;
 
 
 
@@ -474,6 +476,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->lightColorDialog = (gcnew System::Windows::Forms::ColorDialog());
+			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
+			this->specLightLabel = (gcnew System::Windows::Forms::Label());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -520,6 +524,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->drawingModeGroupBox->SuspendLayout();
 			this->cullGroupBox->SuspendLayout();
 			this->statusStrip->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// menuStrip
@@ -1258,9 +1263,12 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightFlowLayoutPanel->Name = L"lightFlowLayoutPanel";
 			this->lightFlowLayoutPanel->Size = System::Drawing::Size(253, 607);
 			this->lightFlowLayoutPanel->TabIndex = 1;
+			this->lightFlowLayoutPanel->WrapContents = false;
 			// 
 			// lightParamsGroupBox
 			// 
+			this->lightParamsGroupBox->Controls->Add(this->trackBar1);
+			this->lightParamsGroupBox->Controls->Add(this->specLightLabel);
 			this->lightParamsGroupBox->Controls->Add(this->lightDiffuseBar);
 			this->lightParamsGroupBox->Controls->Add(this->lightDiffuseLabel);
 			this->lightParamsGroupBox->Controls->Add(this->lightAmbiTrackBar);
@@ -1269,7 +1277,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightParamsGroupBox->Controls->Add(this->lightColorLabel);
 			this->lightParamsGroupBox->Location = System::Drawing::Point(3, 3);
 			this->lightParamsGroupBox->Name = L"lightParamsGroupBox";
-			this->lightParamsGroupBox->Size = System::Drawing::Size(241, 181);
+			this->lightParamsGroupBox->Size = System::Drawing::Size(218, 256);
 			this->lightParamsGroupBox->TabIndex = 0;
 			this->lightParamsGroupBox->TabStop = false;
 			this->lightParamsGroupBox->Text = L"Parameters";
@@ -1325,9 +1333,9 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->lightColorButton->BackColor = System::Drawing::Color::White;
 			this->lightColorButton->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
-			this->lightColorButton->Location = System::Drawing::Point(91, 19);
+			this->lightColorButton->Location = System::Drawing::Point(87, 19);
 			this->lightColorButton->Name = L"lightColorButton";
-			this->lightColorButton->Size = System::Drawing::Size(144, 23);
+			this->lightColorButton->Size = System::Drawing::Size(125, 23);
 			this->lightColorButton->TabIndex = 1;
 			this->lightColorButton->UseVisualStyleBackColor = false;
 			this->lightColorButton->Click += gcnew System::EventHandler(this, &MainForm::lightColorButton_Click);
@@ -1346,9 +1354,9 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightModeGroupBox->Controls->Add(this->gouraudLightRadioButton);
 			this->lightModeGroupBox->Controls->Add(this->phongLightRadioButton);
 			this->lightModeGroupBox->Controls->Add(this->noLightRadioButton);
-			this->lightModeGroupBox->Location = System::Drawing::Point(3, 190);
+			this->lightModeGroupBox->Location = System::Drawing::Point(3, 265);
 			this->lightModeGroupBox->Name = L"lightModeGroupBox";
-			this->lightModeGroupBox->Size = System::Drawing::Size(241, 110);
+			this->lightModeGroupBox->Size = System::Drawing::Size(221, 110);
 			this->lightModeGroupBox->TabIndex = 1;
 			this->lightModeGroupBox->TabStop = false;
 			this->lightModeGroupBox->Text = L"Mode";
@@ -1400,9 +1408,9 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightPosGroupBox->Controls->Add(this->lightPosYLabel);
 			this->lightPosGroupBox->Controls->Add(this->lightPosXBar);
 			this->lightPosGroupBox->Controls->Add(this->lightPosXLabel);
-			this->lightPosGroupBox->Location = System::Drawing::Point(3, 306);
+			this->lightPosGroupBox->Location = System::Drawing::Point(3, 381);
 			this->lightPosGroupBox->Name = L"lightPosGroupBox";
-			this->lightPosGroupBox->Size = System::Drawing::Size(241, 236);
+			this->lightPosGroupBox->Size = System::Drawing::Size(224, 236);
 			this->lightPosGroupBox->TabIndex = 4;
 			this->lightPosGroupBox->TabStop = false;
 			this->lightPosGroupBox->Text = L"Position";
@@ -1678,6 +1686,29 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->openFileDialog->Filter = L"3D Object files|*.object|Text files|*.txt|All files|*.*";
 			// 
+			// trackBar1
+			// 
+			this->trackBar1->Location = System::Drawing::Point(9, 196);
+			this->trackBar1->Maximum = 90;
+			this->trackBar1->Minimum = 10;
+			this->trackBar1->Name = L"trackBar1";
+			this->trackBar1->Size = System::Drawing::Size(212, 56);
+			this->trackBar1->TabIndex = 12;
+			this->trackBar1->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->trackBar1->Value = 10;
+			// 
+			// specLightLabel
+			// 
+			this->specLightLabel->AutoSize = true;
+			this->specLightLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->specLightLabel->Location = System::Drawing::Point(6, 173);
+			this->specLightLabel->Name = L"specLightLabel";
+			this->specLightLabel->Size = System::Drawing::Size(122, 17);
+			this->specLightLabel->TabIndex = 13;
+			this->specLightLabel->Text = L"Specular Strength";
+			this->specLightLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -1758,6 +1789,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->cullGroupBox->PerformLayout();
 			this->statusStrip->ResumeLayout(false);
 			this->statusStrip->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
