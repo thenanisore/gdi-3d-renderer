@@ -515,6 +515,12 @@ System::Void MainForm::changeLighting() {
 	renderScene();
 }
 
+System::Void MainForm::lightResetButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	mainScene->resetLighting();
+	updateLightParams();
+	renderScene();
+}
+
 System::Void MainForm::noLightRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
 	changeLighting();
 }

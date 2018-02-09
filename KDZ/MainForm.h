@@ -78,6 +78,7 @@ namespace KDZ {
 	private: System::Windows::Forms::ColorDialog^  lightColorDialog;
 	private: System::Windows::Forms::TrackBar^  trackBar1;
 	private: System::Windows::Forms::Label^  specLightLabel;
+	private: System::Windows::Forms::Button^  lightResetButton;
 
 
 
@@ -155,6 +156,7 @@ namespace KDZ {
 		System::Void changeLightPosition();
 		// light source control
 		System::Void changeLighting();
+		System::Void lightResetButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void lightPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void lightPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void lightPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
@@ -478,6 +480,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
 			this->specLightLabel = (gcnew System::Windows::Forms::Label());
+			this->lightResetButton = (gcnew System::Windows::Forms::Button());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -550,20 +553,20 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// openToolStripMenuItem
 			// 
 			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
-			this->openToolStripMenuItem->Size = System::Drawing::Size(129, 26);
+			this->openToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->openToolStripMenuItem->Text = L"Open...";
 			this->openToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::openToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
 			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
-			this->aboutToolStripMenuItem->Size = System::Drawing::Size(129, 26);
+			this->aboutToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->aboutToolStripMenuItem->Text = L"About";
 			// 
 			// exitToolStripMenuItem
 			// 
 			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
-			this->exitToolStripMenuItem->Size = System::Drawing::Size(129, 26);
+			this->exitToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->exitToolStripMenuItem->Text = L"Exit";
 			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::exitToolStripMenuItem_Click);
 			// 
@@ -1254,6 +1257,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// lightFlowLayoutPanel
 			// 
 			this->lightFlowLayoutPanel->AutoScroll = true;
+			this->lightFlowLayoutPanel->Controls->Add(this->lightResetButton);
 			this->lightFlowLayoutPanel->Controls->Add(this->lightParamsGroupBox);
 			this->lightFlowLayoutPanel->Controls->Add(this->lightModeGroupBox);
 			this->lightFlowLayoutPanel->Controls->Add(this->lightPosGroupBox);
@@ -1275,7 +1279,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightParamsGroupBox->Controls->Add(this->lightAmbiLabel);
 			this->lightParamsGroupBox->Controls->Add(this->lightColorButton);
 			this->lightParamsGroupBox->Controls->Add(this->lightColorLabel);
-			this->lightParamsGroupBox->Location = System::Drawing::Point(3, 3);
+			this->lightParamsGroupBox->Location = System::Drawing::Point(3, 32);
 			this->lightParamsGroupBox->Name = L"lightParamsGroupBox";
 			this->lightParamsGroupBox->Size = System::Drawing::Size(218, 256);
 			this->lightParamsGroupBox->TabIndex = 0;
@@ -1354,7 +1358,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightModeGroupBox->Controls->Add(this->gouraudLightRadioButton);
 			this->lightModeGroupBox->Controls->Add(this->phongLightRadioButton);
 			this->lightModeGroupBox->Controls->Add(this->noLightRadioButton);
-			this->lightModeGroupBox->Location = System::Drawing::Point(3, 265);
+			this->lightModeGroupBox->Location = System::Drawing::Point(3, 294);
 			this->lightModeGroupBox->Name = L"lightModeGroupBox";
 			this->lightModeGroupBox->Size = System::Drawing::Size(221, 110);
 			this->lightModeGroupBox->TabIndex = 1;
@@ -1408,7 +1412,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightPosGroupBox->Controls->Add(this->lightPosYLabel);
 			this->lightPosGroupBox->Controls->Add(this->lightPosXBar);
 			this->lightPosGroupBox->Controls->Add(this->lightPosXLabel);
-			this->lightPosGroupBox->Location = System::Drawing::Point(3, 381);
+			this->lightPosGroupBox->Location = System::Drawing::Point(3, 410);
 			this->lightPosGroupBox->Name = L"lightPosGroupBox";
 			this->lightPosGroupBox->Size = System::Drawing::Size(224, 236);
 			this->lightPosGroupBox->TabIndex = 4;
@@ -1708,6 +1712,16 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->specLightLabel->TabIndex = 13;
 			this->specLightLabel->Text = L"Specular Strength";
 			this->specLightLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// lightResetButton
+			// 
+			this->lightResetButton->Location = System::Drawing::Point(3, 3);
+			this->lightResetButton->Name = L"lightResetButton";
+			this->lightResetButton->Size = System::Drawing::Size(224, 23);
+			this->lightResetButton->TabIndex = 18;
+			this->lightResetButton->Text = L"Reset";
+			this->lightResetButton->UseVisualStyleBackColor = true;
+			this->lightResetButton->Click += gcnew System::EventHandler(this, &MainForm::lightResetButton_Click);
 			// 
 			// MainForm
 			// 
