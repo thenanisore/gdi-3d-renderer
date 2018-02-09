@@ -70,7 +70,7 @@ namespace GL {
 		// and the first vertex of the triangle is less than zero
 		Vector3 norm = pol.normals[0];
 		Vector3 v0 = pol.vertices[0].toVec3();
-		bool visible = (-v0).dot(norm) < 0;
+		bool visible = (-v0).dot(norm) >= 0;
 		return visible;
 	}
 
@@ -78,12 +78,14 @@ namespace GL {
 		const Matrix4& modelView, const Matrix3 &normalMatrix, bool wireframe, bool solid) {
 		Matrix4 transformMatrix = proj * modelView;
 		for (const GL::Polygon &pol : obj.polygons) {
-			// get the polygon transformed
-			GL::Polygon transformed = pol.getTransformed(transformMatrix, normalMatrix);
+			// get the polygon transformed (to world/camera coords).
+			GL::Polygon worldTransformed = pol.getTransformed(modelView, normalMatrix);
 			// check visibility is back-culling is on, don't draw if is a back face
-			if (cullFace && !isVisible(transformed)) {
+			if (cullFace && !isVisible(worldTransformed)) {
 				continue;
 			}
+			// get the polygon transformed (to clip space).
+			GL::Polygon transformed = worldTransformed.getTransformed(proj, Matrix3());
 			viewportTransform(transformed);
 			if (!toClip(transformed)) {
 				if (wireframe) { drawPolygon(transformed); }
@@ -178,7 +180,7 @@ namespace GL {
 		// start drawing
 		for (int i = 1; i <= dx; i++, e += 2 * dy) {
 			// calculate z-value in pixel
-			float t = (Vector3(x, y, 0.f) - Vector3(from.x, from.y, 0.f)).len / (Vector3(to.x, to.y, 0.f) - Vector3(from.x, from.y, 0.f)).len;
+			float t = (Vector3(x, y, 0.f) - Vector3(from.x, from.y, 0.f)).length() / (Vector3(to.x, to.y, 0.f) - Vector3(from.x, from.y, 0.f)).length();
 			float z = (1 - t) * from.z + t * to.z;
 			drawPoint(x, y, z, isSelectedObject ? selectedBrush : wfBrush);
 
