@@ -434,6 +434,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightingTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->lightFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->lightParamsGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->lightDiffuseBar = (gcnew System::Windows::Forms::TrackBar());
+			this->lightDiffuseLabel = (gcnew System::Windows::Forms::Label());
 			this->lightAmbiTrackBar = (gcnew System::Windows::Forms::TrackBar());
 			this->lightAmbiLabel = (gcnew System::Windows::Forms::Label());
 			this->lightColorButton = (gcnew System::Windows::Forms::Button());
@@ -471,8 +473,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->wfColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
-			this->lightDiffuseBar = (gcnew System::Windows::Forms::TrackBar());
-			this->lightDiffuseLabel = (gcnew System::Windows::Forms::Label());
 			this->lightColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
@@ -507,6 +507,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightingTabPage->SuspendLayout();
 			this->lightFlowLayoutPanel->SuspendLayout();
 			this->lightParamsGroupBox->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightDiffuseBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightAmbiTrackBar))->BeginInit();
 			this->lightModeGroupBox->SuspendLayout();
 			this->lightPosGroupBox->SuspendLayout();
@@ -519,7 +520,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->drawingModeGroupBox->SuspendLayout();
 			this->cullGroupBox->SuspendLayout();
 			this->statusStrip->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightDiffuseBar))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// menuStrip
@@ -1065,13 +1065,13 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// camPosZBar
 			// 
 			this->camPosZBar->Location = System::Drawing::Point(6, 159);
-			this->camPosZBar->Maximum = 30;
-			this->camPosZBar->Minimum = 3;
+			this->camPosZBar->Maximum = 300;
+			this->camPosZBar->Minimum = 30;
 			this->camPosZBar->Name = L"camPosZBar";
 			this->camPosZBar->Size = System::Drawing::Size(212, 56);
-			this->camPosZBar->TabIndex = 10;
+			this->camPosZBar->TabIndex = 30;
 			this->camPosZBar->TickStyle = System::Windows::Forms::TickStyle::None;
-			this->camPosZBar->Value = 10;
+			this->camPosZBar->Value = 100;
 			this->camPosZBar->Scroll += gcnew System::EventHandler(this, &MainForm::camPosZBar_Scroll);
 			// 
 			// camPosZLabel
@@ -1089,7 +1089,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// camPosYBar
 			// 
 			this->camPosYBar->Location = System::Drawing::Point(6, 100);
-			this->camPosYBar->Minimum = -10;
+			this->camPosYBar->Maximum = 100;
+			this->camPosYBar->Minimum = -100;
 			this->camPosYBar->Name = L"camPosYBar";
 			this->camPosYBar->Size = System::Drawing::Size(212, 56);
 			this->camPosYBar->TabIndex = 8;
@@ -1111,7 +1112,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// camPosXBar
 			// 
 			this->camPosXBar->Location = System::Drawing::Point(6, 41);
-			this->camPosXBar->Minimum = -10;
+			this->camPosXBar->Maximum = 100;
+			this->camPosXBar->Minimum = -100;
 			this->camPosXBar->Name = L"camPosXBar";
 			this->camPosXBar->Size = System::Drawing::Size(212, 56);
 			this->camPosXBar->TabIndex = 6;
@@ -1272,6 +1274,29 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightParamsGroupBox->TabStop = false;
 			this->lightParamsGroupBox->Text = L"Parameters";
 			// 
+			// lightDiffuseBar
+			// 
+			this->lightDiffuseBar->Location = System::Drawing::Point(9, 134);
+			this->lightDiffuseBar->Maximum = 90;
+			this->lightDiffuseBar->Minimum = 10;
+			this->lightDiffuseBar->Name = L"lightDiffuseBar";
+			this->lightDiffuseBar->Size = System::Drawing::Size(212, 56);
+			this->lightDiffuseBar->TabIndex = 10;
+			this->lightDiffuseBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->lightDiffuseBar->Value = 10;
+			// 
+			// lightDiffuseLabel
+			// 
+			this->lightDiffuseLabel->AutoSize = true;
+			this->lightDiffuseLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular,
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
+			this->lightDiffuseLabel->Location = System::Drawing::Point(6, 111);
+			this->lightDiffuseLabel->Name = L"lightDiffuseLabel";
+			this->lightDiffuseLabel->Size = System::Drawing::Size(110, 17);
+			this->lightDiffuseLabel->TabIndex = 11;
+			this->lightDiffuseLabel->Text = L"Diffuse Strength";
+			this->lightDiffuseLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
 			// lightAmbiTrackBar
 			// 
 			this->lightAmbiTrackBar->Location = System::Drawing::Point(6, 72);
@@ -1385,12 +1410,13 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// lightPosZBar
 			// 
 			this->lightPosZBar->Location = System::Drawing::Point(6, 159);
-			this->lightPosZBar->Maximum = 100;
+			this->lightPosZBar->Maximum = 300;
 			this->lightPosZBar->Minimum = -100;
 			this->lightPosZBar->Name = L"lightPosZBar";
 			this->lightPosZBar->Size = System::Drawing::Size(212, 56);
 			this->lightPosZBar->TabIndex = 10;
 			this->lightPosZBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->lightPosZBar->Value = 100;
 			this->lightPosZBar->Scroll += gcnew System::EventHandler(this, &MainForm::lightPosZBar_Scroll);
 			// 
 			// lightPosZLabel
@@ -1652,29 +1678,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->openFileDialog->Filter = L"3D Object files|*.object|Text files|*.txt|All files|*.*";
 			// 
-			// lightDiffuseBar
-			// 
-			this->lightDiffuseBar->Location = System::Drawing::Point(9, 134);
-			this->lightDiffuseBar->Maximum = 90;
-			this->lightDiffuseBar->Minimum = 10;
-			this->lightDiffuseBar->Name = L"lightDiffuseBar";
-			this->lightDiffuseBar->Size = System::Drawing::Size(212, 56);
-			this->lightDiffuseBar->TabIndex = 10;
-			this->lightDiffuseBar->TickStyle = System::Windows::Forms::TickStyle::None;
-			this->lightDiffuseBar->Value = 10;
-			// 
-			// lightDiffuseLabel
-			// 
-			this->lightDiffuseLabel->AutoSize = true;
-			this->lightDiffuseLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular,
-				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			this->lightDiffuseLabel->Location = System::Drawing::Point(6, 111);
-			this->lightDiffuseLabel->Name = L"lightDiffuseLabel";
-			this->lightDiffuseLabel->Size = System::Drawing::Size(110, 17);
-			this->lightDiffuseLabel->TabIndex = 11;
-			this->lightDiffuseLabel->Text = L"Diffuse Strength";
-			this->lightDiffuseLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -1736,6 +1739,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightFlowLayoutPanel->PerformLayout();
 			this->lightParamsGroupBox->ResumeLayout(false);
 			this->lightParamsGroupBox->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightDiffuseBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightAmbiTrackBar))->EndInit();
 			this->lightModeGroupBox->ResumeLayout(false);
 			this->lightModeGroupBox->PerformLayout();
@@ -1754,7 +1758,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->cullGroupBox->PerformLayout();
 			this->statusStrip->ResumeLayout(false);
 			this->statusStrip->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightDiffuseBar))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

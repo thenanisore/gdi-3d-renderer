@@ -22,6 +22,18 @@ namespace GL {
 		specular = light.specular;
 	}
 
+	Light & Light::operator=(const Light & light) {
+		on = light.on;
+		isPhongMode = light.isPhongMode;
+		initPosition = light.initPosition;
+		position = light.position;
+		color = light.color;
+		ambient = light.ambient;
+		diffuse = light.diffuse;
+		specular = light.specular;
+		return *this;
+	}
+
 	void Light::reset() {
 		on = isPhongMode = true;
 		position = initPosition;

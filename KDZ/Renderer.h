@@ -28,11 +28,9 @@ namespace GL {
 
 		Color getBGColor();
 		Color getWFColor();
-		Color getLightColor();
 		Color getSelectedColor();
 		void setBGColor(Color _col);
 		void setWFColor(Color _col);
-		void setLightColor(Color _col);
 		void setSelectedColor(Color _col);
 		bool isSelectedObject;
 		void setProjection(bool _perspective);
@@ -41,12 +39,10 @@ namespace GL {
 		const Color DEFAULT_BG_COLOR = Color::Black;
 		const Color DEFAULT_WF_COLOR = Color::White;
 		const Color DEFAULT_SELECTED_COLOR = Color::Blue;
-		const Color DEFAULT_LIGHT_COLOR = Color::White;
 
 	private:
 		Graphics ^graphics;
 		Color bgColor;
-		Color lightColor;
 		SolidBrush ^wfBrush;
 		SolidBrush ^selectedBrush;
 		SolidBrush ^surfaceBrush;

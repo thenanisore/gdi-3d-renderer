@@ -9,9 +9,9 @@ namespace GL {
 	const float positionMultiplier = 0.1f;
 	const float rotationMultiplier = 1.0f;
 	const float scaleMultiplier = 0.1f;
-	const float cameraPositionMultiplier = 1.0f;
+	const float cameraPositionMultiplier = 0.1f;
 	const float camerRotationMultiplier = 1.0f;
-	const float lightPositionMultiplier = 1.0f;
+	const float lightPositionMultiplier = 0.1f;
 
 	Scene::Scene() : camera(), selectedObject(0) {
 		lightSource = Light(camera.getPosition());
