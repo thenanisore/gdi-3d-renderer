@@ -48,7 +48,9 @@ namespace GL {
 				// notify the renderer if the current object is selected
 				renderer->isSelectedObject = (&sceneObjects[selectedObject] == &object);
 				// pass the current object and a transformation matrix in a renderer
-				renderer->renderObject(object, projection * view * model, drawWireframe, drawSolid);
+				Matrix4 modelView = view * model;
+				Matrix3 normalTransform = modelView.inverted().transposed().toMat3();
+				renderer->renderObject(object, projection, modelView, normalTransform, drawWireframe, drawSolid);
 				renderer->isSelectedObject = false;
 			}
 		}

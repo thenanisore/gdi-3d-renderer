@@ -23,7 +23,7 @@ namespace GL {
 		// Copy constructor
 		Vector4(const Vector4 &vec);
 
-		float x, y, z, w, len;
+		float x, y, z, w;
 
 		// Copy assignment operator
 		Vector4& operator=(const Vector4 &vec);
@@ -34,6 +34,8 @@ namespace GL {
 		Vector4 operator-() const;
 		Vector4 operator*(float s) const;
 		Vector4 operator/(float s) const;
+		// Returns a length of the vector.
+		float length() const;
 		// Returns a dot product of two vectors
 		float dot(const Vector4 &vec) const;
 		// Returns a vector of the same direction with the length 1

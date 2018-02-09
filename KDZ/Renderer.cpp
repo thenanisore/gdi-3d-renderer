@@ -68,18 +68,22 @@ namespace GL {
 	bool Renderer::isVisible(const Polygon &pol) {
 		// a face is visible is a dot-product of its normal vector
 		// and the first vertex of the triangle is less than zero
-		const Vector3 *norm = &pol.normals[0];
-		const Vector3 *v0 = &pol.vertices[0].toVec3();
-		bool visible = (-*v0).dot(*norm) < 0;
+		Vector3 norm = pol.normals[0];
+		Vector3 v0 = pol.vertices[0].toVec3();
+		bool visible = (-v0).dot(norm) < 0;
 		return visible;
 	}
 
-	void Renderer::renderObject(const SceneObject &obj, const Matrix4& transformMatrix, bool wireframe, bool solid) {
-		for (GL::Polygon pol : obj.polygons) {
+	void Renderer::renderObject(const SceneObject &obj, const Matrix4 &proj, 
+		const Matrix4& modelView, const Matrix3 &normalMatrix, bool wireframe, bool solid) {
+		Matrix4 transformMatrix = proj * modelView;
+		for (const GL::Polygon &pol : obj.polygons) {
 			// get the polygon transformed
-			GL::Polygon transformed = pol.getTransformed(transformMatrix);
+			GL::Polygon transformed = pol.getTransformed(transformMatrix, normalMatrix);
 			// check visibility is back-culling is on, don't draw if is a back face
-			if (cullFace && !isVisible(transformed)) return;
+			if (cullFace && !isVisible(transformed)) {
+				continue;
+			}
 			viewportTransform(transformed);
 			if (!toClip(transformed)) {
 				if (wireframe) { drawPolygon(transformed); }
@@ -140,15 +144,6 @@ namespace GL {
 	void Renderer::setFaceCulling(bool _cullFace) {
 		cullFace = _cullFace;
 	}
-
-	//int outCode(int x, int y, int X1, int X2, int Y1, int Y2) {
-	//	int code = 0;
-	//	if (x < X1) code |= 0x01;
-	//	if (x < X2) code |= 0x02;
-	//	if (x < Y1) code |= 0x04;
-	//	if (x < Y2) code |= 0x08;
-	//	return code;
-	//}
 
 	// returns a signum of x
 	inline int sign(int x) {

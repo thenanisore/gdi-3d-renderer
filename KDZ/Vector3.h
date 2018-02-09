@@ -18,7 +18,7 @@ namespace GL {
 		// Copy constructor
 		Vector3(const Vector3 &vec);
 
-		float x, y, z, len;
+		float x, y, z;
 
 		// Copy assignment operator
 		Vector3& operator=(const Vector3 &vec);
@@ -30,6 +30,8 @@ namespace GL {
 		Vector3 operator-() const;
 		Vector3 operator*(float s) const;
 		Vector3 operator/(float s) const;
+		// Returns a length of the vector.
+		float length() const;
 		// Returns a dot product of two vectors
 		float dot(const Vector3 &vec) const;
 		// Returns a cross product of two vectors

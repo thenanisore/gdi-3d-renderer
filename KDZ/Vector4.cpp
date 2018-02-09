@@ -4,9 +4,7 @@ namespace GL {
 
 	Vector4::Vector4() : Vector4(0.0f, 0.0f, 0.0f, 0.0f) { }
 
-	Vector4::Vector4(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {
-		len = sqrt(_x * _x + _y * _y + _z * _z + _w * _w);
-	}
+	Vector4::Vector4(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) { }
 
 	Vector4::Vector4(const Vector4 &vec) {
 		x = vec.x; y = vec.y; z = vec.z; w = vec.w;
@@ -59,12 +57,17 @@ namespace GL {
 		return Vector4(x / s, y / s, z / s, w / s);
 	}
 
+	float Vector4::length() const {
+		return sqrt(x * x + y * y + z * z + w * w);
+	}
+
 	float Vector4::dot(const Vector4 &vec) const {
 		return x * vec.x + y * vec.y + z * vec.z + w * vec.w;
 	}
 
 	Vector4 Vector4::normalized() const {
 		// return a zero vector if already is one
+		float len = length();
 		return (*this) / (len == 0 ? 1 : len);
 	}
 

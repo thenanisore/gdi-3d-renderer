@@ -18,7 +18,8 @@ namespace GL {
 		void drawAxes(Matrix4 transformMatrix, bool grid);
 		void clearScreen();
 		void clearZBuffer();
-		void renderObject(const SceneObject &obj, const Matrix4 &transformMatrix, bool wireframe, bool solid);
+		void renderObject(const SceneObject &obj, const Matrix4 &proj, 
+			const Matrix4 &modelView, const Matrix3 &normalMatrix, bool wireframe, bool solid);
 		void ztofile();
 		void setGraphics(Graphics ^g);
 

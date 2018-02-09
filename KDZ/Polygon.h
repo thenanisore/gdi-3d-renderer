@@ -23,7 +23,7 @@ namespace GL {
 		void setNormals(const Vector3 & first, const Vector3 & second, const Vector3 & third);
 		void calculateNormals();
 		// Returns a Polygon with the given transformation applied.
-		Polygon getTransformed(const Matrix4 &mat);
+		Polygon getTransformed(const Matrix4 &mat, const Matrix3 &normalMat) const;
 
 		std::vector<Vector4> vertices;
 		std::vector<Vector4> colors;

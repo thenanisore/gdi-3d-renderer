@@ -38,12 +38,12 @@ namespace GL {
 		normals = std::vector<Vector3> { normal, normal, normal };
 	}
 
-	Polygon Polygon::getTransformed(const Matrix4 &mat) {
+	Polygon Polygon::getTransformed(const Matrix4 &mat, const Matrix3 &normalMat) const {
 		Polygon transformed(vertices[0], vertices[1], vertices[2]);
 		for (int i = 0; i < vertices.size(); i++) {
 			transformed.vertices[i] = mat * vertices[i];
 			transformed.colors[i] = colors[i];
-			// TODO: transform normals
+			transformed.normals[i] = (normalMat * normals[i]).normalized();
 		}
 		return transformed;
 	}
