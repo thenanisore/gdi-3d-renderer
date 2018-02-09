@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.h"
+#include "Light.h"
 #include "SceneObject.h"
 
 namespace GL {
@@ -19,7 +20,7 @@ namespace GL {
 		void clearScreen();
 		void clearZBuffer();
 		void renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4 &proj, 
-			const Vector3 &cameraPos, const Vector3 &lightPos, bool wireframe, bool solid);
+			const Vector3 &cameraPos, const Light &light, bool wireframe, bool solid);
 		void ztofile();
 		void setGraphics(Graphics ^g);
 

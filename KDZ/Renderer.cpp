@@ -82,8 +82,9 @@ namespace GL {
 	}
 
 	void Renderer::renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4& proj, 
-		const Vector3 &cameraPos, const Vector3 &lightPos, bool wireframe, bool solid) 
+		const Vector3 &cameraPos, const Light &light, bool wireframe, bool solid) 
 	{
+		Material material = obj.getMaterial();
 		Matrix4 modelView = view * model;
 		Matrix3 normalTransform = modelView.inverted().transposed().toMat3();
 		for (const GL::Polygon &pol : obj.polygons) {

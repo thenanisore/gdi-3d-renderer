@@ -75,6 +75,7 @@ namespace GL {
 	private:
 		void addObject(SceneObject &obj);
 		Vector3 lightPos;
+		Vector3 lightColor;
 		Camera camera;
 		std::vector<SceneObject> sceneObjects;
 		int selectedObject;

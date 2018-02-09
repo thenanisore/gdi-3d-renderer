@@ -57,7 +57,8 @@ namespace KDZ {
 	private: System::Windows::Forms::TabPage^  lightingTabPage;
 	private: System::Windows::Forms::FlowLayoutPanel^  lightFlowLayoutPanel;
 	private: System::Windows::Forms::GroupBox^  lightParamsGroupBox;
-	private: System::Windows::Forms::Button^  button3;
+	private: System::Windows::Forms::Button^  lightColorButton;
+
 	private: System::Windows::Forms::Label^  lightColorLabel;
 	private: System::Windows::Forms::GroupBox^  lightModeGroupBox;
 	private: System::Windows::Forms::RadioButton^  gouraudLightRadioButton;
@@ -72,6 +73,11 @@ namespace KDZ {
 	private: System::Windows::Forms::Label^  lightPosXLabel;
 	private: System::Windows::Forms::TrackBar^  lightAmbiTrackBar;
 	private: System::Windows::Forms::Label^  lightAmbiLabel;
+	private: System::Windows::Forms::TrackBar^  lightDiffuseBar;
+	private: System::Windows::Forms::Label^  lightDiffuseLabel;
+	private: System::Windows::Forms::ColorDialog^  lightColorDialog;
+
+
 
 
 		 // Main scene
@@ -412,6 +418,24 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->camYawLabel = (gcnew System::Windows::Forms::Label());
 			this->camRotPitchBar = (gcnew System::Windows::Forms::TrackBar());
 			this->camPitchLabel = (gcnew System::Windows::Forms::Label());
+			this->lightingTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->lightFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
+			this->lightParamsGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->lightAmbiTrackBar = (gcnew System::Windows::Forms::TrackBar());
+			this->lightAmbiLabel = (gcnew System::Windows::Forms::Label());
+			this->lightColorButton = (gcnew System::Windows::Forms::Button());
+			this->lightColorLabel = (gcnew System::Windows::Forms::Label());
+			this->lightModeGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->gouraudLightRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->phongLightRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->noLightRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->lightPosGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->lightPosZBar = (gcnew System::Windows::Forms::TrackBar());
+			this->lightPosZLabel = (gcnew System::Windows::Forms::Label());
+			this->lightPosYBar = (gcnew System::Windows::Forms::TrackBar());
+			this->lightPosYLabel = (gcnew System::Windows::Forms::Label());
+			this->lightPosXBar = (gcnew System::Windows::Forms::TrackBar());
+			this->lightPosXLabel = (gcnew System::Windows::Forms::Label());
 			this->otherTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->otherFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->colorGroupBox = (gcnew System::Windows::Forms::GroupBox());
@@ -434,24 +458,9 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->wfColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
-			this->lightingTabPage = (gcnew System::Windows::Forms::TabPage());
-			this->lightFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
-			this->lightParamsGroupBox = (gcnew System::Windows::Forms::GroupBox());
-			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->lightColorLabel = (gcnew System::Windows::Forms::Label());
-			this->lightModeGroupBox = (gcnew System::Windows::Forms::GroupBox());
-			this->gouraudLightRadioButton = (gcnew System::Windows::Forms::RadioButton());
-			this->phongLightRadioButton = (gcnew System::Windows::Forms::RadioButton());
-			this->noLightRadioButton = (gcnew System::Windows::Forms::RadioButton());
-			this->lightPosGroupBox = (gcnew System::Windows::Forms::GroupBox());
-			this->lightPosZBar = (gcnew System::Windows::Forms::TrackBar());
-			this->lightPosZLabel = (gcnew System::Windows::Forms::Label());
-			this->lightPosYBar = (gcnew System::Windows::Forms::TrackBar());
-			this->lightPosYLabel = (gcnew System::Windows::Forms::Label());
-			this->lightPosXBar = (gcnew System::Windows::Forms::TrackBar());
-			this->lightPosXLabel = (gcnew System::Windows::Forms::Label());
-			this->lightAmbiTrackBar = (gcnew System::Windows::Forms::TrackBar());
-			this->lightAmbiLabel = (gcnew System::Windows::Forms::Label());
+			this->lightDiffuseBar = (gcnew System::Windows::Forms::TrackBar());
+			this->lightDiffuseLabel = (gcnew System::Windows::Forms::Label());
+			this->lightColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -482,21 +491,22 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->camRotationGroupBox->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotYawBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotPitchBar))->BeginInit();
+			this->lightingTabPage->SuspendLayout();
+			this->lightFlowLayoutPanel->SuspendLayout();
+			this->lightParamsGroupBox->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightAmbiTrackBar))->BeginInit();
+			this->lightModeGroupBox->SuspendLayout();
+			this->lightPosGroupBox->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosZBar))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosYBar))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosXBar))->BeginInit();
 			this->otherTabPage->SuspendLayout();
 			this->otherFlowLayoutPanel->SuspendLayout();
 			this->colorGroupBox->SuspendLayout();
 			this->drawingModeGroupBox->SuspendLayout();
 			this->cullGroupBox->SuspendLayout();
 			this->statusStrip->SuspendLayout();
-			this->lightingTabPage->SuspendLayout();
-			this->lightFlowLayoutPanel->SuspendLayout();
-			this->lightParamsGroupBox->SuspendLayout();
-			this->lightModeGroupBox->SuspendLayout();
-			this->lightPosGroupBox->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosZBar))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosYBar))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosXBar))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightAmbiTrackBar))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightDiffuseBar))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// menuStrip
@@ -1210,6 +1220,224 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->camPitchLabel->Text = L"Pitch";
 			this->camPitchLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
+			// lightingTabPage
+			// 
+			this->lightingTabPage->BackColor = System::Drawing::SystemColors::Control;
+			this->lightingTabPage->Controls->Add(this->lightFlowLayoutPanel);
+			this->lightingTabPage->Location = System::Drawing::Point(4, 25);
+			this->lightingTabPage->Name = L"lightingTabPage";
+			this->lightingTabPage->Padding = System::Windows::Forms::Padding(3);
+			this->lightingTabPage->Size = System::Drawing::Size(259, 613);
+			this->lightingTabPage->TabIndex = 3;
+			this->lightingTabPage->Text = L"Lighting";
+			// 
+			// lightFlowLayoutPanel
+			// 
+			this->lightFlowLayoutPanel->AutoScroll = true;
+			this->lightFlowLayoutPanel->Controls->Add(this->lightParamsGroupBox);
+			this->lightFlowLayoutPanel->Controls->Add(this->lightModeGroupBox);
+			this->lightFlowLayoutPanel->Controls->Add(this->lightPosGroupBox);
+			this->lightFlowLayoutPanel->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->lightFlowLayoutPanel->FlowDirection = System::Windows::Forms::FlowDirection::TopDown;
+			this->lightFlowLayoutPanel->Location = System::Drawing::Point(3, 3);
+			this->lightFlowLayoutPanel->Name = L"lightFlowLayoutPanel";
+			this->lightFlowLayoutPanel->Size = System::Drawing::Size(253, 607);
+			this->lightFlowLayoutPanel->TabIndex = 1;
+			// 
+			// lightParamsGroupBox
+			// 
+			this->lightParamsGroupBox->Controls->Add(this->lightDiffuseBar);
+			this->lightParamsGroupBox->Controls->Add(this->lightDiffuseLabel);
+			this->lightParamsGroupBox->Controls->Add(this->lightAmbiTrackBar);
+			this->lightParamsGroupBox->Controls->Add(this->lightAmbiLabel);
+			this->lightParamsGroupBox->Controls->Add(this->lightColorButton);
+			this->lightParamsGroupBox->Controls->Add(this->lightColorLabel);
+			this->lightParamsGroupBox->Location = System::Drawing::Point(3, 3);
+			this->lightParamsGroupBox->Name = L"lightParamsGroupBox";
+			this->lightParamsGroupBox->Size = System::Drawing::Size(241, 181);
+			this->lightParamsGroupBox->TabIndex = 0;
+			this->lightParamsGroupBox->TabStop = false;
+			this->lightParamsGroupBox->Text = L"Parameters";
+			// 
+			// lightAmbiTrackBar
+			// 
+			this->lightAmbiTrackBar->Location = System::Drawing::Point(6, 72);
+			this->lightAmbiTrackBar->Maximum = 90;
+			this->lightAmbiTrackBar->Minimum = 10;
+			this->lightAmbiTrackBar->Name = L"lightAmbiTrackBar";
+			this->lightAmbiTrackBar->Size = System::Drawing::Size(212, 56);
+			this->lightAmbiTrackBar->TabIndex = 8;
+			this->lightAmbiTrackBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->lightAmbiTrackBar->Value = 10;
+			this->lightAmbiTrackBar->Scroll += gcnew System::EventHandler(this, &MainForm::lightAmbiTrackBar_Scroll);
+			// 
+			// lightAmbiLabel
+			// 
+			this->lightAmbiLabel->AutoSize = true;
+			this->lightAmbiLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->lightAmbiLabel->Location = System::Drawing::Point(6, 49);
+			this->lightAmbiLabel->Name = L"lightAmbiLabel";
+			this->lightAmbiLabel->Size = System::Drawing::Size(128, 17);
+			this->lightAmbiLabel->TabIndex = 9;
+			this->lightAmbiLabel->Text = L"Ambience Strength";
+			this->lightAmbiLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// lightColorButton
+			// 
+			this->lightColorButton->BackColor = System::Drawing::Color::White;
+			this->lightColorButton->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->lightColorButton->Location = System::Drawing::Point(91, 19);
+			this->lightColorButton->Name = L"lightColorButton";
+			this->lightColorButton->Size = System::Drawing::Size(144, 23);
+			this->lightColorButton->TabIndex = 1;
+			this->lightColorButton->UseVisualStyleBackColor = false;
+			this->lightColorButton->Click += gcnew System::EventHandler(this, &MainForm::button3_Click);
+			// 
+			// lightColorLabel
+			// 
+			this->lightColorLabel->AutoSize = true;
+			this->lightColorLabel->Location = System::Drawing::Point(7, 22);
+			this->lightColorLabel->Name = L"lightColorLabel";
+			this->lightColorLabel->Size = System::Drawing::Size(41, 17);
+			this->lightColorLabel->TabIndex = 0;
+			this->lightColorLabel->Text = L"Color";
+			// 
+			// lightModeGroupBox
+			// 
+			this->lightModeGroupBox->Controls->Add(this->gouraudLightRadioButton);
+			this->lightModeGroupBox->Controls->Add(this->phongLightRadioButton);
+			this->lightModeGroupBox->Controls->Add(this->noLightRadioButton);
+			this->lightModeGroupBox->Location = System::Drawing::Point(3, 190);
+			this->lightModeGroupBox->Name = L"lightModeGroupBox";
+			this->lightModeGroupBox->Size = System::Drawing::Size(241, 110);
+			this->lightModeGroupBox->TabIndex = 1;
+			this->lightModeGroupBox->TabStop = false;
+			this->lightModeGroupBox->Text = L"Mode";
+			// 
+			// gouraudLightRadioButton
+			// 
+			this->gouraudLightRadioButton->AutoSize = true;
+			this->gouraudLightRadioButton->Checked = true;
+			this->gouraudLightRadioButton->Location = System::Drawing::Point(7, 76);
+			this->gouraudLightRadioButton->Name = L"gouraudLightRadioButton";
+			this->gouraudLightRadioButton->Size = System::Drawing::Size(139, 21);
+			this->gouraudLightRadioButton->TabIndex = 2;
+			this->gouraudLightRadioButton->TabStop = true;
+			this->gouraudLightRadioButton->Text = L"Gouraud Lighting";
+			this->gouraudLightRadioButton->UseVisualStyleBackColor = true;
+			this->gouraudLightRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::gouraudLightRadioButton_CheckedChanged);
+			// 
+			// phongLightRadioButton
+			// 
+			this->phongLightRadioButton->AutoSize = true;
+			this->phongLightRadioButton->Location = System::Drawing::Point(6, 49);
+			this->phongLightRadioButton->Name = L"phongLightRadioButton";
+			this->phongLightRadioButton->Size = System::Drawing::Size(124, 21);
+			this->phongLightRadioButton->TabIndex = 1;
+			this->phongLightRadioButton->Text = L"Phong Lighting";
+			this->phongLightRadioButton->UseVisualStyleBackColor = true;
+			this->phongLightRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::phongLightRadioButton_CheckedChanged);
+			// 
+			// noLightRadioButton
+			// 
+			this->noLightRadioButton->AutoSize = true;
+			this->noLightRadioButton->Location = System::Drawing::Point(7, 22);
+			this->noLightRadioButton->Name = L"noLightRadioButton";
+			this->noLightRadioButton->Size = System::Drawing::Size(63, 21);
+			this->noLightRadioButton->TabIndex = 0;
+			this->noLightRadioButton->Text = L"None";
+			this->noLightRadioButton->UseVisualStyleBackColor = true;
+			this->noLightRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::noLightRadioButton_CheckedChanged);
+			// 
+			// lightPosGroupBox
+			// 
+			this->lightPosGroupBox->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->lightPosGroupBox->AutoSize = true;
+			this->lightPosGroupBox->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->lightPosGroupBox->Controls->Add(this->lightPosZBar);
+			this->lightPosGroupBox->Controls->Add(this->lightPosZLabel);
+			this->lightPosGroupBox->Controls->Add(this->lightPosYBar);
+			this->lightPosGroupBox->Controls->Add(this->lightPosYLabel);
+			this->lightPosGroupBox->Controls->Add(this->lightPosXBar);
+			this->lightPosGroupBox->Controls->Add(this->lightPosXLabel);
+			this->lightPosGroupBox->Location = System::Drawing::Point(3, 306);
+			this->lightPosGroupBox->Name = L"lightPosGroupBox";
+			this->lightPosGroupBox->Size = System::Drawing::Size(241, 236);
+			this->lightPosGroupBox->TabIndex = 4;
+			this->lightPosGroupBox->TabStop = false;
+			this->lightPosGroupBox->Text = L"Position";
+			// 
+			// lightPosZBar
+			// 
+			this->lightPosZBar->Location = System::Drawing::Point(6, 159);
+			this->lightPosZBar->Maximum = 100;
+			this->lightPosZBar->Minimum = -100;
+			this->lightPosZBar->Name = L"lightPosZBar";
+			this->lightPosZBar->Size = System::Drawing::Size(212, 56);
+			this->lightPosZBar->TabIndex = 10;
+			this->lightPosZBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->lightPosZBar->Scroll += gcnew System::EventHandler(this, &MainForm::lightPosZBar_Scroll);
+			// 
+			// lightPosZLabel
+			// 
+			this->lightPosZLabel->AutoSize = true;
+			this->lightPosZLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->lightPosZLabel->Location = System::Drawing::Point(6, 136);
+			this->lightPosZLabel->Name = L"lightPosZLabel";
+			this->lightPosZLabel->Size = System::Drawing::Size(46, 17);
+			this->lightPosZLabel->TabIndex = 11;
+			this->lightPosZLabel->Text = L"Z Axis";
+			this->lightPosZLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// lightPosYBar
+			// 
+			this->lightPosYBar->Location = System::Drawing::Point(6, 100);
+			this->lightPosYBar->Maximum = 100;
+			this->lightPosYBar->Minimum = -100;
+			this->lightPosYBar->Name = L"lightPosYBar";
+			this->lightPosYBar->Size = System::Drawing::Size(212, 56);
+			this->lightPosYBar->TabIndex = 8;
+			this->lightPosYBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->lightPosYBar->Scroll += gcnew System::EventHandler(this, &MainForm::lightPosYBar_Scroll);
+			// 
+			// lightPosYLabel
+			// 
+			this->lightPosYLabel->AutoSize = true;
+			this->lightPosYLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->lightPosYLabel->Location = System::Drawing::Point(6, 77);
+			this->lightPosYLabel->Name = L"lightPosYLabel";
+			this->lightPosYLabel->Size = System::Drawing::Size(46, 17);
+			this->lightPosYLabel->TabIndex = 9;
+			this->lightPosYLabel->Text = L"Y Axis";
+			this->lightPosYLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// lightPosXBar
+			// 
+			this->lightPosXBar->Location = System::Drawing::Point(6, 41);
+			this->lightPosXBar->Maximum = 100;
+			this->lightPosXBar->Minimum = -100;
+			this->lightPosXBar->Name = L"lightPosXBar";
+			this->lightPosXBar->Size = System::Drawing::Size(212, 56);
+			this->lightPosXBar->TabIndex = 6;
+			this->lightPosXBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->lightPosXBar->Scroll += gcnew System::EventHandler(this, &MainForm::lightPosXBar_Scroll);
+			// 
+			// lightPosXLabel
+			// 
+			this->lightPosXLabel->AutoSize = true;
+			this->lightPosXLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->lightPosXLabel->Location = System::Drawing::Point(6, 18);
+			this->lightPosXLabel->Name = L"lightPosXLabel";
+			this->lightPosXLabel->Size = System::Drawing::Size(46, 17);
+			this->lightPosXLabel->TabIndex = 7;
+			this->lightPosXLabel->Text = L"X Axis";
+			this->lightPosXLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
 			// otherTabPage
 			// 
 			this->otherTabPage->BackColor = System::Drawing::SystemColors::Control;
@@ -1411,213 +1639,28 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->openFileDialog->Filter = L"3D Object files|*.object|Text files|*.txt|All files|*.*";
 			// 
-			// lightingTabPage
+			// lightDiffuseBar
 			// 
-			this->lightingTabPage->BackColor = System::Drawing::SystemColors::Control;
-			this->lightingTabPage->Controls->Add(this->lightFlowLayoutPanel);
-			this->lightingTabPage->Location = System::Drawing::Point(4, 25);
-			this->lightingTabPage->Name = L"lightingTabPage";
-			this->lightingTabPage->Padding = System::Windows::Forms::Padding(3);
-			this->lightingTabPage->Size = System::Drawing::Size(259, 613);
-			this->lightingTabPage->TabIndex = 3;
-			this->lightingTabPage->Text = L"Lighting";
+			this->lightDiffuseBar->Location = System::Drawing::Point(9, 134);
+			this->lightDiffuseBar->Maximum = 90;
+			this->lightDiffuseBar->Minimum = 10;
+			this->lightDiffuseBar->Name = L"lightDiffuseBar";
+			this->lightDiffuseBar->Size = System::Drawing::Size(212, 56);
+			this->lightDiffuseBar->TabIndex = 10;
+			this->lightDiffuseBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->lightDiffuseBar->Value = 10;
 			// 
-			// lightFlowLayoutPanel
+			// lightDiffuseLabel
 			// 
-			this->lightFlowLayoutPanel->AutoScroll = true;
-			this->lightFlowLayoutPanel->Controls->Add(this->lightParamsGroupBox);
-			this->lightFlowLayoutPanel->Controls->Add(this->lightModeGroupBox);
-			this->lightFlowLayoutPanel->Controls->Add(this->lightPosGroupBox);
-			this->lightFlowLayoutPanel->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->lightFlowLayoutPanel->FlowDirection = System::Windows::Forms::FlowDirection::TopDown;
-			this->lightFlowLayoutPanel->Location = System::Drawing::Point(3, 3);
-			this->lightFlowLayoutPanel->Name = L"lightFlowLayoutPanel";
-			this->lightFlowLayoutPanel->Size = System::Drawing::Size(253, 607);
-			this->lightFlowLayoutPanel->TabIndex = 1;
-			// 
-			// lightParamsGroupBox
-			// 
-			this->lightParamsGroupBox->Controls->Add(this->lightAmbiTrackBar);
-			this->lightParamsGroupBox->Controls->Add(this->lightAmbiLabel);
-			this->lightParamsGroupBox->Controls->Add(this->button3);
-			this->lightParamsGroupBox->Controls->Add(this->lightColorLabel);
-			this->lightParamsGroupBox->Location = System::Drawing::Point(3, 3);
-			this->lightParamsGroupBox->Name = L"lightParamsGroupBox";
-			this->lightParamsGroupBox->Size = System::Drawing::Size(241, 118);
-			this->lightParamsGroupBox->TabIndex = 0;
-			this->lightParamsGroupBox->TabStop = false;
-			this->lightParamsGroupBox->Text = L"Parameters";
-			// 
-			// button3
-			// 
-			this->button3->BackColor = System::Drawing::Color::White;
-			this->button3->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
-			this->button3->Location = System::Drawing::Point(91, 19);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(144, 23);
-			this->button3->TabIndex = 1;
-			this->button3->UseVisualStyleBackColor = false;
-			// 
-			// lightColorLabel
-			// 
-			this->lightColorLabel->AutoSize = true;
-			this->lightColorLabel->Location = System::Drawing::Point(7, 22);
-			this->lightColorLabel->Name = L"lightColorLabel";
-			this->lightColorLabel->Size = System::Drawing::Size(41, 17);
-			this->lightColorLabel->TabIndex = 0;
-			this->lightColorLabel->Text = L"Color";
-			// 
-			// lightModeGroupBox
-			// 
-			this->lightModeGroupBox->Controls->Add(this->gouraudLightRadioButton);
-			this->lightModeGroupBox->Controls->Add(this->phongLightRadioButton);
-			this->lightModeGroupBox->Controls->Add(this->noLightRadioButton);
-			this->lightModeGroupBox->Location = System::Drawing::Point(3, 127);
-			this->lightModeGroupBox->Name = L"lightModeGroupBox";
-			this->lightModeGroupBox->Size = System::Drawing::Size(241, 110);
-			this->lightModeGroupBox->TabIndex = 1;
-			this->lightModeGroupBox->TabStop = false;
-			this->lightModeGroupBox->Text = L"Mode";
-			// 
-			// gouraudLightRadioButton
-			// 
-			this->gouraudLightRadioButton->AutoSize = true;
-			this->gouraudLightRadioButton->Checked = true;
-			this->gouraudLightRadioButton->Location = System::Drawing::Point(7, 76);
-			this->gouraudLightRadioButton->Name = L"gouraudLightRadioButton";
-			this->gouraudLightRadioButton->Size = System::Drawing::Size(139, 21);
-			this->gouraudLightRadioButton->TabIndex = 2;
-			this->gouraudLightRadioButton->TabStop = true;
-			this->gouraudLightRadioButton->Text = L"Gouraud Lighting";
-			this->gouraudLightRadioButton->UseVisualStyleBackColor = true;
-			// 
-			// phongLightRadioButton
-			// 
-			this->phongLightRadioButton->AutoSize = true;
-			this->phongLightRadioButton->Location = System::Drawing::Point(6, 49);
-			this->phongLightRadioButton->Name = L"phongLightRadioButton";
-			this->phongLightRadioButton->Size = System::Drawing::Size(124, 21);
-			this->phongLightRadioButton->TabIndex = 1;
-			this->phongLightRadioButton->Text = L"Phong Lighting";
-			this->phongLightRadioButton->UseVisualStyleBackColor = true;
-			// 
-			// noLightRadioButton
-			// 
-			this->noLightRadioButton->AutoSize = true;
-			this->noLightRadioButton->Location = System::Drawing::Point(7, 22);
-			this->noLightRadioButton->Name = L"noLightRadioButton";
-			this->noLightRadioButton->Size = System::Drawing::Size(63, 21);
-			this->noLightRadioButton->TabIndex = 0;
-			this->noLightRadioButton->Text = L"None";
-			this->noLightRadioButton->UseVisualStyleBackColor = true;
-			// 
-			// lightPosGroupBox
-			// 
-			this->lightPosGroupBox->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->lightPosGroupBox->AutoSize = true;
-			this->lightPosGroupBox->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-			this->lightPosGroupBox->Controls->Add(this->lightPosZBar);
-			this->lightPosGroupBox->Controls->Add(this->lightPosZLabel);
-			this->lightPosGroupBox->Controls->Add(this->lightPosYBar);
-			this->lightPosGroupBox->Controls->Add(this->lightPosYLabel);
-			this->lightPosGroupBox->Controls->Add(this->lightPosXBar);
-			this->lightPosGroupBox->Controls->Add(this->lightPosXLabel);
-			this->lightPosGroupBox->Location = System::Drawing::Point(3, 243);
-			this->lightPosGroupBox->Name = L"lightPosGroupBox";
-			this->lightPosGroupBox->Size = System::Drawing::Size(241, 236);
-			this->lightPosGroupBox->TabIndex = 4;
-			this->lightPosGroupBox->TabStop = false;
-			this->lightPosGroupBox->Text = L"Position";
-			// 
-			// lightPosZBar
-			// 
-			this->lightPosZBar->Location = System::Drawing::Point(6, 159);
-			this->lightPosZBar->Maximum = 100;
-			this->lightPosZBar->Minimum = -100;
-			this->lightPosZBar->Name = L"lightPosZBar";
-			this->lightPosZBar->Size = System::Drawing::Size(212, 56);
-			this->lightPosZBar->TabIndex = 10;
-			this->lightPosZBar->TickStyle = System::Windows::Forms::TickStyle::None;
-			// 
-			// lightPosZLabel
-			// 
-			this->lightPosZLabel->AutoSize = true;
-			this->lightPosZLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->lightPosZLabel->Location = System::Drawing::Point(6, 136);
-			this->lightPosZLabel->Name = L"lightPosZLabel";
-			this->lightPosZLabel->Size = System::Drawing::Size(46, 17);
-			this->lightPosZLabel->TabIndex = 11;
-			this->lightPosZLabel->Text = L"Z Axis";
-			this->lightPosZLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
-			// lightPosYBar
-			// 
-			this->lightPosYBar->Location = System::Drawing::Point(6, 100);
-			this->lightPosYBar->Maximum = 100;
-			this->lightPosYBar->Minimum = -100;
-			this->lightPosYBar->Name = L"lightPosYBar";
-			this->lightPosYBar->Size = System::Drawing::Size(212, 56);
-			this->lightPosYBar->TabIndex = 8;
-			this->lightPosYBar->TickStyle = System::Windows::Forms::TickStyle::None;
-			// 
-			// lightPosYLabel
-			// 
-			this->lightPosYLabel->AutoSize = true;
-			this->lightPosYLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->lightPosYLabel->Location = System::Drawing::Point(6, 77);
-			this->lightPosYLabel->Name = L"lightPosYLabel";
-			this->lightPosYLabel->Size = System::Drawing::Size(46, 17);
-			this->lightPosYLabel->TabIndex = 9;
-			this->lightPosYLabel->Text = L"Y Axis";
-			this->lightPosYLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
-			// lightPosXBar
-			// 
-			this->lightPosXBar->Location = System::Drawing::Point(6, 41);
-			this->lightPosXBar->Maximum = 100;
-			this->lightPosXBar->Minimum = -100;
-			this->lightPosXBar->Name = L"lightPosXBar";
-			this->lightPosXBar->Size = System::Drawing::Size(212, 56);
-			this->lightPosXBar->TabIndex = 6;
-			this->lightPosXBar->TickStyle = System::Windows::Forms::TickStyle::None;
-			// 
-			// lightPosXLabel
-			// 
-			this->lightPosXLabel->AutoSize = true;
-			this->lightPosXLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->lightPosXLabel->Location = System::Drawing::Point(6, 18);
-			this->lightPosXLabel->Name = L"lightPosXLabel";
-			this->lightPosXLabel->Size = System::Drawing::Size(46, 17);
-			this->lightPosXLabel->TabIndex = 7;
-			this->lightPosXLabel->Text = L"X Axis";
-			this->lightPosXLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
-			// lightAmbiTrackBar
-			// 
-			this->lightAmbiTrackBar->Location = System::Drawing::Point(6, 72);
-			this->lightAmbiTrackBar->Maximum = 90;
-			this->lightAmbiTrackBar->Minimum = 10;
-			this->lightAmbiTrackBar->Name = L"lightAmbiTrackBar";
-			this->lightAmbiTrackBar->Size = System::Drawing::Size(212, 56);
-			this->lightAmbiTrackBar->TabIndex = 8;
-			this->lightAmbiTrackBar->TickStyle = System::Windows::Forms::TickStyle::None;
-			this->lightAmbiTrackBar->Value = 10;
-			// 
-			// lightAmbiLabel
-			// 
-			this->lightAmbiLabel->AutoSize = true;
-			this->lightAmbiLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->lightAmbiLabel->Location = System::Drawing::Point(6, 49);
-			this->lightAmbiLabel->Name = L"lightAmbiLabel";
-			this->lightAmbiLabel->Size = System::Drawing::Size(128, 17);
-			this->lightAmbiLabel->TabIndex = 9;
-			this->lightAmbiLabel->Text = L"Ambience Strength";
-			this->lightAmbiLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			this->lightDiffuseLabel->AutoSize = true;
+			this->lightDiffuseLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular,
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
+			this->lightDiffuseLabel->Location = System::Drawing::Point(6, 111);
+			this->lightDiffuseLabel->Name = L"lightDiffuseLabel";
+			this->lightDiffuseLabel->Size = System::Drawing::Size(110, 17);
+			this->lightDiffuseLabel->TabIndex = 11;
+			this->lightDiffuseLabel->Text = L"Diffuse Strength";
+			this->lightDiffuseLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// MainForm
 			// 
@@ -1675,6 +1718,19 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->camRotationGroupBox->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotYawBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->camRotPitchBar))->EndInit();
+			this->lightingTabPage->ResumeLayout(false);
+			this->lightFlowLayoutPanel->ResumeLayout(false);
+			this->lightFlowLayoutPanel->PerformLayout();
+			this->lightParamsGroupBox->ResumeLayout(false);
+			this->lightParamsGroupBox->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightAmbiTrackBar))->EndInit();
+			this->lightModeGroupBox->ResumeLayout(false);
+			this->lightModeGroupBox->PerformLayout();
+			this->lightPosGroupBox->ResumeLayout(false);
+			this->lightPosGroupBox->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosZBar))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosYBar))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosXBar))->EndInit();
 			this->otherTabPage->ResumeLayout(false);
 			this->otherFlowLayoutPanel->ResumeLayout(false);
 			this->colorGroupBox->ResumeLayout(false);
@@ -1685,24 +1741,28 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->cullGroupBox->PerformLayout();
 			this->statusStrip->ResumeLayout(false);
 			this->statusStrip->PerformLayout();
-			this->lightingTabPage->ResumeLayout(false);
-			this->lightFlowLayoutPanel->ResumeLayout(false);
-			this->lightFlowLayoutPanel->PerformLayout();
-			this->lightParamsGroupBox->ResumeLayout(false);
-			this->lightParamsGroupBox->PerformLayout();
-			this->lightModeGroupBox->ResumeLayout(false);
-			this->lightModeGroupBox->PerformLayout();
-			this->lightPosGroupBox->ResumeLayout(false);
-			this->lightPosGroupBox->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosZBar))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosYBar))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosXBar))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightAmbiTrackBar))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightDiffuseBar))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 
 #pragma endregion
+private: System::Void lightPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void lightPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void lightPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void lightAmbiTrackBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void noLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void phongLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void gouraudLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+}
 };
 }

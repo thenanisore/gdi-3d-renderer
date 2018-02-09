@@ -15,7 +15,7 @@ namespace GL {
 		// Initializes a vector with the specified values.
 		Vector4(float _x, float _y, float _z, float _w);
 		// Initializes a vector with the first four values of the given std::vector.
-		Vector4::Vector4(const std::vector<float> &vec);
+		Vector4(const std::vector<float> &vec);
 		// Initializes a vector with the values of the given Vector3 with a w-coordinate.
 		Vector4(const Vector3 &vec, float _w);
 		// Initializes a vector with the values of the given Vector3 with w = 1.
