@@ -253,18 +253,18 @@ namespace GL {
 				float ambientStrength = 0.1f;
 				Vector3 ambient = Util::colorToVec(lightColor).toVec3() * ambientStrength;
 				// diffuse lighting
-				float diffuseStrength = 0.5f;
-				Vector3 lightDir = (lightPos - fragPos).normalized();
+				float diffuseStrength = 0.8f;
+				Vector3 lightDir = (-fragPos).normalized();
 				float diff = max(fragNormal.dot(lightDir), 0.f);
 				Vector3 diffuse = Util::colorToVec(lightColor).toVec3() * diff * diffuseStrength;
 				// specular lighting
-				float specularStrength = 0.5f;
-				Vector3 viewDir = -fragPos;
-				Vector3 reflectDir = Util::reflect(-lightDir, fragNormal);
-				float spec = pow(max(viewDir.dot(reflectDir), 0.f), 32);
+				float specularStrength = 0.7f;
+				Vector3 viewDir = (-fragPos).normalized();
+				Vector3 reflectDir = Util::reflect(-lightDir, fragNormal).normalized();
+				float spec = pow(max(viewDir.dot(reflectDir), 0.f), 8);
 				Vector3 specular = Util::colorToVec(lightColor).toVec3() * specularStrength * spec;
 				// resulting
-				col = (diffuse + ambient) * col;
+				col = (diffuse + ambient + specular) * col;
 				clampVec(col, 0, 1.f);
 				surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
 
