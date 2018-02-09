@@ -115,6 +115,7 @@ namespace KDZ {
 		System::Void camRotYawBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void updateObjectParams();
 		System::Void updateCameraParams();
+		System::Void updateLightParams();
 		System::Void updateOtherParams();
 		// buttons
 		System::Void nextObjButton_Click(System::Object^  sender, System::EventArgs^  e);
@@ -122,6 +123,7 @@ namespace KDZ {
 		System::Void deleteObjButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void setObjectsParams(int objPosX, int objPosY, int objPosZ, int objScaleX, int objScaleY, int objScaleZ, int objRotX, int objRotY, int objRotZ, bool objReflXY, bool objReflXZ, bool objReflYZ);
 		System::Void setCameraParams(int camPosX, int camPosY, int camPosZ, int camPitch, int camYaw, bool perspective);
+		System::Void setLightParams(int lightPosX, int lightPosY, int lightPosZ, bool isOn, bool isPhong, Color lightColor);
 		System::Void setOtherParams(Color bgColor, Color wfColor, Color selectedColor, bool wfMode, bool solidMode, bool faceCull);
 		System::Void resetObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		System::Void resetCamButton_Click(System::Object^  sender, System::EventArgs^  e); 
@@ -148,6 +150,17 @@ namespace KDZ {
 		// culling radio buttons
 		System::Void cullOnRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void cullOffRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void changeLightPosition();
+		// light source control
+		System::Void changeLighting();
+		System::Void lightPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void lightPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void lightPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void lightColorButton_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void lightAmbiTrackBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void noLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void phongLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void gouraudLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 
 	private: System::Windows::Forms::Button^  prevObjButton;
 	private: System::Windows::Forms::Button^  nextObjButton;
@@ -1292,7 +1305,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightColorButton->Size = System::Drawing::Size(144, 23);
 			this->lightColorButton->TabIndex = 1;
 			this->lightColorButton->UseVisualStyleBackColor = false;
-			this->lightColorButton->Click += gcnew System::EventHandler(this, &MainForm::button3_Click);
+			this->lightColorButton->Click += gcnew System::EventHandler(this, &MainForm::lightColorButton_Click);
 			// 
 			// lightColorLabel
 			// 
@@ -1748,21 +1761,5 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 		}
 
 #pragma endregion
-private: System::Void lightPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void lightPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void lightPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void lightAmbiTrackBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void noLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void phongLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void gouraudLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
-}
 };
 }

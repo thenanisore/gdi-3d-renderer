@@ -20,6 +20,7 @@ System::Void MainForm::setScene() {
 	updateObjectParams();
 	updateCameraParams();
 	updateOtherParams();
+	updateLightParams();
 	renderScene();
 }
 
@@ -90,6 +91,8 @@ System::Void MainForm::updateStatusBar() {
 	info += "Camera | Pos : (" + camPos.x + ", " + camPos.y + ", " + camPos.z + ") | ";
 	GL::Vector3 camRot = mainScene->getCameraRotation(true);
 	info += "Pitch : " + camRot.x + " | Yaw : " + camRot.y + " |";
+	GL::Vector3 lightPos = mainScene->getLightPosition(true);
+	info += "Light | Pos : (" + lightPos.x + ", " + lightPos.y + ", " + lightPos.z + ") | ";
 	objCountLabel->Text = info;
 }
 
@@ -149,6 +152,18 @@ System::Void MainForm::setCameraParams(int camPosX, int camPosY, int camPosZ, in
 	isSettingParams = false;
 }
 
+System::Void MainForm::setLightParams(int lightPosX, int lightPosY, int lightPosZ, bool isOn, bool isPhong, Color lightColor) {
+	// set lighting parameters
+	isSettingParams = true;
+	lightPosXBar->Value = lightPosX;
+	lightPosYBar->Value = lightPosY;
+	lightPosZBar->Value = lightPosZ;
+	phongLightRadioButton->Checked = isOn && isPhong;
+	gouraudLightRadioButton->Checked = isOn && !isPhong;
+	noLightRadioButton->Checked = !isOn;
+	isSettingParams = false;
+}
+
 System::Void MainForm::setOtherParams(Color bgColor, Color wfColor, Color selectedColor, bool wfMode, bool solidMode, bool faceCull) {
 	// set other parameters
 	isSettingParams = true;
@@ -182,6 +197,14 @@ System::Void MainForm::updateCameraParams() {
 	GL::Vector3 rot = mainScene->getCameraRotation(false);
 	bool perspective = mainScene->isPerspective();
 	setCameraParams(pos.x, pos.y, pos.z, rot.x, rot.y, perspective);
+}
+
+System::Void MainForm::updateLightParams() {
+	GL::Vector3 pos = mainScene->getLightPosition(false);
+	Color lightColor = mainScene->getLightColor();
+	bool isOn = mainScene->isLightOn();
+	bool isPhong = mainScene->getLightMode();
+	setLightParams(pos.x, pos.y, pos.z, isOn, isPhong, lightColor);
 }
 
 System::Void MainForm::updateOtherParams() {
@@ -442,4 +465,64 @@ System::Void MainForm::cullOnRadioButton_CheckedChanged(System::Object ^ sender,
 
 System::Void MainForm::cullOffRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
 	changeCulling();
+}
+
+// Lighting:
+
+System::Void MainForm::changeLightPosition() {
+	mainScene->setLightPosition(lightPosXBar->Value, lightPosYBar->Value, lightPosZBar->Value);
+	renderScene();
+}
+
+System::Void MainForm::lightPosXBar_Scroll(System::Object ^ sender, System::EventArgs ^ e) {
+	changeLightPosition();
+}
+
+System::Void MainForm::lightPosYBar_Scroll(System::Object ^ sender, System::EventArgs ^ e) {
+	changeLightPosition();
+}
+
+System::Void MainForm::lightPosZBar_Scroll(System::Object ^ sender, System::EventArgs ^ e) {
+	changeLightPosition();
+}
+
+System::Void KDZ::MainForm::lightAmbiTrackBar_Scroll(System::Object ^ sender, System::EventArgs ^ e)
+{
+	return System::Void();
+}
+
+System::Void KDZ::MainForm::lightColorButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	ColorDialog ^dialog = gcnew ColorDialog();
+	dialog->ShowHelp = true;
+	dialog->Color = mainScene->getLightColor();
+	// Update the text box color if the user clicks OK 
+	if (dialog->ShowDialog(this) == ::DialogResult::OK) {
+		mainScene->setLightColor(dialog->Color);
+		lightColorButton->BackColor = dialog->Color;
+		renderScene();
+	}
+}
+
+
+System::Void MainForm::changeLighting() {
+	if (noLightRadioButton->Checked) {
+		mainScene->setLightOn(false);
+	}
+	else {
+		mainScene->setLightMode(phongLightRadioButton->Checked);
+		mainScene->setLightOn(true);
+	}
+	renderScene();
+}
+
+System::Void MainForm::noLightRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeLighting();
+}
+
+System::Void MainForm::phongLightRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeLighting();
+}
+
+System::Void MainForm::gouraudLightRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeLighting();
 }

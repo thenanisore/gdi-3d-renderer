@@ -82,9 +82,9 @@ namespace GL {
 	}
 
 	void Renderer::renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4& proj, 
-		const Vector3 &cameraPos, const Light &light, bool wireframe, bool solid) 
+		const Vector3 &cameraPos, const Light &lightSource, bool wireframe, bool solid) 
 	{
-		Material material = obj.getMaterial();
+		//Material material = obj.getMaterial();
 		Matrix4 modelView = view * model;
 		Matrix3 normalTransform = modelView.inverted().transposed().toMat3();
 		for (const GL::Polygon &pol : obj.polygons) {
@@ -102,7 +102,7 @@ namespace GL {
 				if (solid) { 
 					// another one for lighting calculations
 					GL::Polygon worldTransformed = pol.getTransformed(modelView, normalTransform);
-					fillPolygon(transformed, worldTransformed, cameraPos, lightPos);
+					fillPolygon(transformed, worldTransformed, cameraPos, lightSource);
 				}
 			}
 		}
@@ -186,7 +186,7 @@ namespace GL {
 		if (vec.z > max) vec.z = max;
 	}
 
-	void Renderer::fillPolygon(const Polygon &poly, const Polygon &worldPoly, const Vector3 &cameraPos, const Vector3 &lightPos) {
+	void Renderer::fillPolygon(const Polygon &poly, const Polygon &worldPoly, const Vector3 &cameraPos, const Light &lightSource) {
 		// copy vectors first
 		Vector3 first = poly.vertices[0].toVec3(), second = poly.vertices[1].toVec3(), third = poly.vertices[2].toVec3();
 		// in world coordinates (for lighting calculations) 

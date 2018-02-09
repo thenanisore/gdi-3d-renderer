@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Polygon.h"
-#include "Material.h"
 
 #include <vector>
 #include <cmath>
@@ -42,7 +41,7 @@ namespace GL {
 		// Rotation angles (in the world space).
 		Vector3 rotation;
 		// Color.
-		Material material;
+		//Material material;
 
 		// reflection flags:
 		bool reflectionXY;

@@ -60,7 +60,7 @@ namespace GL {
 		void drawLine(const Vector3 &from, const Vector3 &to);
 		void drawPoint(int x, int y, float z, SolidBrush ^b);
 		void drawPolygon(const GL::Polygon &poly);
-		void fillPolygon(const GL::Polygon &poly, const GL::Polygon &worldPoly, const Vector3 &cameraPos, const Vector3 &lightPos);
+		void fillPolygon(const GL::Polygon &poly, const GL::Polygon &worldPoly, const Vector3 &cameraPos, const Light &lightSource);
 		void viewportTransform(GL::Polygon & poly);
 		Vector3 NDCtoViewport(const Vector3 &vertex);
 	};

@@ -11,14 +11,10 @@ namespace GL {
 	const float scaleMultiplier = 0.1f;
 	const float cameraPositionMultiplier = 1.0f;
 	const float camerRotationMultiplier = 1.0f;
+	const float lightPositionMultiplier = 1.0f;
 
-	Scene::Scene() : camera() {
-		// test code
-		//addPolygon();
-		addCube();
-		//addPolygons();
-		selectedObject = 0;
-		lightPos = camera.getPosition();
+	Scene::Scene() : camera(), selectedObject(0) {
+		lightSource = Light(camera.getPosition());
 	}
 
 	void Scene::renderScene(Renderer ^renderer) {
@@ -48,7 +44,7 @@ namespace GL {
 				renderer->isSelectedObject = (&sceneObjects[selectedObject] == &object);
 				// pass the current object and transformation matrices in the renderer
 				renderer->renderObject(object, model, view, projection, camera.getPosition(), 
-					lightPos, drawWireframe, drawSolid);
+					lightSource, drawWireframe, drawSolid);
 				renderer->isSelectedObject = false;
 			}
 		}
@@ -86,14 +82,6 @@ namespace GL {
 
 	Vector3 Scene::getObjectScale(bool worldCoords) const {
 		return sceneObjects[selectedObject].getScale() / (worldCoords ? 1.f : scaleMultiplier);
-	}
-
-	Vector3 Scene::getCameraPosition(bool worldCoords) const {
-		return camera.getPosition() / (worldCoords ? 1.f : cameraPositionMultiplier);
-	}
-
-	Vector3 Scene::getCameraRotation(bool worldCoords) const {
-		return camera.getRotation() / (worldCoords ? 1.f : camerRotationMultiplier);
 	}
 
 	void Scene::resetObject() {
@@ -139,20 +127,54 @@ namespace GL {
 		camera.setRotation(Vector3(pitch, -yawn, roll) * camerRotationMultiplier);
 	}
 
+	Vector3 Scene::getCameraPosition(bool worldCoords) const {
+		return camera.getPosition() / (worldCoords ? 1.f : cameraPositionMultiplier);
+	}
+
+	Vector3 Scene::getCameraRotation(bool worldCoords) const {
+		return camera.getRotation() / (worldCoords ? 1.f : camerRotationMultiplier);
+	}
+
 	void Scene::resetCamera() {
 		camera.reset();
 	}
 
-	Vector3 Scene::getLightPosition() {
-		return lightPos;
+	// methods to manipulate the light source:
+
+	Vector3 Scene::getLightPosition(bool worldCoords) {
+		return lightSource.position / (worldCoords ? 1.f : lightPositionMultiplier);
 	}
 
 	void Scene::setLightPosition(int x_coord, int y_coord, int z_coord) {
-		lightPos = Vector3(x_coord, y_coord, z_coord);
+		lightSource.position = Vector3(x_coord, y_coord, z_coord);
+	}
+
+	Color Scene::getLightColor() {
+		return Util::vecToColor(lightSource.color);
+	}
+
+	bool Scene::isLightOn() {
+		return lightSource.on;
+	}
+
+	bool Scene::getLightMode() {
+		return lightSource.isPhongMode;
+	}
+
+	void Scene::setLightColor(Color^ lightColor) {
+		lightSource.color = Util::colorToVec(lightColor).toVec3();
+	}
+
+	void Scene::setLightOn(bool isOn) {
+		lightSource.on = isOn;
+	}
+
+	void Scene::setLightMode(bool phong) {
+		lightSource.isPhongMode = phong;
 	}
 
 	void Scene::resetLighting() {
-		// TODO: reset lighting
+		lightSource.reset();
 	}
 
 	void Scene::setProjectionMode(bool _perspective) {

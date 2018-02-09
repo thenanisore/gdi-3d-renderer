@@ -46,8 +46,14 @@ namespace GL {
 
 		// methods to manipulate lighting:
 
-		Vector3 getLightPosition();
+		Vector3 getLightPosition(bool worldCoords);
 		void setLightPosition(int x_coord, int y_coord, int z_coord);
+		void setLightColor(Color^ lightColor);
+		void setLightOn(bool isOn);
+		void setLightMode(bool phong);
+		Color getLightColor();
+		bool isLightOn();
+		bool getLightMode();
 		void resetLighting();
 
 		// Sets projection mode: perspective if the parameter is true, orthographics otherwise.
@@ -74,8 +80,7 @@ namespace GL {
 
 	private:
 		void addObject(SceneObject &obj);
-		Vector3 lightPos;
-		Vector3 lightColor;
+		Light lightSource;
 		Camera camera;
 		std::vector<SceneObject> sceneObjects;
 		int selectedObject;
