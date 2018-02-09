@@ -76,12 +76,12 @@ namespace GL {
 
 			if (!toClip(transformed)) {
 				// draw
-				if (wireframe) {
-					drawPolygon(transformed);
-				}
 				if (solid) {
 					// TODO: lighting
 					fillPolygon(transformed);
+				}
+				if (wireframe) {
+					drawPolygon(transformed);
 				}
 			}
 		}
@@ -274,10 +274,10 @@ namespace GL {
 		}
 	}
 
-	// Remaps the coordinates from [-1, 1] to the [0, viewport] space. 
+	// Remaps coordinates from [-1, 1] to the [0, viewport] space. 
 	Vector3 Renderer::NDCtoViewport(const Vector3 &vertex) {
-		return Vector3((1.f + vertex.x) * viewportX / 2.f, 
-			           (1.f - vertex.y) * viewportY / 2.f,
+		return Vector3((int)((1.f + vertex.x) * viewportX / 2.f),
+			           (int)((1.f - vertex.y) * viewportY / 2.f),
 			            vertex.z);
 	}
 }
