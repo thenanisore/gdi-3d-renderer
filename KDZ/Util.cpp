@@ -169,6 +169,10 @@ namespace GL {
 			float v = (d11 * d20 - d01 * d21) / denom;
 			float w = (d00 * d21 - d01 * d20) / denom;
 			float u = 1.0f - v - w;
+			if (float::IsNaN(v) || float::IsNaN(u) || float::IsNaN(w)) {
+				// deformed triangle
+				throw new std::invalid_argument("Triangle is deformed: cannot computer barycentric coordinates");
+			}
 			return Vector3(u, v, w);
 		}
 
@@ -218,6 +222,13 @@ namespace GL {
 
 		Vector3 reflect(const Vector3 & inc, const Vector3 & norm) {
 			return inc - norm * (2.f * norm.dot(inc));
+		}
+
+		// Returns an area of the given triangle.
+		float area(const GL::Polygon & poly) {
+			float left = (poly.vertices[1].x - poly.vertices[0].x) * (poly.vertices[2].y - poly.vertices[0].y);
+			float right = (poly.vertices[2].x - poly.vertices[0].x) * (poly.vertices[1].y - poly.vertices[0].y);
+			return abs(0.5f * (left - right));
 		}
 	}
 }

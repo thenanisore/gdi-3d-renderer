@@ -111,6 +111,9 @@ namespace GL {
 	void Scene::deleteObject() {
 		if (!isEmpty()) {
 			sceneObjects.erase(sceneObjects.begin() + selectedObject);
+			if (selectedObject > 0) {
+				selectedObject--;
+			}
 		}
 	}
 

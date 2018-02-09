@@ -2,6 +2,7 @@
 
 #include "Matrix3.h"
 #include "Matrix4.h"
+#include "Polygon.h"
 
 namespace GL {
 
@@ -50,5 +51,7 @@ namespace GL {
 		Vector4 colorToVec(System::Drawing::Color ^col);
 		// Returns a reflection direction for a given incident vector and a normal.
 		Vector3 reflect(const Vector3 &inc, const Vector3 &norm);
+		// Returns an area of the given polygon.
+		float area(const GL::Polygon &poly);
 	}
 }
