@@ -18,8 +18,7 @@ namespace GL {
 		void drawAxes(Matrix4 transformMatrix, bool grid);
 		void clearScreen();
 		void clearZBuffer();
-		void renderObject(const SceneObject &obj, const Matrix4 &proj, 
-			const Matrix4 &modelView, const Matrix3 &normalMatrix, bool wireframe, bool solid);
+		void renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4 &proj, bool wireframe, bool solid);
 		void ztofile();
 		void setGraphics(Graphics ^g);
 
@@ -34,6 +33,10 @@ namespace GL {
 		bool isSelectedObject;
 		void setProjection(bool _perspective);
 		void setFaceCulling(bool _cullFace);
+
+		const Color DEFAULT_BG_COLOR = Color::Black;
+		const Color DEFAULT_WF_COLOR = Color::White;
+		const Color DEFAULT_SELECTED_COLOR = Color::Blue;
 
 	private:
 		Graphics ^graphics;

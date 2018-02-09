@@ -147,10 +147,10 @@ namespace GL {
 			Matrix4 ortho;
 			ortho.set(0, 0, 2.f / (right - left));
 			ortho.set(1, 1, 2.f / (top - bottom));
-			ortho.set(2, 2, 1.f / (near - far));
+			ortho.set(2, 2, -2.f / (far - near));
 			ortho.set(0, 3, -(right + left) / (right - left));
 			ortho.set(1, 3, -(top + bottom) / (top - bottom));
-			ortho.set(2, 3, -near / (near - far));
+			ortho.set(2, 3, -(far + near) / (far - near));
 			return ortho;
 		}
 

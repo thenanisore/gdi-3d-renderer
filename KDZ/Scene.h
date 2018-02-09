@@ -48,10 +48,15 @@ namespace GL {
 		void setProjectionMode(bool perspective);
 		// Sets drawing mode flags: wireframe and/or solid.
 		void setDrawingMode(bool wireframe, bool solid);
+		void setCulling(bool cull);
 		// Returns true is the scene contains no objects.
 		bool isEmpty();
 		bool isSelectedFirst();
 		bool isSelectedLast();
+		bool isPerspective();
+		bool isWireframeMode();
+		bool isSolidMode();
+		bool isCulling();
 		unsigned int objectCount();
 		unsigned int getSelected();
 		bool fromFile(String ^file);
@@ -63,11 +68,12 @@ namespace GL {
 
 	private:
 		void addObject(SceneObject &obj);
+		Camera camera;
+		std::vector<SceneObject> sceneObjects;
 		int selectedObject;
-		bool isPerspective;
+		bool perspective;
+		bool faceCull;
 		bool drawWireframe;
 		bool drawSolid;
-		std::vector<SceneObject> sceneObjects;
-		Camera camera;
 	};
 }

@@ -23,13 +23,12 @@ namespace GL {
 	void Scene::renderScene(Renderer ^renderer) {
 		renderer->clearScreen();
 		renderer->clearZBuffer();
-
-		// TODO: culling switch
-		renderer->setFaceCulling(true);
+		renderer->setFaceCulling(faceCull);
 		
+		// calculate matrices
 		Matrix4 view = camera.getViewMatrix();
 		Matrix4 projection;
-		if (isPerspective) {
+		if (isPerspective()) {
 			// TODO: regulate FoV
 			projection = Util::perspective(60.f, renderer->getViewportAspect(), 0.1f, 100.f);
 			renderer->setProjection(true);
@@ -40,17 +39,14 @@ namespace GL {
 		}
 
 		//renderer->drawAxes(projection * view, false);
-
 		if (!isEmpty()) {
 			for (const SceneObject &object : sceneObjects) {
 				// get transformation matrix
 				Matrix4 model = object.getModelMatrix();
 				// notify the renderer if the current object is selected
 				renderer->isSelectedObject = (&sceneObjects[selectedObject] == &object);
-				// pass the current object and a transformation matrix in a renderer
-				Matrix4 modelView = view * model;
-				Matrix3 normalTransform = modelView.inverted().transposed().toMat3();
-				renderer->renderObject(object, projection, modelView, normalTransform, drawWireframe, drawSolid);
+				// pass the current object and transformation matrices in the renderer
+				renderer->renderObject(object, model, view, projection, drawWireframe, drawSolid);
 				renderer->isSelectedObject = false;
 			}
 		}
@@ -142,13 +138,17 @@ namespace GL {
 		camera.reset();
 	}
 
-	void Scene::setProjectionMode(bool perspective) {
-		isPerspective = perspective;
+	void Scene::setProjectionMode(bool _perspective) {
+		perspective = _perspective;
 	}
 
 	void Scene::setDrawingMode(bool wireframe, bool solid) {
 		drawWireframe = wireframe;
 		drawSolid = solid;
+	}
+
+	void Scene::setCulling(bool cull) {
+		faceCull = cull;
 	}
 
 	bool Scene::isEmpty() {
@@ -163,6 +163,22 @@ namespace GL {
 		return selectedObject == sceneObjects.size() - 1 && !isEmpty();
 	}
 
+	bool Scene::isPerspective() {
+		return perspective;
+	}
+
+	bool Scene::isWireframeMode() {
+		return drawWireframe;
+	}
+
+	bool Scene::isSolidMode() {
+		return drawSolid;
+	}
+
+	bool Scene::isCulling() {
+		return faceCull;
+	}
+
 	unsigned int Scene::objectCount() {
 		return sceneObjects.size();
 	}
@@ -170,7 +186,6 @@ namespace GL {
 	unsigned int Scene::getSelected() {
 		return selectedObject;
 	}
-
 	bool Scene::fromFile(String ^ file) {
 		String^ delimStr = "\r\n";
 		array<Char>^ delimiter = delimStr->ToCharArray();

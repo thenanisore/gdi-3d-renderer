@@ -18,6 +18,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 System::Void MainForm::setScene() {
 	checkButtons();
 	updateObjectParams();
+	updateCameraParams();
+	updateOtherParams();
 	renderScene();
 }
 
@@ -134,7 +136,7 @@ System::Void MainForm::setObjectsParams(int objPosX, int objPosY, int objPosZ, i
 	isSettingParams = false;
 }
 
-System::Void MainForm::setCameraParams(int camPosX, int camPosY, int camPosZ, int camPitch, int camYaw) {
+System::Void MainForm::setCameraParams(int camPosX, int camPosY, int camPosZ, int camPitch, int camYaw, bool perspective) {
 	// set camera's trackbars
 	isSettingParams = true;
 	camPosXBar->Value = camPosX;
@@ -142,21 +144,54 @@ System::Void MainForm::setCameraParams(int camPosX, int camPosY, int camPosZ, in
 	camPosZBar->Value = camPosZ;
 	camRotPitchBar->Value = camPitch;
 	camRotYawBar->Value = camYaw;
+	perspectiveButton->Checked = perspective;
+	orthoButton->Checked = !perspective;
+	isSettingParams = false;
+}
+
+System::Void MainForm::setOtherParams(Color bgColor, Color wfColor, Color selectedColor, bool wfMode, bool solidMode, bool faceCull) {
+	// set other parameters
+	isSettingParams = true;
+	wfColorButton->BackColor = wfColor;
+	bgColorButton->BackColor = bgColor;
+	selectedColorButton->BackColor = selectedColor;
+	if (wfMode && solidMode) {
+		bothRadioButton->Checked = true;
+	}
+	else {
+		wfRadioButton->Checked = wfMode;
+		solidRadioButton->Checked = solidMode;
+	}
+	cullOnRadioButton->Checked = faceCull;
+	cullOffRadioButton->Checked = !faceCull;
 	isSettingParams = false;
 }
 
 System::Void MainForm::updateObjectParams() {
-	GL::Vector3 pos = mainScene->getObjectPosition(false);
-	GL::Vector3 rot = mainScene->getObjectRotation(false);
-	GL::Vector3 sc = mainScene->getObjectScale(false);
-	GL::Vector3 refl = mainScene->getObjectReflection();
-	setObjectsParams(pos.x, pos.y, pos.z, sc.x, sc.y, sc.z, rot.x, rot.y, rot.z, refl.z, refl.y, refl.x);
+	if (!mainScene->isEmpty()) {
+		GL::Vector3 pos = mainScene->getObjectPosition(false);
+		GL::Vector3 rot = mainScene->getObjectRotation(false);
+		GL::Vector3 sc = mainScene->getObjectScale(false);
+		GL::Vector3 refl = mainScene->getObjectReflection();
+		setObjectsParams(pos.x, pos.y, pos.z, sc.x, sc.y, sc.z, rot.x, rot.y, rot.z, refl.z, refl.y, refl.x);
+	}
 }
 
 System::Void MainForm::updateCameraParams() {
 	GL::Vector3 pos = mainScene->getCameraPosition(false);
 	GL::Vector3 rot = mainScene->getCameraRotation(false);
-	setCameraParams(pos.x, pos.y, pos.z, rot.x, rot.y);
+	bool perspective = mainScene->isPerspective();
+	setCameraParams(pos.x, pos.y, pos.z, rot.x, rot.y, perspective);
+}
+
+System::Void MainForm::updateOtherParams() {
+	Color bg = renderer->getBGColor();
+	Color wfCol = renderer->getWFColor();
+	Color sel = renderer->getSelectedColor();
+	bool wf = mainScene->isWireframeMode();
+	bool solid = mainScene->isSolidMode();
+	bool cull = mainScene->isCulling();
+	setOtherParams(bg, wfCol, sel, wf, solid, cull);
 }
 
 // Sets scene after the MainForm is shown.
@@ -282,6 +317,7 @@ System::Void MainForm::prevObjButton_Click(System::Object^  sender, System::Even
 System::Void MainForm::deleteObjButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	mainScene->deleteObject();
 	checkButtons();
+	updateObjectParams();
 	renderScene();
 }
 
@@ -380,14 +416,30 @@ System::Void MainForm::changeDrawingMode() {
 	renderScene();
 }
 
-System::Void KDZ::MainForm::wfRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+System::Void MainForm::wfRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
 	changeDrawingMode();
 }
 
-System::Void KDZ::MainForm::solidRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+System::Void MainForm::solidRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
 	changeDrawingMode();
 }
 
-System::Void KDZ::MainForm::bothRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+System::Void MainForm::bothRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
 	changeDrawingMode();
+}
+
+// Culling:
+
+System::Void MainForm::changeCulling() {
+	if (cullOnRadioButton->Checked) mainScene->setCulling(true);
+	else if (cullOffRadioButton->Checked) mainScene->setCulling(false);
+	renderScene();
+}
+
+System::Void MainForm::cullOnRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeCulling();
+}
+
+System::Void MainForm::cullOffRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeCulling();
 }

@@ -51,6 +51,9 @@ namespace KDZ {
 
 
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog;
+	private: System::Windows::Forms::GroupBox^  cullGroupBox;
+	private: System::Windows::Forms::RadioButton^  cullOffRadioButton;
+	private: System::Windows::Forms::RadioButton^  cullOnRadioButton;
 
 
 		 // Main scene
@@ -88,12 +91,14 @@ namespace KDZ {
 		System::Void camRotYawBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void updateObjectParams();
 		System::Void updateCameraParams();
+		System::Void updateOtherParams();
 		// buttons
 		System::Void nextObjButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void prevObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		System::Void deleteObjButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void setObjectsParams(int objPosX, int objPosY, int objPosZ, int objScaleX, int objScaleY, int objScaleZ, int objRotX, int objRotY, int objRotZ, bool objReflXY, bool objReflXZ, bool objReflYZ);
-		System::Void setCameraParams(int camPosX, int camPosY, int camPosZ, int camPitch, int camYaw);
+		System::Void setCameraParams(int camPosX, int camPosY, int camPosZ, int camPitch, int camYaw, bool perspective);
+		System::Void setOtherParams(Color bgColor, Color wfColor, Color selectedColor, bool wfMode, bool solidMode, bool faceCull);
 		System::Void resetObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		System::Void resetCamButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		// object reflection checkboxes:
@@ -110,11 +115,15 @@ namespace KDZ {
 		System::Void changeProjectionMode();
 		System::Void perspectiveButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void orthoButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void changeCulling();
 		// drawing mode radio buttons
 		System::Void changeDrawingMode();
 		System::Void wfRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void solidRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void bothRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		// culling radio buttons
+		System::Void cullOnRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void cullOffRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 
 	private: System::Windows::Forms::Button^  prevObjButton;
 	private: System::Windows::Forms::Button^  nextObjButton;
@@ -404,6 +413,9 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->wfColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->cullGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->cullOnRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->cullOffRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -439,6 +451,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->colorGroupBox->SuspendLayout();
 			this->drawingModeGroupBox->SuspendLayout();
 			this->statusStrip->SuspendLayout();
+			this->cullGroupBox->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// menuStrip
@@ -1166,6 +1179,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->otherFlowLayoutPanel->Controls->Add(this->colorGroupBox);
 			this->otherFlowLayoutPanel->Controls->Add(this->drawingModeGroupBox);
+			this->otherFlowLayoutPanel->Controls->Add(this->cullGroupBox);
 			this->otherFlowLayoutPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->otherFlowLayoutPanel->FlowDirection = System::Windows::Forms::FlowDirection::TopDown;
 			this->otherFlowLayoutPanel->Location = System::Drawing::Point(3, 3);
@@ -1315,6 +1329,41 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->openFileDialog->Filter = L"3D Object files|*.object|Text files|*.txt|All files|*.*";
 			// 
+			// cullGroupBox
+			// 
+			this->cullGroupBox->Controls->Add(this->cullOffRadioButton);
+			this->cullGroupBox->Controls->Add(this->cullOnRadioButton);
+			this->cullGroupBox->Location = System::Drawing::Point(3, 244);
+			this->cullGroupBox->Name = L"cullGroupBox";
+			this->cullGroupBox->Size = System::Drawing::Size(241, 80);
+			this->cullGroupBox->TabIndex = 2;
+			this->cullGroupBox->TabStop = false;
+			this->cullGroupBox->Text = L"Face Culling";
+			// 
+			// cullOnRadioButton
+			// 
+			this->cullOnRadioButton->AutoSize = true;
+			this->cullOnRadioButton->Location = System::Drawing::Point(7, 22);
+			this->cullOnRadioButton->Name = L"cullOnRadioButton";
+			this->cullOnRadioButton->Size = System::Drawing::Size(48, 21);
+			this->cullOnRadioButton->TabIndex = 0;
+			this->cullOnRadioButton->TabStop = true;
+			this->cullOnRadioButton->Text = L"On";
+			this->cullOnRadioButton->UseVisualStyleBackColor = true;
+			this->cullOnRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::cullOnRadioButton_CheckedChanged);
+			// 
+			// cullOffRadioButton
+			// 
+			this->cullOffRadioButton->AutoSize = true;
+			this->cullOffRadioButton->Location = System::Drawing::Point(6, 49);
+			this->cullOffRadioButton->Name = L"cullOffRadioButton";
+			this->cullOffRadioButton->Size = System::Drawing::Size(48, 21);
+			this->cullOffRadioButton->TabIndex = 1;
+			this->cullOffRadioButton->TabStop = true;
+			this->cullOffRadioButton->Text = L"Off";
+			this->cullOffRadioButton->UseVisualStyleBackColor = true;
+			this->cullOffRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::cullOffRadioButton_CheckedChanged);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -1379,6 +1428,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->drawingModeGroupBox->PerformLayout();
 			this->statusStrip->ResumeLayout(false);
 			this->statusStrip->PerformLayout();
+			this->cullGroupBox->ResumeLayout(false);
+			this->cullGroupBox->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

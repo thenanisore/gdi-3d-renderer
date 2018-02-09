@@ -12,10 +12,11 @@ namespace GL {
 	using namespace System::Collections::Generic;
 
 	Renderer::Renderer(Graphics ^im, int viewportWidth, int viewportHeight) : graphics(im) {
-		bgColor = Color::White;
-		wfBrush = gcnew SolidBrush(Color::Black);
-		selectedBrush = gcnew SolidBrush(Color::Yellow);
-		surfaceBrush = gcnew SolidBrush(Color::LightBlue);
+		// initialize colors
+		bgColor = DEFAULT_BG_COLOR;
+		wfBrush = gcnew SolidBrush(DEFAULT_WF_COLOR);
+		selectedBrush = gcnew SolidBrush(DEFAULT_SELECTED_COLOR);
+		surfaceBrush = gcnew SolidBrush(Color::Black);
 		// initialize z-buffer
 		setViewport(viewportWidth, viewportHeight);
 	}
@@ -67,25 +68,26 @@ namespace GL {
 
 	bool Renderer::isVisible(const Polygon &pol) {
 		// a face is visible is a dot-product of its normal vector
-		// and the first vertex of the triangle is less than zero
+		// and the first vertex of the triangle is less than zero (here's reversed)
 		Vector3 norm = pol.normals[0];
 		Vector3 v0 = pol.vertices[0].toVec3();
-		bool visible = (-v0).dot(norm) >= 0;
+		Vector3 camPos = perspective ? Vector3() : Vector3(v0.x, v0.y, -1.f);
+		bool visible = (camPos - v0).dot(norm) >= 0;
 		return visible;
 	}
 
-	void Renderer::renderObject(const SceneObject &obj, const Matrix4 &proj, 
-		const Matrix4& modelView, const Matrix3 &normalMatrix, bool wireframe, bool solid) {
-		Matrix4 transformMatrix = proj * modelView;
+	void Renderer::renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4& proj, bool wireframe, bool solid) {
+		Matrix4 modelView = view * model;
+		Matrix3 normalTransform = modelView.inverted().transposed().toMat3();
 		for (const GL::Polygon &pol : obj.polygons) {
-			// get the polygon transformed (to world/camera coords).
-			GL::Polygon worldTransformed = pol.getTransformed(modelView, normalMatrix);
+			// get the polygon transformed (world coords).
+			GL::Polygon worldTransformed = pol.getTransformed(modelView, normalTransform);
 			// check visibility is back-culling is on, don't draw if is a back face
 			if (cullFace && !isVisible(worldTransformed)) {
 				continue;
 			}
-			// get the polygon transformed (to clip space).
-			GL::Polygon transformed = worldTransformed.getTransformed(proj, Matrix3());
+			// get the polygon transformed (clip space). if ortho, don't forget to apply the view matrix.
+			GL::Polygon transformed = worldTransformed.getTransformed(perspective ? proj : proj * view, Matrix3());
 			viewportTransform(transformed);
 			if (!toClip(transformed)) {
 				if (wireframe) { drawPolygon(transformed); }
@@ -198,7 +200,7 @@ namespace GL {
 	}
 
 	void Renderer::drawPoint(int x, int y, float z, SolidBrush ^br) {
-		if (x >= 0 && x < viewportX && y >= 0 && y < viewportY && z > 0 && z < 1) {
+		if (x >= 0 && x < viewportX && y >= 0 && y < viewportY && z > -1 && z < 1) {
 			// z test
 			if (z < zbuffer[x, y]) {
 				zbuffer[x, y] = z;
