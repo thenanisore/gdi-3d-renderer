@@ -205,5 +205,10 @@ namespace GL {
 		bool compareFloat(float a, float b, float eps) {
 			return abs(a - b) < eps;
 		}
+
+
+		bool invertedMat4(const double m[16], double invOut[16]) {
+			// todo
+		}
 	}
 }

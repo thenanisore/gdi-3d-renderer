@@ -5,9 +5,9 @@ namespace GL {
 
 	Matrix4::Matrix4() {
 		values = { 1, 0, 0, 0,
-				   0, 1, 0, 0,
-				   0, 0, 1, 0,
-				   0, 0, 0, 1 };
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1 };
 	}
 
 	Matrix4::Matrix4(const std::vector<float> _values) : values(_values) { }
@@ -93,11 +93,44 @@ namespace GL {
 		return Matrix4(newValues);
 	}
 
+	float Matrix4::minor(int row, int col) const {
+		Matrix3 sub;
+		for (int i = 0; i < dim; i++) {
+			for (int j = 0; j < dim; j++) {
+				if (i != row && j != col) {
+					int r = i < row ? i : i - 1;
+					int c = j < col ? j : j - 1;
+					sub.set(r, c, get(i, j));
+				}
+			}
+		}
+		return sub.determinant();
+	}
+
+	float Matrix4::determinant() const {
+		return get(0, 0) * minor(0, 0) - get(0, 1) * minor(0, 1) + get(0, 2) * minor(0, 2) - get(0, 3) * minor(0, 3);
+	}
+
+	Matrix4 Matrix4::inverted() const {
+		float det = determinant();
+		if (det == 0) {
+			throw std::invalid_argument("The determinant is zero");
+		}
+		Matrix4 inv;
+		for (int i = 0; i < dim; i++) {
+			for (int j = 0; j < dim; j++) {
+				int sign = (i + j) % 2 == 0 ? 1 : -1;
+				inv.set(j, i, sign * minor(i, j));
+			}
+		}
+		return inv * (1.f / det);
+	}
+
 	Matrix3 Matrix4::toMat3() const {
 		return Matrix3(std::vector<float> {
-			get(0, 0), get(0,1), get(0,2),
-			get(1, 0), get(1, 1), get(1, 2),
-			get(2, 0), get(2, 1), get(2, 2)
+			get(0, 0), get(0, 1), get(0, 2),
+				get(1, 0), get(1, 1), get(1, 2),
+				get(2, 0), get(2, 1), get(2, 2)
 		});
 	}
 }

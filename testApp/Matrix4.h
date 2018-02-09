@@ -33,9 +33,12 @@ namespace GL {
 		Vector4 getRow(int row) const;
 		Vector4 getColumn(int col) const;
 		Matrix4 transposed() const;
+		float determinant() const;
 		Matrix3 toMat3() const;
+		Matrix4 inverted() const;
 
 	private:
+		float minor(int row, int col) const;
 		std::vector<float> values;
 	};
 }

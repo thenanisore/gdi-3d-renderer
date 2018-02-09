@@ -31,6 +31,7 @@ namespace GL {
 		void set(int row, int col, float val);
 		Vector3 getRow(int row) const;
 		Vector3 getColumn(int col) const;
+		float determinant() const;
 		Matrix3 transposed() const;
 
 	private:

@@ -32,6 +32,7 @@ namespace GL {
 		void setSelectedColor(Color _col);
 		bool isSelectedObject;
 		void setProjection(bool _perspective);
+		void setFaceCulling(bool _cullFace);
 
 	private:
 		Graphics ^graphics;
@@ -40,14 +41,17 @@ namespace GL {
 		SolidBrush ^selectedBrush;
 		SolidBrush ^surfaceBrush;
 		bool perspective;
+		bool cullFace;
 		int viewportX;
 		int viewportY;
 		array<float, 2> ^zbuffer;
 		bool toClip(const Polygon & pol);
+		bool isVisible(const Polygon & pol);
 		void drawLine(const Vector3 &from, const Vector3 &to);
 		void drawPoint(int x, int y, float z, SolidBrush ^b);
 		void drawPolygon(const GL::Polygon &pol);
 		void fillPolygon(const GL::Polygon &pol);
+		void viewportTransform(GL::Polygon & poly);
 		Vector3 NDCtoViewport(const Vector3 &vertex);
 	};
 }

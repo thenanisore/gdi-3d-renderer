@@ -83,6 +83,13 @@ namespace GL {
 		return Vector3(get(0, col), get(1, col), get(2, col));
 	}
 
+	float Matrix3::determinant() const {
+		float minor1 = get(1, 1) * get(2, 2) - get(1, 2) * get(2, 1);
+		float minor2 = get(1, 0) * get(2, 2) - get(1, 2) * get(2, 0);
+		float minor3 = get(1, 0) * get(2, 1) - get(1, 1) * get(2, 0);
+		return get(0, 0) * minor1 - get(0, 1) * minor2 + get(0, 2) * minor3;
+	}
+
 	Matrix3 Matrix3::transposed() const {
 		std::vector<float> newValues(values);
 		for (int i = 0; i < newValues.size(); i++) {

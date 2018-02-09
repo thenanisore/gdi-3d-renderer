@@ -86,6 +86,10 @@ void print(GL::SceneObject so, GL::Matrix4 tr) {
 	std::cout << std::endl;
 }
 
+void print(float x) {
+	std::cout << x << std::endl;
+}
+
 void printh(GL::SceneObject so, GL::Matrix4 tr) {
 	std::cout << "--- SceneObject ---" << std::endl;
 	for (const GL::Polygon &pol : so.polygons) {
@@ -155,7 +159,7 @@ void test3() {
 	printh(obj, persp.transposed() * view2 * obj.getModelMatrix());
 }
 
-int main(array<System::String ^> ^args) {
+void test4() {
 	GL::Vector3 a(0, 0, 0);
 	GL::Vector3 b(2, 0, 0);
 	GL::Vector3 c(0, 2, 1);
@@ -165,6 +169,29 @@ int main(array<System::String ^> ^args) {
 	std::cout << GL::Util::isInTriangle(GL::Vector3(0, 0, 2), a, b, c) << std::endl;
 	std::cout << GL::Util::isInTriangle(GL::Vector3(0, 1, 0), a, b, c) << std::endl;
 	std::cout << GL::Util::isInTriangle(GL::Vector3(3, 0.5, 2), a, b, c) << std::endl;
+}
+
+int main(array<System::String ^> ^args) {
+
+	GL::Matrix3 ma(std::vector<float> {
+		1, 4, 7, 3, 0, 5, -1, 9, 11
+	});
+	print(ma);
+	print(ma.determinant());
+
+	GL::Matrix3 mb(std::vector<float> {
+		7, 4, 9, 0, 6, -3, 4, -10, -4
+	});
+	print(mb);
+	print(mb.determinant());
+
+	GL::Matrix4 mc(std::vector<float> {
+		6, -5, 8, 4, 9, 7, 5, 2, 7, 5, 3, 7, -4, 8, -8, -3
+	});
+	print(mc);
+	print(mc.determinant());
+	print(mc.inverted());
+	print(mc.inverted() * mc);
 
 	std::getchar();
     return 0;

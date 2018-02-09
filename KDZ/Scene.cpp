@@ -23,6 +23,9 @@ namespace GL {
 	void Scene::renderScene(Renderer ^renderer) {
 		renderer->clearScreen();
 		renderer->clearZBuffer();
+
+		// TODO: culling switch
+		renderer->setFaceCulling(true);
 		
 		Matrix4 view = camera.getViewMatrix();
 		Matrix4 projection;

@@ -65,24 +65,25 @@ namespace GL {
 		return true;
 	}
 
+	bool Renderer::isVisible(const Polygon &pol) {
+		// a face is visible is a dot-product of its normal vector
+		// and the first vertex of the triangle is less than zero
+		const Vector3 *norm = &pol.normals[0];
+		const Vector3 *v0 = &pol.vertices[0].toVec3();
+		bool visible = (-*v0).dot(*norm) < 0;
+		return visible;
+	}
 
 	void Renderer::renderObject(const SceneObject &obj, const Matrix4& transformMatrix, bool wireframe, bool solid) {
 		for (GL::Polygon pol : obj.polygons) {
-			// get the polygon transformed 
+			// get the polygon transformed
 			GL::Polygon transformed = pol.getTransformed(transformMatrix);
-			transformed.vertices[0] = NDCtoViewport(transformed.vertices[0].fromHomogeneous());
-			transformed.vertices[1] = NDCtoViewport(transformed.vertices[1].fromHomogeneous());
-			transformed.vertices[2] = NDCtoViewport(transformed.vertices[2].fromHomogeneous());
-
+			// check visibility is back-culling is on, don't draw if is a back face
+			if (cullFace && !isVisible(transformed)) return;
+			viewportTransform(transformed);
 			if (!toClip(transformed)) {
-				// draw
-				if (solid) {
-					// TODO: lighting
-					fillPolygon(transformed);
-				}
-				if (wireframe) {
-					drawPolygon(transformed);
-				}
+				if (wireframe) { drawPolygon(transformed); }
+				if (solid) { fillPolygon(transformed); }
 			}
 		}
 	}
@@ -134,6 +135,10 @@ namespace GL {
 
 	void Renderer::setProjection(bool _perspective) {
 		perspective = _perspective;
+	}
+
+	void Renderer::setFaceCulling(bool _cullFace) {
+		cullFace = _cullFace;
 	}
 
 	//int outCode(int x, int y, int X1, int X2, int Y1, int Y2) {
@@ -231,9 +236,12 @@ namespace GL {
 		Vector4 firstColor = pol.colors[0];
 		Vector4 secondColor = pol.colors[1];
 		Vector4 thirdColor = pol.colors[2];
+
 		// deformed triangles not needed to be rendered
-		if (first.y == second.y && first.y == third.y) return;
-		// sort the vertices
+		if ((first.y == second.y && first.y == third.y) || (first.x == second.x && first.x == third.x))
+			return;
+
+		// sort the vertices, third -> second -> first
 		if (first.y > second.y) {
 			swap(first, second);
 			swap(firstColor, secondColor);
@@ -247,31 +255,50 @@ namespace GL {
 			swap(secondColor, thirdColor);
 		}
 
-		// discard very narrow triangles
+		// memorize z-values
 		Vector3 zs(first.z, second.z, third.z);
+		// we're working in the 2d space, so we get rid of z
 		first.z = second.z = third.z = 0.f;
-		if (first.equalEpsilon(second, 0.5f) || second.equalEpsilon(third, 0.5f) || third.equalEpsilon(first, 0.5f)) return;
+		// discard very narrow triangles
+		if (first.equalEpsilon(second, 0.5f) || second.equalEpsilon(third, 0.5f) || third.equalEpsilon(first, 0.5f)) {
+			return;
+		}
 		int totalHeight = third.y - first.y;
-
+		// scan down to up
 		for (int i = 0; i < totalHeight; i++) {
 			bool secondHalf = i > second.y - first.y || second.y == first.y;
 			int segmentHeight = secondHalf ? third.y - second.y : second.y - first.y;
+			// current height to overall height ratio
 			float alpha = (float)i / totalHeight;
+			// current segment height to overall segment height ratio
 			float beta = (float)(i - (secondHalf ? second.y - first.y : 0)) / segmentHeight;
+			// find current intersection point between scanline and first-to-third side
 			Vector3 A = first + (third - first) * alpha;
+			// find current intersection point between scanline and first-to-second (or second-to-third) side
 			Vector3 B = secondHalf ? second + (third - second) * beta : first + (second - first) * beta;
+			// A should be on the left
 			if (A.x > B.x) swap(A, B);
+			// fill the line between A and B
 			for (int j = A.x; j <= B.x; j++) {
 				// determine a color
 				Vector3 coordinates = Util::barycentric2d(Vector3(j, first.y + i, 0.f), first, second, third);
 				Vector3 col = (firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z).toVec3();
+				// map negative colors to 0, >1 to 1
 				clampVec(col, 0, 1.f);
-				float z = coordinates.dot(zs);
 				surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
+				// find interpolated z-value
+				float z = coordinates.dot(zs);
 				//surfaceBrush->Color = Color::FromArgb(255, z * 255, z * 255, z * 255);
 				drawPoint(j, first.y + i, z, surfaceBrush);
 			}
 		}
+	}
+
+	// Translate from homonegenous coordinates (w-division) and map to the viewport.
+	void Renderer::viewportTransform(GL::Polygon &poly) {
+		poly.vertices[0] = NDCtoViewport(poly.vertices[0].fromHomogeneous());
+		poly.vertices[1] = NDCtoViewport(poly.vertices[1].fromHomogeneous());
+		poly.vertices[2] = NDCtoViewport(poly.vertices[2].fromHomogeneous());
 	}
 
 	// Remaps coordinates from [-1, 1] to the [0, viewport] space. 
