@@ -298,7 +298,7 @@ namespace GL {
 		array<String^>^ lines = file->Split(delimiter);
 		// parse each line
 		std::vector<Vector3> vertices;
-		std::vector<Vector3> colors;
+		std::vector<Vector4> colors;
 		std::vector<Vector3> indices;
 		for (int i = 0; i < lines->Length; i++) {
 			String^ trimmed = lines[i]->Trim();
@@ -316,12 +316,12 @@ namespace GL {
 				case 'c':
 					// color
 					data = Util::parseVec3(trimmed->Substring(2));
-					colors.push_back(data);
+					colors.push_back(Vector4(data, 1.f));
 					break;
 				case 'f':
 					// polygon indices
 					data = Util::parseVec3(trimmed->Substring(2));
-					indices.push_back(data);
+					indices.push_back(data - 1);
 					break;
 				default:
 					// do nothing?
@@ -330,22 +330,7 @@ namespace GL {
 			}
 		}
 		// construct a SceneObject
-		SceneObject newObj;
-		for (int i = 0; i < indices.size(); i++) {
-			indices[i] = indices[i] - 1;
-			newObj.addPolygon(GL::Polygon(
-				vertices[(int)indices[i].x],
-				vertices[(int)indices[i].y],
-				vertices[(int)indices[i].z]
-			));
-			if (colors.size() == vertices.size()) {
-				newObj.polygons[newObj.polygons.size() - 1].setColors(
-					colors[(int)indices[i].x],
-					colors[(int)indices[i].y],
-					colors[(int)indices[i].z]
-				);
-			}
-		}
+		SceneObject newObj(vertices, colors, indices);
 		addObject(newObj);
 
 		return true;

@@ -9,6 +9,38 @@ namespace GL {
 		: polygons(_polygons), position(), scale(1.0f, 1.0f, 1.0f), rotation(), 
 		  reflectionXY(false), reflectionXZ(false), reflectionYZ(false), material() { }
 
+	SceneObject::SceneObject(const std::vector<Vector3> &vertices, std::vector<Vector3> indices)
+	    : SceneObject::SceneObject() 
+	{
+		for (int i = 0; i < indices.size(); i++) {
+			addPolygon(GL::Polygon(
+				vertices[(int)indices[i].x],
+				vertices[(int)indices[i].y],
+				vertices[(int)indices[i].z]
+			));
+		}
+	}
+
+	SceneObject::SceneObject(const std::vector<Vector3> &vertices, const std::vector<Vector4> &colors, std::vector<Vector3> indices) 
+		: SceneObject::SceneObject()
+	{
+		if (colors.size() != vertices.size()) {
+			throw new std::invalid_argument("Colors must be specified for each vertex");
+		}
+		for (int i = 0; i < indices.size(); i++) {
+			addPolygon(GL::Polygon(
+				vertices[(int)indices[i].x],
+				vertices[(int)indices[i].y],
+				vertices[(int)indices[i].z]
+			));
+			polygons[polygons.size() - 1].setColors(
+				colors[(int)indices[i].x],
+				colors[(int)indices[i].y],
+				colors[(int)indices[i].z]
+			);
+		}
+	}
+
 	SceneObject::SceneObject(const SceneObject & obj) {
 		position = obj.getPosition();
 		rotation = obj.getRotation();

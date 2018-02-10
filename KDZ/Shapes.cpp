@@ -131,7 +131,9 @@ namespace GL {
 
 		// Generates a sphere.
 		SceneObject sphere() {
-			// TODO: sphere
+			// generate icosahedron first
+			float t = (1.f + sqrt(5.f)) / 2.f;
+
 			return cube();
 		}
 
