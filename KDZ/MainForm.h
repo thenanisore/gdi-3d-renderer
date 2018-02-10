@@ -76,9 +76,11 @@ namespace KDZ {
 	private: System::Windows::Forms::TrackBar^  lightDiffuseBar;
 	private: System::Windows::Forms::Label^  lightDiffuseLabel;
 	private: System::Windows::Forms::ColorDialog^  lightColorDialog;
-	private: System::Windows::Forms::TrackBar^  trackBar1;
+	private: System::Windows::Forms::TrackBar^  lightSpecBar;
+
 	private: System::Windows::Forms::Label^  specLightLabel;
 	private: System::Windows::Forms::Button^  lightResetButton;
+	private: System::Windows::Forms::RadioButton^  flatLightRadioButton;
 
 
 
@@ -127,7 +129,7 @@ namespace KDZ {
 		System::Void deleteObjButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void setObjectsParams(int objPosX, int objPosY, int objPosZ, int objScaleX, int objScaleY, int objScaleZ, int objRotX, int objRotY, int objRotZ, bool objReflXY, bool objReflXZ, bool objReflYZ);
 		System::Void setCameraParams(int camPosX, int camPosY, int camPosZ, int camPitch, int camYaw, bool perspective);
-		System::Void setLightParams(int lightPosX, int lightPosY, int lightPosZ, bool isOn, bool isPhong, Color lightColor);
+		System::Void setLightParams(int lightPosX, int lightPosY, int lightPosZ, bool isOn, GL::LightMode mode, Color lightColor, int ambi, int diff, int spec);
 		System::Void setOtherParams(Color bgColor, Color wfColor, Color selectedColor, bool wfMode, bool solidMode, bool faceCull);
 		System::Void resetObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		System::Void resetCamButton_Click(System::Object^  sender, System::EventArgs^  e); 
@@ -155,6 +157,7 @@ namespace KDZ {
 		System::Void cullOnRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void cullOffRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void changeLightPosition();
+		System::Void changeLightParams();
 		// light source control
 		System::Void changeLighting();
 		System::Void lightResetButton_Click(System::Object^  sender, System::EventArgs^  e);
@@ -163,9 +166,12 @@ namespace KDZ {
 		System::Void lightPosZBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void lightColorButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void lightAmbiTrackBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void lightDiffuseBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void lightSpecBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void noLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void phongLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void gouraudLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void flatLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 
 	private: System::Windows::Forms::Button^  prevObjButton;
 	private: System::Windows::Forms::Button^  nextObjButton;
@@ -440,7 +446,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->lightResetButton = (gcnew System::Windows::Forms::Button());
 			this->lightParamsGroupBox = (gcnew System::Windows::Forms::GroupBox());
-			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
+			this->lightSpecBar = (gcnew System::Windows::Forms::TrackBar());
 			this->specLightLabel = (gcnew System::Windows::Forms::Label());
 			this->lightDiffuseBar = (gcnew System::Windows::Forms::TrackBar());
 			this->lightDiffuseLabel = (gcnew System::Windows::Forms::Label());
@@ -449,6 +455,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightColorButton = (gcnew System::Windows::Forms::Button());
 			this->lightColorLabel = (gcnew System::Windows::Forms::Label());
 			this->lightModeGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->flatLightRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->gouraudLightRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->phongLightRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->noLightRadioButton = (gcnew System::Windows::Forms::RadioButton());
@@ -515,7 +522,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightingTabPage->SuspendLayout();
 			this->lightFlowLayoutPanel->SuspendLayout();
 			this->lightParamsGroupBox->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightSpecBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightDiffuseBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightAmbiTrackBar))->BeginInit();
 			this->lightModeGroupBox->SuspendLayout();
@@ -554,21 +561,21 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// openToolStripMenuItem
 			// 
 			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
-			this->openToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->openToolStripMenuItem->Size = System::Drawing::Size(129, 26);
 			this->openToolStripMenuItem->Text = L"Open...";
 			this->openToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::openToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
 			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
-			this->aboutToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->aboutToolStripMenuItem->Size = System::Drawing::Size(129, 26);
 			this->aboutToolStripMenuItem->Text = L"About";
 			this->aboutToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::aboutToolStripMenuItem_Click);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
-			this->exitToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->exitToolStripMenuItem->Size = System::Drawing::Size(129, 26);
 			this->exitToolStripMenuItem->Text = L"Exit";
 			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::exitToolStripMenuItem_Click);
 			// 
@@ -1283,7 +1290,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			// lightParamsGroupBox
 			// 
-			this->lightParamsGroupBox->Controls->Add(this->trackBar1);
+			this->lightParamsGroupBox->Controls->Add(this->lightSpecBar);
 			this->lightParamsGroupBox->Controls->Add(this->specLightLabel);
 			this->lightParamsGroupBox->Controls->Add(this->lightDiffuseBar);
 			this->lightParamsGroupBox->Controls->Add(this->lightDiffuseLabel);
@@ -1298,16 +1305,17 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightParamsGroupBox->TabStop = false;
 			this->lightParamsGroupBox->Text = L"Parameters";
 			// 
-			// trackBar1
+			// lightSpecBar
 			// 
-			this->trackBar1->Location = System::Drawing::Point(9, 196);
-			this->trackBar1->Maximum = 90;
-			this->trackBar1->Minimum = 10;
-			this->trackBar1->Name = L"trackBar1";
-			this->trackBar1->Size = System::Drawing::Size(212, 56);
-			this->trackBar1->TabIndex = 12;
-			this->trackBar1->TickStyle = System::Windows::Forms::TickStyle::None;
-			this->trackBar1->Value = 10;
+			this->lightSpecBar->Location = System::Drawing::Point(9, 196);
+			this->lightSpecBar->Maximum = 100;
+			this->lightSpecBar->Minimum = 10;
+			this->lightSpecBar->Name = L"lightSpecBar";
+			this->lightSpecBar->Size = System::Drawing::Size(212, 56);
+			this->lightSpecBar->TabIndex = 12;
+			this->lightSpecBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->lightSpecBar->Value = 80;
+			this->lightSpecBar->Scroll += gcnew System::EventHandler(this, &MainForm::lightSpecBar_Scroll);
 			// 
 			// specLightLabel
 			// 
@@ -1330,7 +1338,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightDiffuseBar->Size = System::Drawing::Size(212, 56);
 			this->lightDiffuseBar->TabIndex = 10;
 			this->lightDiffuseBar->TickStyle = System::Windows::Forms::TickStyle::None;
-			this->lightDiffuseBar->Value = 10;
+			this->lightDiffuseBar->Value = 50;
+			this->lightDiffuseBar->Scroll += gcnew System::EventHandler(this, &MainForm::lightDiffuseBar_Scroll);
 			// 
 			// lightDiffuseLabel
 			// 
@@ -1390,21 +1399,34 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			// lightModeGroupBox
 			// 
+			this->lightModeGroupBox->Controls->Add(this->flatLightRadioButton);
 			this->lightModeGroupBox->Controls->Add(this->gouraudLightRadioButton);
 			this->lightModeGroupBox->Controls->Add(this->phongLightRadioButton);
 			this->lightModeGroupBox->Controls->Add(this->noLightRadioButton);
 			this->lightModeGroupBox->Location = System::Drawing::Point(3, 294);
 			this->lightModeGroupBox->Name = L"lightModeGroupBox";
-			this->lightModeGroupBox->Size = System::Drawing::Size(221, 110);
+			this->lightModeGroupBox->Size = System::Drawing::Size(221, 131);
 			this->lightModeGroupBox->TabIndex = 1;
 			this->lightModeGroupBox->TabStop = false;
 			this->lightModeGroupBox->Text = L"Mode";
+			// 
+			// flatLightRadioButton
+			// 
+			this->flatLightRadioButton->AutoSize = true;
+			this->flatLightRadioButton->Location = System::Drawing::Point(6, 103);
+			this->flatLightRadioButton->Name = L"flatLightRadioButton";
+			this->flatLightRadioButton->Size = System::Drawing::Size(106, 21);
+			this->flatLightRadioButton->TabIndex = 3;
+			this->flatLightRadioButton->TabStop = true;
+			this->flatLightRadioButton->Text = L"Flat Lighting";
+			this->flatLightRadioButton->UseVisualStyleBackColor = true;
+			this->flatLightRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::flatLightRadioButton_CheckedChanged);
 			// 
 			// gouraudLightRadioButton
 			// 
 			this->gouraudLightRadioButton->AutoSize = true;
 			this->gouraudLightRadioButton->Checked = true;
-			this->gouraudLightRadioButton->Location = System::Drawing::Point(7, 76);
+			this->gouraudLightRadioButton->Location = System::Drawing::Point(6, 76);
 			this->gouraudLightRadioButton->Name = L"gouraudLightRadioButton";
 			this->gouraudLightRadioButton->Size = System::Drawing::Size(139, 21);
 			this->gouraudLightRadioButton->TabIndex = 2;
@@ -1447,7 +1469,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightPosGroupBox->Controls->Add(this->lightPosYLabel);
 			this->lightPosGroupBox->Controls->Add(this->lightPosXBar);
 			this->lightPosGroupBox->Controls->Add(this->lightPosXLabel);
-			this->lightPosGroupBox->Location = System::Drawing::Point(3, 410);
+			this->lightPosGroupBox->Location = System::Drawing::Point(3, 431);
 			this->lightPosGroupBox->Name = L"lightPosGroupBox";
 			this->lightPosGroupBox->Size = System::Drawing::Size(224, 236);
 			this->lightPosGroupBox->TabIndex = 4;
@@ -1786,7 +1808,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightFlowLayoutPanel->PerformLayout();
 			this->lightParamsGroupBox->ResumeLayout(false);
 			this->lightParamsGroupBox->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightSpecBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightDiffuseBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightAmbiTrackBar))->EndInit();
 			this->lightModeGroupBox->ResumeLayout(false);

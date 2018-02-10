@@ -1,6 +1,7 @@
 #include "MainForm.h"
 #include "About.h"
 #include "Scene.h"
+#include "Light.h"
 #include "Renderer.h"
 
 #include <Windows.h>
@@ -158,18 +159,6 @@ System::Void MainForm::setCameraParams(int camPosX, int camPosY, int camPosZ, in
 	isSettingParams = false;
 }
 
-System::Void MainForm::setLightParams(int lightPosX, int lightPosY, int lightPosZ, bool isOn, bool isPhong, Color lightColor) {
-	// set lighting parameters
-	isSettingParams = true;
-	lightPosXBar->Value = lightPosX;
-	lightPosYBar->Value = lightPosY;
-	lightPosZBar->Value = lightPosZ;
-	phongLightRadioButton->Checked = isOn && isPhong;
-	gouraudLightRadioButton->Checked = isOn && !isPhong;
-	noLightRadioButton->Checked = !isOn;
-	isSettingParams = false;
-}
-
 System::Void MainForm::setOtherParams(Color bgColor, Color wfColor, Color selectedColor, bool wfMode, bool solidMode, bool faceCull) {
 	// set other parameters
 	isSettingParams = true;
@@ -203,14 +192,6 @@ System::Void MainForm::updateCameraParams() {
 	GL::Vector3 rot = mainScene->getCameraRotation(false);
 	bool perspective = mainScene->isPerspective();
 	setCameraParams(pos.x, pos.y, pos.z, rot.x, rot.y, perspective);
-}
-
-System::Void MainForm::updateLightParams() {
-	GL::Vector3 pos = mainScene->getLightPosition(false);
-	Color lightColor = mainScene->getLightColor();
-	bool isOn = mainScene->isLightOn();
-	bool isPhong = mainScene->getLightMode();
-	setLightParams(pos.x, pos.y, pos.z, isOn, isPhong, lightColor);
 }
 
 System::Void MainForm::updateOtherParams() {
@@ -475,8 +456,39 @@ System::Void MainForm::cullOffRadioButton_CheckedChanged(System::Object ^ sender
 
 // Lighting:
 
+System::Void MainForm::setLightParams(int lightPosX, int lightPosY, int lightPosZ, bool isOn,
+	GL::LightMode mode, Color lightColor, int ambi, int diff, int spec) {
+	// set lighting parameters
+	isSettingParams = true;
+	lightPosXBar->Value = lightPosX;
+	lightPosYBar->Value = lightPosY;
+	lightPosZBar->Value = lightPosZ;
+	lightAmbiTrackBar->Value = ambi;
+	lightDiffuseBar->Value = diff;
+	lightSpecBar->Value = spec;
+	noLightRadioButton->Checked = !isOn;
+	phongLightRadioButton->Checked = isOn && mode == GL::LightMode::PHONG;
+	gouraudLightRadioButton->Checked = isOn && mode == GL::LightMode::GOURAUD;
+	flatLightRadioButton->Checked = isOn && mode == GL::LightMode::FLAT;
+	isSettingParams = false;
+}
+
+System::Void MainForm::updateLightParams() {
+	GL::Vector3 pos = mainScene->getLightPosition(false);
+	Color lightColor = mainScene->getLightColor();
+	bool isOn = mainScene->isLightOn();
+	GL::LightMode mode = mainScene->getLightMode();
+	GL::Vector3 params = mainScene->getLightParams();
+	setLightParams(pos.x, pos.y, pos.z, isOn, mode, lightColor, (int)params.x, (int)params.y, (int)params.z);
+}
+
 System::Void MainForm::changeLightPosition() {
 	mainScene->setLightPosition(lightPosXBar->Value, lightPosYBar->Value, lightPosZBar->Value);
+	renderScene();
+}
+
+System::Void MainForm::changeLightParams() {
+	mainScene->setLightParams(lightAmbiTrackBar->Value, lightDiffuseBar->Value, lightSpecBar->Value);
 	renderScene();
 }
 
@@ -492,9 +504,16 @@ System::Void MainForm::lightPosZBar_Scroll(System::Object ^ sender, System::Even
 	changeLightPosition();
 }
 
-System::Void KDZ::MainForm::lightAmbiTrackBar_Scroll(System::Object ^ sender, System::EventArgs ^ e)
-{
-	return System::Void();
+System::Void KDZ::MainForm::lightAmbiTrackBar_Scroll(System::Object ^ sender, System::EventArgs ^ e) {
+	changeLightParams();
+}
+
+System::Void MainForm::lightDiffuseBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
+	changeLightParams();
+}
+
+System::Void MainForm::lightSpecBar_Scroll(System::Object^  sender, System::EventArgs^  e) {
+	changeLightParams();
 }
 
 System::Void KDZ::MainForm::lightColorButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
@@ -515,8 +534,16 @@ System::Void MainForm::changeLighting() {
 		mainScene->setLightOn(false);
 	}
 	else {
-		mainScene->setLightMode(phongLightRadioButton->Checked);
 		mainScene->setLightOn(true);
+		if (phongLightRadioButton->Checked) {
+			mainScene->setLightMode(GL::LightMode::PHONG);
+		}
+		else if (flatLightRadioButton->Checked) {
+			mainScene->setLightMode(GL::LightMode::FLAT);
+		}
+		else if (gouraudLightRadioButton->Checked) {
+			mainScene->setLightMode(GL::LightMode::GOURAUD);
+		}
 	}
 	renderScene();
 }
@@ -536,5 +563,9 @@ System::Void MainForm::phongLightRadioButton_CheckedChanged(System::Object ^ sen
 }
 
 System::Void MainForm::gouraudLightRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeLighting();
+}
+
+System::Void MainForm::flatLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 	changeLighting();
 }

@@ -38,6 +38,8 @@ namespace GL {
 		// methods to manipulate camera:
 
 		void setCameraPosition(int x_coord, int y_coord, int z_coord);
+		void setLightParams(float _ambient, float _diffuse, float _specular);
+		Vector3 getLightParams();
 		void setCameraRotation(float pitch, float yawn, float roll);
 		Vector3 getCameraPosition(bool worldCoords) const;
 		Vector3 getCameraRotation(bool worldCoords) const;
@@ -50,10 +52,10 @@ namespace GL {
 		void setLightPosition(int x_coord, int y_coord, int z_coord);
 		void setLightColor(Color^ lightColor);
 		void setLightOn(bool isOn);
-		void setLightMode(bool phong);
+		void setLightMode(LightMode _mode);
 		Color getLightColor();
 		bool isLightOn();
-		bool getLightMode();
+		LightMode getLightMode();
 		void resetLighting();
 
 		// Sets projection mode: perspective if the parameter is true, orthographics otherwise.

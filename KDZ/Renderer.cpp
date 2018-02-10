@@ -256,18 +256,18 @@ namespace GL {
 					// map negative colors to 0, >1 to 1
 
 					// lighting calculations
-					float ambientStrength = 0.1f;
+					float ambientStrength = lightSource.getAmbient();
 					Vector3 ambient = lightSource.color * ambientStrength;
 					// diffuse lighting
-					float diffuseStrength = 0.8f;
+					float diffuseStrength = lightSource.getDiffuse();
 					Vector3 lightDir = (lightSource.position - fragPos).normalized();
 					float diff = max(fragNormal.dot(lightDir), 0.f);
 					Vector3 diffuse = lightSource.color * diff * diffuseStrength;
 					// specular lighting
-					float specularStrength = 0.7f;
+					float specularStrength = lightSource.getSpecular();
 					Vector3 viewDir = (-fragPos).normalized();
 					Vector3 reflectDir = Util::reflect(-lightDir, fragNormal).normalized();
-					float spec = pow(max(viewDir.dot(reflectDir), 0.f), 8);
+					float spec = pow(max(viewDir.dot(reflectDir), 0.f), 16);
 					Vector3 specular = lightSource.color * specularStrength * spec;
 					// resulting
 					col = (diffuse + ambient + specular) * col;

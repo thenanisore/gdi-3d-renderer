@@ -12,6 +12,9 @@ namespace GL {
 	const float cameraPositionMultiplier = 0.1f;
 	const float camerRotationMultiplier = 1.0f;
 	const float lightPositionMultiplier = 0.1f;
+	const float lightAmbientMultiplier = 0.01f;
+	const float lightDiffuseMultiplier = 0.01f;
+	const float lightSpecularMultiplier = 0.01f;
 
 	Scene::Scene() : camera(), selectedObject(0) {
 		lightSource = Light(camera.getPosition());
@@ -157,8 +160,8 @@ namespace GL {
 		return lightSource.on;
 	}
 
-	bool Scene::getLightMode() {
-		return lightSource.isPhongMode;
+	LightMode Scene::getLightMode() {
+		return lightSource.mode;
 	}
 
 	void Scene::setLightColor(Color^ lightColor) {
@@ -169,8 +172,21 @@ namespace GL {
 		lightSource.on = isOn;
 	}
 
-	void Scene::setLightMode(bool phong) {
-		lightSource.isPhongMode = phong;
+	void Scene::setLightMode(LightMode _mode) {
+		lightSource.mode = _mode;
+	}
+
+	void Scene::setLightParams(float _amb, float _diff, float _spec) {
+		lightSource.setAmbient(_amb * lightAmbientMultiplier);
+		lightSource.setDiffuse(_diff * lightDiffuseMultiplier);
+		lightSource.setSpecular(_spec * lightSpecularMultiplier);
+	}
+
+	Vector3 Scene::getLightParams() {
+		float amb = lightSource.getAmbient() / lightAmbientMultiplier;
+		float diff = lightSource.getDiffuse() / lightDiffuseMultiplier;
+		float spec = lightSource.getSpecular() / lightSpecularMultiplier;
+		return Vector3(amb, diff, spec);
 	}
 
 	void Scene::resetLighting() {
