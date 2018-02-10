@@ -9,13 +9,21 @@ namespace GL {
 	class Material {
 	public:
 		Material();
-		Material(Vector3 _amb, Vector3 _dif, Vector3 _spec, float _shine);
+		Material(float _amb, float _dif, float _spec, float _shine);
+		Material(float _amb, float _dif, float _spec, float _shine, Vector3 _color);
 		Material(const Material &mat);
 
-		Vector3 ambient;
-		Vector3 diffuse;
-		Vector3 specular;
-		float shininess;
+		float getAmbient() const;
+		float getDiffuse() const;
+		float getSpecular() const;
+		void setAmbient(float ambient);
+		void setDiffuse(float diffuse);
+		void setSpecular(float specular);
 
+		Vector3 color;
+		float ambient;
+		float diffuse;
+		float specular;
+		float shininess;
 	};
 }

@@ -4,7 +4,7 @@
 
 namespace GL {
 
-	enum LightMode { NONE, FLAT, PHONG, GOURAUD };
+	enum LightMode { FLAT, PHONG, GOURAUD };
 
 	// The Light class represents a light source.
 	class Light {
