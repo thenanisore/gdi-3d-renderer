@@ -80,8 +80,26 @@ namespace GL {
 		return visible;
 	}
 
+	std::vector<Vector4> Renderer::getGouraudColors(const GL::Polygon &poly, Light lightSource, Material material) {
+		// Gouraud model lighting calculations:
+		std::vector<Vector4> colors;
+		for (int i = 0; i < 3; i++) {
+			// diffuse lighting
+			Vector3 lightDir = (lightSource.position - poly.vertices[i].toVec3()).normalized();
+			float diff = Util::max(poly.normals[i].dot(lightDir), 0.f);
+			Vector4 diffuse = lightSource.getDiffuseColor() * (material.getDiffuseColor() * diff);
+			// specular lighting
+			Vector3 viewDir = (-poly.vertices[i].toVec3()).normalized();
+			Vector3 reflectDir = Util::reflect(-lightDir, poly.normals[i]);
+			float spec = pow(Util::max(viewDir.dot(reflectDir), 0.f), material.getShininess());
+			Vector4 specular = lightSource.getSpecularColor() * (material.getSpecularColor() * spec);
+			colors.push_back(diffuse + specular);
+		}
+		return colors;
+	}
+
 	void Renderer::renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4& proj, 
-		const Vector3 &cameraPos, const Light &lightSource, bool wireframe, bool solid) 
+		const Light &lightSource, bool wireframe, bool solid) 
 	{
 		//Material material = obj.getMaterial();
 		Matrix4 modelView = view * model;
@@ -101,14 +119,16 @@ namespace GL {
 				if (solid) { 
 					// another one for lighting calculations
 					GL::Polygon worldTransformed = pol.getTransformed(modelView, normalTransform);
-					fillPolygon(transformed, worldTransformed, cameraPos, lightSource, obj.getMaterial());
+					std::vector<Vector4> gouraudColors = { Vector4(), Vector4(), Vector4() };
+					if (lightSource.mode == LightMode::GOURAUD) {
+						// doing gouraud lighting calculations here in a 'vertex shader'
+						gouraudColors = getGouraudColors(pol, lightSource, obj.getMaterial());
+					}
+					// essentially, entering fragment shader
+					fillPolygon(transformed, worldTransformed, lightSource, obj.getMaterial(), gouraudColors);
 				}
 			}
 		}
-	}
-
-	float getZ(float x, float y, const Vector3 &p, const Vector3 &normal) {
-		return p.z - (normal.x * (x - p.x) + normal.y * (y - p.y)) / normal.z;
 	}
 
 	// Draws a line using the Bresenham's algorithm with Z-testing.
@@ -162,7 +182,8 @@ namespace GL {
 		drawLine(pol.vertices[2].toVec3(), pol.vertices[0].toVec3());
 	}
 
-	void Renderer::fillPolygon(const Polygon &poly, const Polygon &worldPoly, const Vector3 &cameraPos, const Light &lightSource, const Material &material) {
+	void Renderer::fillPolygon(const Polygon &poly, const Polygon &worldPoly, const Light &lightSource,
+		const Material &material, std::vector<Vector4> gouraudColors) {
 		// copy vectors first
 		Vector3 first = poly.vertices[0].toVec3(), second = poly.vertices[1].toVec3(), third = poly.vertices[2].toVec3();
 		// in world coordinates (for lighting calculations) 
@@ -182,18 +203,21 @@ namespace GL {
 			Util::swap(firstW, secondW);
 			Util::swap(firstColor, secondColor);
 			Util::swap(firstNorm, secondNorm);
+			Util::swap(gouraudColors[0], gouraudColors[1]);
 		}
 		if (first.y > third.y) {
 			Util::swap(first, third);
 			Util::swap(firstW, thirdW);
 			Util::swap(firstColor, thirdColor);
 			Util::swap(firstNorm, thirdNorm);
+			Util::swap(gouraudColors[0], gouraudColors[2]);
 		}
 		if (second.y > third.y) {
 			Util::swap(second, third);
 			Util::swap(secondW, thirdW);
 			Util::swap(secondColor, thirdColor);
 			Util::swap(secondNorm, thirdNorm);
+			Util::swap(gouraudColors[1], gouraudColors[2]);
 		}
 
 		// memorize z-values
@@ -204,6 +228,10 @@ namespace GL {
 		if (first.equalEpsilon(second, 0.5f) || second.equalEpsilon(third, 0.5f) || third.equalEpsilon(first, 0.5f)) {
 			return;
 		}
+
+		// ambient lighting
+		Vector4 ambient = lightSource.getAmbientColor() * material.getAmbientColor();
+
 		int totalHeight = third.y - first.y;
 		// scan down to up
 		for (int i = 0; i < totalHeight; i++) {
@@ -229,29 +257,37 @@ namespace GL {
 					// determine a fragment position (in world coords)
 					Vector3 fragPos = (firstW * coordinates.x + secondW * coordinates.y + thirdW * coordinates.z);
 					// determine an interpolated normal
-					Vector3 fragNormal = (lightSource.mode == LightMode::FLAT)
-						? firstNorm 
-						: (firstNorm * coordinates.x + secondNorm * coordinates.y + thirdNorm * coordinates.z).normalized();
-					// map negative colors to 0, >1 to 1
+					Vector3 fragNormal;
+					switch (lightSource.mode) {
+					case LightMode::FLAT:
+						fragNormal = ((firstNorm + secondNorm + thirdNorm) / 3.f).normalized();
+						break;
+					case LightMode::PHONG:
+						// Phong model shading normal interpolation:
+						fragNormal = (firstNorm * coordinates.x + secondNorm * coordinates.y + thirdNorm * coordinates.z).normalized();
+						break;
+					}
 
-					// lighting calculations:
+					if (lightSource.mode != LightMode::GOURAUD) {
+						// diffuse lighting
+						Vector3 lightDir = (lightSource.position - fragPos).normalized();
+						float diff = Util::max(fragNormal.dot(lightDir), 0.f);
+						Vector4 diffuse = lightSource.getDiffuseColor() * (material.getDiffuseColor() * diff);
 
-					// ambient lighting
-					Vector4 ambient = lightSource.getAmbientColor() * material.getAmbientColor();
+						// specular lighting
+						Vector3 viewDir = (-fragPos).normalized();
+						Vector3 reflectDir = Util::reflect(-lightDir, fragNormal);
+						float spec = pow(Util::max(viewDir.dot(reflectDir), 0.f), material.getShininess());
+						Vector4 specular = lightSource.getSpecularColor() * (material.getSpecularColor() * spec);
 
-					// diffuse lighting
-					Vector3 lightDir = (lightSource.position - fragPos).normalized();
-					float diff = Util::max(fragNormal.dot(lightDir), 0.f);
-					Vector4 diffuse = lightSource.getDiffuseColor() * (material.getDiffuseColor() * diff);
-
-					// specular lighting
-					Vector3 viewDir = (-fragPos).normalized();
-					Vector3 reflectDir = Util::reflect(-lightDir, fragNormal).normalized();
-					float spec = pow(Util::max(viewDir.dot(reflectDir), 0.f), material.getShininess());
-					Vector4 specular = lightSource.getSpecularColor() * (material.getSpecularColor() * spec);
-
-					// resulting
-					col = Util::clampVec((diffuse + ambient + specular) * col, 0.f, 1.f);
+						// resulting
+						col = Util::clampVec((ambient + (lightSource.on ? diffuse + specular : Vector4())) * col, 0.f, 1.f);
+					}
+					else {
+						// using pre-computed vertex color values
+						Vector4 sumLight = gouraudColors[0] * coordinates.x + gouraudColors[1] * coordinates.y + gouraudColors[2] * coordinates.z;
+						col = Util::clampVec(ambient + (lightSource.on ? sumLight : Vector4()) * col , 0.f, 1.f);
+					}
 
 					surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
 

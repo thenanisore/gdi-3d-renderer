@@ -145,8 +145,8 @@ System::Void MainForm::exitToolStripMenuItem_Click(System::Object ^ sender, Syst
 
 // Object generation menu:
 
-System::Void MainForm::addObject(GL::Objects::Shape shape) {
-	mainScene->addObject(GL::Objects::generateObject(shape));
+System::Void MainForm::addObject(GL::Objects::Shape shape, int precision) {
+	mainScene->addObject(GL::Objects::generateObject(shape, precision));
 	checkButtons();
 	updateObjectParams();
 	updateMaterialParams();
@@ -154,27 +154,47 @@ System::Void MainForm::addObject(GL::Objects::Shape shape) {
 }
 
 System::Void MainForm::cubeToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
-	addObject(GL::Objects::Shape::CUBE);
+	addObject(GL::Objects::Shape::CUBE, 1);
 }
 
 System::Void MainForm::thorusToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
-	addObject(GL::Objects::Shape::TORUS);
+	addObject(GL::Objects::Shape::TORUS, 3);
 }
 
 System::Void MainForm::pyramidToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
-	addObject(GL::Objects::Shape::PYRAMID);
+	addObject(GL::Objects::Shape::PYRAMID, 1);
 }
 
 System::Void MainForm::tetrahedronToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
-	addObject(GL::Objects::Shape::TETRAHEDRON);
+	addObject(GL::Objects::Shape::TETRAHEDRON, 1);
 }
 
-System::Void KDZ::MainForm::octahedronToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
-	addObject(GL::Objects::Shape::OCTAHEDRON);
+System::Void MainForm::octahedronToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::OCTAHEDRON, 1);
 }
 
-System::Void KDZ::MainForm::sphereToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
-	addObject(GL::Objects::Shape::SPHERE);
+System::Void MainForm::sphere0MenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::SPHERE, 0);
+}
+
+System::Void MainForm::sphere1MenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::SPHERE, 1);
+}
+
+System::Void MainForm::sphere2MenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::SPHERE, 2);
+}
+
+System::Void MainForm::sphere3MenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::SPHERE, 3);
+}
+
+System::Void MainForm::sphere4MenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::SPHERE, 4);
+}
+
+System::Void MainForm::sphere5MenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::SPHERE, 5);
 }
 
 System::Void MainForm::setObjectsParams(int objPosX, int objPosY, int objPosZ, int objScaleX, int objScaleY, int objScaleZ, int objRotX, int objRotY, int objRotZ, bool objReflXY, bool objReflXZ, bool objReflYZ) {

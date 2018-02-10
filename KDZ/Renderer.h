@@ -20,8 +20,8 @@ namespace GL {
 		void drawAxes(Matrix4 transformMatrix, bool grid);
 		void clearScreen();
 		void clearZBuffer();
-		void renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view, const Matrix4 &proj, 
-			const Vector3 &cameraPos, const Light &light, bool wireframe, bool solid);
+		void renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view,
+			const Matrix4 &proj, const Light &light, bool wireframe, bool solid);
 		void ztofile();
 		void setGraphics(Graphics ^g);
 
@@ -54,10 +54,12 @@ namespace GL {
 		array<float, 2> ^zbuffer;
 		bool toClip(const Polygon & poly);
 		bool isVisible(const Polygon & poly);
+		std::vector<Vector4> getGouraudColors(const GL::Polygon &poly, Light lightSource, Material material);
 		void drawLine(const Vector3 &from, const Vector3 &to);
 		void drawPoint(int x, int y, float z, SolidBrush ^b);
 		void drawPolygon(const GL::Polygon &poly);
-		void fillPolygon(const GL::Polygon &poly, const GL::Polygon &worldPoly, const Vector3 &cameraPos, const Light &lightSource, const Material &material);
+		void fillPolygon(const GL::Polygon &poly, const GL::Polygon &worldPoly, const Light &lightSource, 
+			const Material &material, std::vector<Vector4> gouraudColors);
 		void viewportTransform(GL::Polygon & poly);
 		Vector3 NDCtoViewport(const Vector3 &vertex);
 	};

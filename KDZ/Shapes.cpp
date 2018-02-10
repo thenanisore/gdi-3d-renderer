@@ -127,7 +127,7 @@ namespace GL {
 		}
 
 		// Generates a sphere.
-		SceneObject sphere() {
+		SceneObject sphere(int precisionLevel, float radius) {
 			// generate icosahedron first
 			float t = (1.f + sqrt(5.f)) / 2.f;
 			const std::vector<Vector3> vertices = {
@@ -168,9 +168,6 @@ namespace GL {
 			};
 			SceneObject iso = SceneObject(vertices, colors, indices);
 
-			const int precisionLevel = 4;
-			const float radius = 2.5f;
-
 			// refine each triangle N times
 			for (int i = 0; i < precisionLevel; i++) {
 				std::vector<GL::Polygon> refined;
@@ -187,7 +184,7 @@ namespace GL {
 			return iso;
 		}
 
-		SceneObject generateObject(Shape objShape) {
+		SceneObject generateObject(Shape objShape, int precision) {
 			switch (objShape) {
 			case CUBE:
 				return cube();
@@ -198,7 +195,7 @@ namespace GL {
 			case OCTAHEDRON:
 				return octahedron();
 			case SPHERE:
-				return sphere();
+				return sphere(precision, DEFAULT_RADIUS);
 			case TORUS:
 				return torus();
 			}
