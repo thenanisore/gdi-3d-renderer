@@ -1,4 +1,5 @@
 #include "MainForm.h"
+#include "About.h"
 #include "Scene.h"
 #include "Renderer.h"
 
@@ -115,6 +116,11 @@ System::Void MainForm::openToolStripMenuItem_Click(System::Object ^ sender, Syst
 			sr->Close();
 		}
 	}
+}
+
+System::Void KDZ::MainForm::aboutToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	Form^ aboutForm = gcnew About();
+	aboutForm->ShowDialog();
 }
 
 System::Void MainForm::exitToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {

@@ -91,6 +91,7 @@ namespace KDZ {
 		System::Void updateStatusBar();
 		// menu strip
 		System::Void openToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void aboutToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		// mainform events
 		System::Void MainForm_Shown(System::Object^  sender, System::EventArgs^  e);
@@ -437,7 +438,10 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->camPitchLabel = (gcnew System::Windows::Forms::Label());
 			this->lightingTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->lightFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
+			this->lightResetButton = (gcnew System::Windows::Forms::Button());
 			this->lightParamsGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
+			this->specLightLabel = (gcnew System::Windows::Forms::Label());
 			this->lightDiffuseBar = (gcnew System::Windows::Forms::TrackBar());
 			this->lightDiffuseLabel = (gcnew System::Windows::Forms::Label());
 			this->lightAmbiTrackBar = (gcnew System::Windows::Forms::TrackBar());
@@ -478,9 +482,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->lightColorDialog = (gcnew System::Windows::Forms::ColorDialog());
-			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
-			this->specLightLabel = (gcnew System::Windows::Forms::Label());
-			this->lightResetButton = (gcnew System::Windows::Forms::Button());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -514,6 +515,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightingTabPage->SuspendLayout();
 			this->lightFlowLayoutPanel->SuspendLayout();
 			this->lightParamsGroupBox->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightDiffuseBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightAmbiTrackBar))->BeginInit();
 			this->lightModeGroupBox->SuspendLayout();
@@ -527,7 +529,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->drawingModeGroupBox->SuspendLayout();
 			this->cullGroupBox->SuspendLayout();
 			this->statusStrip->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// menuStrip
@@ -562,6 +563,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
 			this->aboutToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->aboutToolStripMenuItem->Text = L"About";
+			this->aboutToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::aboutToolStripMenuItem_Click);
 			// 
 			// exitToolStripMenuItem
 			// 
@@ -1269,6 +1271,16 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightFlowLayoutPanel->TabIndex = 1;
 			this->lightFlowLayoutPanel->WrapContents = false;
 			// 
+			// lightResetButton
+			// 
+			this->lightResetButton->Location = System::Drawing::Point(3, 3);
+			this->lightResetButton->Name = L"lightResetButton";
+			this->lightResetButton->Size = System::Drawing::Size(224, 23);
+			this->lightResetButton->TabIndex = 18;
+			this->lightResetButton->Text = L"Reset";
+			this->lightResetButton->UseVisualStyleBackColor = true;
+			this->lightResetButton->Click += gcnew System::EventHandler(this, &MainForm::lightResetButton_Click);
+			// 
 			// lightParamsGroupBox
 			// 
 			this->lightParamsGroupBox->Controls->Add(this->trackBar1);
@@ -1285,6 +1297,29 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightParamsGroupBox->TabIndex = 0;
 			this->lightParamsGroupBox->TabStop = false;
 			this->lightParamsGroupBox->Text = L"Parameters";
+			// 
+			// trackBar1
+			// 
+			this->trackBar1->Location = System::Drawing::Point(9, 196);
+			this->trackBar1->Maximum = 90;
+			this->trackBar1->Minimum = 10;
+			this->trackBar1->Name = L"trackBar1";
+			this->trackBar1->Size = System::Drawing::Size(212, 56);
+			this->trackBar1->TabIndex = 12;
+			this->trackBar1->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->trackBar1->Value = 10;
+			// 
+			// specLightLabel
+			// 
+			this->specLightLabel->AutoSize = true;
+			this->specLightLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->specLightLabel->Location = System::Drawing::Point(6, 173);
+			this->specLightLabel->Name = L"specLightLabel";
+			this->specLightLabel->Size = System::Drawing::Size(122, 17);
+			this->specLightLabel->TabIndex = 13;
+			this->specLightLabel->Text = L"Specular Strength";
+			this->specLightLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// lightDiffuseBar
 			// 
@@ -1690,39 +1725,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->openFileDialog->Filter = L"3D Object files|*.object|Text files|*.txt|All files|*.*";
 			// 
-			// trackBar1
-			// 
-			this->trackBar1->Location = System::Drawing::Point(9, 196);
-			this->trackBar1->Maximum = 90;
-			this->trackBar1->Minimum = 10;
-			this->trackBar1->Name = L"trackBar1";
-			this->trackBar1->Size = System::Drawing::Size(212, 56);
-			this->trackBar1->TabIndex = 12;
-			this->trackBar1->TickStyle = System::Windows::Forms::TickStyle::None;
-			this->trackBar1->Value = 10;
-			// 
-			// specLightLabel
-			// 
-			this->specLightLabel->AutoSize = true;
-			this->specLightLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->specLightLabel->Location = System::Drawing::Point(6, 173);
-			this->specLightLabel->Name = L"specLightLabel";
-			this->specLightLabel->Size = System::Drawing::Size(122, 17);
-			this->specLightLabel->TabIndex = 13;
-			this->specLightLabel->Text = L"Specular Strength";
-			this->specLightLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
-			// lightResetButton
-			// 
-			this->lightResetButton->Location = System::Drawing::Point(3, 3);
-			this->lightResetButton->Name = L"lightResetButton";
-			this->lightResetButton->Size = System::Drawing::Size(224, 23);
-			this->lightResetButton->TabIndex = 18;
-			this->lightResetButton->Text = L"Reset";
-			this->lightResetButton->UseVisualStyleBackColor = true;
-			this->lightResetButton->Click += gcnew System::EventHandler(this, &MainForm::lightResetButton_Click);
-			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -1784,6 +1786,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightFlowLayoutPanel->PerformLayout();
 			this->lightParamsGroupBox->ResumeLayout(false);
 			this->lightParamsGroupBox->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightDiffuseBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightAmbiTrackBar))->EndInit();
 			this->lightModeGroupBox->ResumeLayout(false);
@@ -1803,7 +1806,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->cullGroupBox->PerformLayout();
 			this->statusStrip->ResumeLayout(false);
 			this->statusStrip->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
