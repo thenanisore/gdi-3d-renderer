@@ -78,43 +78,19 @@ namespace GL {
 
 		// Generates a octahedron.
 		SceneObject octahedron() {
-			SceneObject o(std::vector<Polygon> {
-				// front up
-				Polygon(Vector3(1, 0, 1), Vector3(0, 2, 0), Vector3(-1, 0, 1)),
-				// right up
-				Polygon(Vector3(1, 0, -1), Vector3(0, 2, 0), Vector3(1, 0, 1)),
-				// back up
-				Polygon(Vector3(-1, 0, -1), Vector3(0, 2, 0), Vector3(1, 0, -1)),
-				// left up
-				Polygon(Vector3(-1, 0, 1), Vector3(0, 2, 0), Vector3(-1, 0, -1)),
-				// front bottom
-				Polygon(Vector3(1, 0, 1), Vector3(-1, 0, 1), Vector3(0, -2, 0)), 
-				// right bottom
-				Polygon(Vector3(1, 0, -1), Vector3(1, 0, 1), Vector3(0, -2, 0)), 
-				// back bottom
-				Polygon(Vector3(-1, 0, -1), Vector3(1, 0, -1), Vector3(0, -2, 0)), 
-				// left bottom
-				Polygon(Vector3(-1, 0, 1), Vector3(-1, 0, -1), Vector3(0, -2, 0))
-			});
-			o.setPolygonColors(std::vector<Vector4> {
-				// front up
-				Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f), Vector4(1.f, 0.f, 0.f, 1.f),
-				// right up
-				Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f), Vector4(1.f, 0.f, 0.f, 1.f),
-				// back up
-				Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f), Vector4(1.f, 0.f, 0.f, 1.f),
-				// left up
-				Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f), Vector4(1.f, 0.f, 0.f, 1.f),
-				// front bottom
-				Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f), 
-				// right bottom
-				Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f), 
-				// back bottom
-				Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f), 
-				// left bottom
-				Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f)
-			}, true);
-			return o;
+			const std::vector<Vector3> vertices = {
+				Vector3(0, -2, 0), Vector3(1, 0, 1), Vector3(-1, 0, 1),
+				Vector3(1, 0, -1), Vector3(-1, 0, -1), Vector3(0, 2, 0)
+			};
+			const std::vector<Vector3> indices = {
+				Vector3(0, 1, 2), Vector3(0, 3, 1), Vector3(0, 4, 3), Vector3(0, 2, 4),
+				Vector3(2, 1, 5), Vector3(1, 3, 5), Vector3(3, 4, 5), Vector3(2, 5, 4)
+			};
+			const std::vector<Vector4> colors = {
+				Vector4(1, 1, 1, 1), Vector4(1, 0, 1, 1), Vector4(1, 0, 1, 1),
+				Vector4(1, 0, 1, 1), Vector4(1, 0, 1, 1), Vector4(1, 1, 1, 1)
+			};
+			return SceneObject(vertices, colors, indices);
 		}
 
 		// Generates a octaedron.
