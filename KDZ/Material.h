@@ -6,9 +6,9 @@
 namespace GL {
 
 	const float DEFAULT_MATERIAL_AMBIENCE = 1.f;
-	const float DEFAULT_MATERIAL_DIFFUSE = 1.f;
-	const float DEFAULT_MATERIAL_SPECULAR = 1.f;
-	const int DEFAULT_MATERIAL_SHININESS = 32;
+	const float DEFAULT_MATERIAL_DIFFUSE = 0.9f;
+	const float DEFAULT_MATERIAL_SPECULAR = 0.5f;
+	const int DEFAULT_MATERIAL_SHININESS = 16;
 	const Vector4 DEFAULT_MATERIAL_COLOR = Vector4(1.f, 1.f, 1.f, 1.f);
 
 	// The Material class contains the information about object's lighting parameters.

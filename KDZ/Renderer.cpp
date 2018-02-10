@@ -122,7 +122,7 @@ namespace GL {
 					std::vector<Vector4> gouraudColors = { Vector4(), Vector4(), Vector4() };
 					if (lightSource.mode == LightMode::GOURAUD) {
 						// doing gouraud lighting calculations here in a 'vertex shader'
-						gouraudColors = getGouraudColors(pol, lightSource, obj.getMaterial());
+						gouraudColors = getGouraudColors(worldTransformed, lightSource, obj.getMaterial());
 					}
 					// essentially, entering fragment shader
 					fillPolygon(transformed, worldTransformed, lightSource, obj.getMaterial(), gouraudColors);
