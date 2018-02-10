@@ -81,6 +81,21 @@ namespace KDZ {
 	private: System::Windows::Forms::Label^  specLightLabel;
 	private: System::Windows::Forms::Button^  lightResetButton;
 	private: System::Windows::Forms::RadioButton^  flatLightRadioButton;
+	private: System::Windows::Forms::TabPage^  matTabPage;
+	private: System::Windows::Forms::FlowLayoutPanel^  matFlowLayoutPanel;
+	private: System::Windows::Forms::Button^  resetMatButton;
+	private: System::Windows::Forms::GroupBox^  matParamsGroupBox;
+	private: System::Windows::Forms::TrackBar^  specMatBar;
+	private: System::Windows::Forms::Label^  specMatLabel;
+	private: System::Windows::Forms::TrackBar^  diffMatBar;
+	private: System::Windows::Forms::Label^  diffMatLabel;
+	private: System::Windows::Forms::TrackBar^  ambiMatBar;
+	private: System::Windows::Forms::Label^  ambiMatLabel;
+	private: System::Windows::Forms::Button^  matColorButton;
+	private: System::Windows::Forms::Label^  matColorLabel;
+	private: System::Windows::Forms::TrackBar^  shineMatBar;
+	private: System::Windows::Forms::Label^  shineMatLabel;
+
 
 
 
@@ -159,7 +174,7 @@ namespace KDZ {
 		System::Void changeLightPosition();
 		System::Void changeLightParams();
 		// light source control
-		System::Void changeLighting();
+		System::Void changeLightingMode();
 		System::Void lightResetButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void lightPosXBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void lightPosYBar_Scroll(System::Object^  sender, System::EventArgs^  e);
@@ -172,6 +187,16 @@ namespace KDZ {
 		System::Void phongLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void gouraudLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void flatLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void setMaterialParams(int ambi, int diff, int spec, int shine, Color matColor);
+		System::Void updateMaterialParams();
+		// material control
+		System::Void resetMatButton_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void matColorButton_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void changeMaterialParams();
+		System::Void ambiMatBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void diffMatBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void specMatBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		System::Void shineMatBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 
 	private: System::Windows::Forms::Button^  prevObjButton;
 	private: System::Windows::Forms::Button^  nextObjButton;
@@ -221,6 +246,8 @@ private: System::Windows::Forms::ToolStripStatusLabel^  objCountLabel;
 
 	private: System::Windows::Forms::ToolStripMenuItem^  openToolStripMenuItem;
 private: System::Windows::Forms::TabControl^  tabControl;
+
+
 
 
 
@@ -466,6 +493,20 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightPosYLabel = (gcnew System::Windows::Forms::Label());
 			this->lightPosXBar = (gcnew System::Windows::Forms::TrackBar());
 			this->lightPosXLabel = (gcnew System::Windows::Forms::Label());
+			this->matTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->matFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
+			this->resetMatButton = (gcnew System::Windows::Forms::Button());
+			this->matParamsGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->shineMatBar = (gcnew System::Windows::Forms::TrackBar());
+			this->shineMatLabel = (gcnew System::Windows::Forms::Label());
+			this->specMatBar = (gcnew System::Windows::Forms::TrackBar());
+			this->specMatLabel = (gcnew System::Windows::Forms::Label());
+			this->diffMatBar = (gcnew System::Windows::Forms::TrackBar());
+			this->diffMatLabel = (gcnew System::Windows::Forms::Label());
+			this->ambiMatBar = (gcnew System::Windows::Forms::TrackBar());
+			this->ambiMatLabel = (gcnew System::Windows::Forms::Label());
+			this->matColorButton = (gcnew System::Windows::Forms::Button());
+			this->matColorLabel = (gcnew System::Windows::Forms::Label());
 			this->otherTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->otherFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->colorGroupBox = (gcnew System::Windows::Forms::GroupBox());
@@ -530,6 +571,13 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosZBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosYBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosXBar))->BeginInit();
+			this->matTabPage->SuspendLayout();
+			this->matFlowLayoutPanel->SuspendLayout();
+			this->matParamsGroupBox->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->shineMatBar))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->specMatBar))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->diffMatBar))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->ambiMatBar))->BeginInit();
 			this->otherTabPage->SuspendLayout();
 			this->otherFlowLayoutPanel->SuspendLayout();
 			this->colorGroupBox->SuspendLayout();
@@ -612,6 +660,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->tabControl->Controls->Add(this->objectTabPage);
 			this->tabControl->Controls->Add(this->cameraTabPage);
 			this->tabControl->Controls->Add(this->lightingTabPage);
+			this->tabControl->Controls->Add(this->matTabPage);
 			this->tabControl->Controls->Add(this->otherTabPage);
 			this->tabControl->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tabControl->Location = System::Drawing::Point(644, 3);
@@ -1546,6 +1595,172 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->lightPosXLabel->Text = L"X Axis";
 			this->lightPosXLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
+			// matTabPage
+			// 
+			this->matTabPage->BackColor = System::Drawing::SystemColors::Control;
+			this->matTabPage->Controls->Add(this->matFlowLayoutPanel);
+			this->matTabPage->Location = System::Drawing::Point(4, 25);
+			this->matTabPage->Name = L"matTabPage";
+			this->matTabPage->Padding = System::Windows::Forms::Padding(3);
+			this->matTabPage->Size = System::Drawing::Size(259, 613);
+			this->matTabPage->TabIndex = 4;
+			this->matTabPage->Text = L"Material";
+			// 
+			// matFlowLayoutPanel
+			// 
+			this->matFlowLayoutPanel->AutoScroll = true;
+			this->matFlowLayoutPanel->Controls->Add(this->resetMatButton);
+			this->matFlowLayoutPanel->Controls->Add(this->matParamsGroupBox);
+			this->matFlowLayoutPanel->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->matFlowLayoutPanel->FlowDirection = System::Windows::Forms::FlowDirection::TopDown;
+			this->matFlowLayoutPanel->Location = System::Drawing::Point(3, 3);
+			this->matFlowLayoutPanel->Name = L"matFlowLayoutPanel";
+			this->matFlowLayoutPanel->Size = System::Drawing::Size(253, 607);
+			this->matFlowLayoutPanel->TabIndex = 2;
+			this->matFlowLayoutPanel->WrapContents = false;
+			// 
+			// resetMatButton
+			// 
+			this->resetMatButton->Location = System::Drawing::Point(3, 3);
+			this->resetMatButton->Name = L"resetMatButton";
+			this->resetMatButton->Size = System::Drawing::Size(222, 23);
+			this->resetMatButton->TabIndex = 18;
+			this->resetMatButton->Text = L"Reset";
+			this->resetMatButton->UseVisualStyleBackColor = true;
+			this->resetMatButton->Click += gcnew System::EventHandler(this, &MainForm::resetMatButton_Click);
+			// 
+			// matParamsGroupBox
+			// 
+			this->matParamsGroupBox->Controls->Add(this->shineMatBar);
+			this->matParamsGroupBox->Controls->Add(this->shineMatLabel);
+			this->matParamsGroupBox->Controls->Add(this->specMatBar);
+			this->matParamsGroupBox->Controls->Add(this->specMatLabel);
+			this->matParamsGroupBox->Controls->Add(this->diffMatBar);
+			this->matParamsGroupBox->Controls->Add(this->diffMatLabel);
+			this->matParamsGroupBox->Controls->Add(this->ambiMatBar);
+			this->matParamsGroupBox->Controls->Add(this->ambiMatLabel);
+			this->matParamsGroupBox->Controls->Add(this->matColorButton);
+			this->matParamsGroupBox->Controls->Add(this->matColorLabel);
+			this->matParamsGroupBox->Location = System::Drawing::Point(3, 32);
+			this->matParamsGroupBox->Name = L"matParamsGroupBox";
+			this->matParamsGroupBox->Size = System::Drawing::Size(222, 319);
+			this->matParamsGroupBox->TabIndex = 0;
+			this->matParamsGroupBox->TabStop = false;
+			this->matParamsGroupBox->Text = L"Parameters";
+			// 
+			// shineMatBar
+			// 
+			this->shineMatBar->Location = System::Drawing::Point(9, 258);
+			this->shineMatBar->Maximum = 8;
+			this->shineMatBar->Minimum = 1;
+			this->shineMatBar->Name = L"shineMatBar";
+			this->shineMatBar->Size = System::Drawing::Size(212, 56);
+			this->shineMatBar->TabIndex = 14;
+			this->shineMatBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->shineMatBar->Value = 4;
+			this->shineMatBar->Scroll += gcnew System::EventHandler(this, &MainForm::shineMatBar_Scroll);
+			// 
+			// shineMatLabel
+			// 
+			this->shineMatLabel->AutoSize = true;
+			this->shineMatLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->shineMatLabel->Location = System::Drawing::Point(6, 235);
+			this->shineMatLabel->Name = L"shineMatLabel";
+			this->shineMatLabel->Size = System::Drawing::Size(69, 17);
+			this->shineMatLabel->TabIndex = 15;
+			this->shineMatLabel->Text = L"Shininess";
+			this->shineMatLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// specMatBar
+			// 
+			this->specMatBar->Location = System::Drawing::Point(9, 196);
+			this->specMatBar->Maximum = 100;
+			this->specMatBar->Name = L"specMatBar";
+			this->specMatBar->Size = System::Drawing::Size(212, 56);
+			this->specMatBar->TabIndex = 12;
+			this->specMatBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->specMatBar->Value = 80;
+			this->specMatBar->Scroll += gcnew System::EventHandler(this, &MainForm::specMatBar_Scroll);
+			// 
+			// specMatLabel
+			// 
+			this->specMatLabel->AutoSize = true;
+			this->specMatLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->specMatLabel->Location = System::Drawing::Point(6, 173);
+			this->specMatLabel->Name = L"specMatLabel";
+			this->specMatLabel->Size = System::Drawing::Size(122, 17);
+			this->specMatLabel->TabIndex = 13;
+			this->specMatLabel->Text = L"Specular Strength";
+			this->specMatLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// diffMatBar
+			// 
+			this->diffMatBar->Location = System::Drawing::Point(9, 134);
+			this->diffMatBar->Maximum = 100;
+			this->diffMatBar->Name = L"diffMatBar";
+			this->diffMatBar->Size = System::Drawing::Size(212, 56);
+			this->diffMatBar->TabIndex = 10;
+			this->diffMatBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->diffMatBar->Value = 50;
+			this->diffMatBar->Scroll += gcnew System::EventHandler(this, &MainForm::diffMatBar_Scroll);
+			// 
+			// diffMatLabel
+			// 
+			this->diffMatLabel->AutoSize = true;
+			this->diffMatLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->diffMatLabel->Location = System::Drawing::Point(6, 111);
+			this->diffMatLabel->Name = L"diffMatLabel";
+			this->diffMatLabel->Size = System::Drawing::Size(110, 17);
+			this->diffMatLabel->TabIndex = 11;
+			this->diffMatLabel->Text = L"Diffuse Strength";
+			this->diffMatLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// ambiMatBar
+			// 
+			this->ambiMatBar->Location = System::Drawing::Point(6, 72);
+			this->ambiMatBar->Maximum = 100;
+			this->ambiMatBar->Name = L"ambiMatBar";
+			this->ambiMatBar->Size = System::Drawing::Size(212, 56);
+			this->ambiMatBar->TabIndex = 8;
+			this->ambiMatBar->TickStyle = System::Windows::Forms::TickStyle::None;
+			this->ambiMatBar->Value = 10;
+			this->ambiMatBar->Scroll += gcnew System::EventHandler(this, &MainForm::ambiMatBar_Scroll);
+			// 
+			// ambiMatLabel
+			// 
+			this->ambiMatLabel->AutoSize = true;
+			this->ambiMatLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->ambiMatLabel->Location = System::Drawing::Point(6, 49);
+			this->ambiMatLabel->Name = L"ambiMatLabel";
+			this->ambiMatLabel->Size = System::Drawing::Size(128, 17);
+			this->ambiMatLabel->TabIndex = 9;
+			this->ambiMatLabel->Text = L"Ambience Strength";
+			this->ambiMatLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// matColorButton
+			// 
+			this->matColorButton->BackColor = System::Drawing::Color::White;
+			this->matColorButton->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->matColorButton->Location = System::Drawing::Point(87, 19);
+			this->matColorButton->Name = L"matColorButton";
+			this->matColorButton->Size = System::Drawing::Size(125, 23);
+			this->matColorButton->TabIndex = 1;
+			this->matColorButton->UseVisualStyleBackColor = false;
+			this->matColorButton->Click += gcnew System::EventHandler(this, &MainForm::matColorButton_Click);
+			// 
+			// matColorLabel
+			// 
+			this->matColorLabel->AutoSize = true;
+			this->matColorLabel->Location = System::Drawing::Point(7, 22);
+			this->matColorLabel->Name = L"matColorLabel";
+			this->matColorLabel->Size = System::Drawing::Size(41, 17);
+			this->matColorLabel->TabIndex = 0;
+			this->matColorLabel->Text = L"Color";
+			// 
 			// otherTabPage
 			// 
 			this->otherTabPage->BackColor = System::Drawing::SystemColors::Control;
@@ -1818,6 +2033,14 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosZBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosYBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->lightPosXBar))->EndInit();
+			this->matTabPage->ResumeLayout(false);
+			this->matFlowLayoutPanel->ResumeLayout(false);
+			this->matParamsGroupBox->ResumeLayout(false);
+			this->matParamsGroupBox->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->shineMatBar))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->specMatBar))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->diffMatBar))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->ambiMatBar))->EndInit();
 			this->otherTabPage->ResumeLayout(false);
 			this->otherFlowLayoutPanel->ResumeLayout(false);
 			this->colorGroupBox->ResumeLayout(false);

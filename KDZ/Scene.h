@@ -58,6 +58,12 @@ namespace GL {
 		LightMode getLightMode();
 		void resetLighting();
 
+		void setMaterialParams(int _ambi, int _diff, int _spec, int _shine);
+		void setMaterialColor(Color ^col);
+		Vector4 getMaterialParams();
+		Color getMaterialColor();
+		void resetMaterial();
+
 		// Sets projection mode: perspective if the parameter is true, orthographics otherwise.
 		void setProjectionMode(bool perspective);
 		// Sets drawing mode flags: wireframe and/or solid.

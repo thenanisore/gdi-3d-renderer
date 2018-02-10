@@ -20,6 +20,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 System::Void MainForm::setScene() {
 	checkButtons();
 	updateObjectParams();
+	updateMaterialParams();
 	updateCameraParams();
 	updateOtherParams();
 	updateLightParams();
@@ -57,6 +58,12 @@ System::Void MainForm::checkButtons() {
 		objReflectionXYCheckbox->Enabled = false;
 		objReflectionXZCheckbox->Enabled = false;
 		objReflectionYZCheckbox->Enabled = false;
+		resetMatButton->Enabled = false;
+		matColorButton->Enabled = false;
+		ambiMatBar->Enabled = false;
+		diffMatBar->Enabled = false;
+		specMatBar->Enabled = false;
+		shineMatBar->Enabled = false;
 	}
 	else {
 		prevObjButton->Enabled = mainScene->objectCount() > 1 && !mainScene->isSelectedFirst();
@@ -75,6 +82,12 @@ System::Void MainForm::checkButtons() {
 		objReflectionXYCheckbox->Enabled = true;
 		objReflectionXZCheckbox->Enabled = true;
 		objReflectionYZCheckbox->Enabled = true;
+		resetMatButton->Enabled = true;
+		matColorButton->Enabled = true;
+		ambiMatBar->Enabled = true;
+		diffMatBar->Enabled = true;
+		specMatBar->Enabled = true;
+		shineMatBar->Enabled = true;
 	}
 }
 
@@ -106,6 +119,7 @@ System::Void MainForm::openToolStripMenuItem_Click(System::Object ^ sender, Syst
 				// object loaded successfully
 				checkButtons();
 				updateObjectParams();
+				updateMaterialParams();
 				renderScene();
 			}
 			else {
@@ -409,11 +423,11 @@ System::Void MainForm::changeProjectionMode() {
 	renderScene();
 }
 
-System::Void KDZ::MainForm::perspectiveButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+System::Void MainForm::perspectiveButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
 	changeProjectionMode();
 }
 
-System::Void KDZ::MainForm::orthoButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+System::Void MainForm::orthoButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
 	changeProjectionMode();
 }
 
@@ -460,6 +474,7 @@ System::Void MainForm::setLightParams(int lightPosX, int lightPosY, int lightPos
 	GL::LightMode mode, Color lightColor, int ambi, int diff, int spec) {
 	// set lighting parameters
 	isSettingParams = true;
+	lightColorButton->BackColor = lightColor;
 	lightPosXBar->Value = lightPosX;
 	lightPosYBar->Value = lightPosY;
 	lightPosZBar->Value = lightPosZ;
@@ -516,7 +531,7 @@ System::Void MainForm::lightSpecBar_Scroll(System::Object^  sender, System::Even
 	changeLightParams();
 }
 
-System::Void KDZ::MainForm::lightColorButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
+System::Void MainForm::lightColorButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
 	ColorDialog ^dialog = gcnew ColorDialog();
 	dialog->ShowHelp = true;
 	dialog->Color = mainScene->getLightColor();
@@ -528,8 +543,7 @@ System::Void KDZ::MainForm::lightColorButton_Click(System::Object ^ sender, Syst
 	}
 }
 
-
-System::Void MainForm::changeLighting() {
+System::Void MainForm::changeLightingMode() {
 	if (noLightRadioButton->Checked) {
 		mainScene->setLightOn(false);
 	}
@@ -555,17 +569,78 @@ System::Void MainForm::lightResetButton_Click(System::Object ^ sender, System::E
 }
 
 System::Void MainForm::noLightRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
-	changeLighting();
+	changeLightingMode();
 }
 
 System::Void MainForm::phongLightRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
-	changeLighting();
+	changeLightingMode();
 }
 
 System::Void MainForm::gouraudLightRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
-	changeLighting();
+	changeLightingMode();
 }
 
 System::Void MainForm::flatLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
-	changeLighting();
+	changeLightingMode();
+}
+
+// Material parameters:
+
+System::Void MainForm::setMaterialParams(int ambi, int diff, int spec, int shine, Color matColor) {
+	// set material parameters
+	isSettingParams = true;
+	ambiMatBar->Value = ambi;
+	diffMatBar->Value = diff;
+	specMatBar->Value = spec;
+	shineMatBar->Value = shine;
+	matColorButton->BackColor = matColor;
+	isSettingParams = false;
+}
+
+System::Void MainForm::updateMaterialParams() {
+	if (!mainScene->isEmpty()) {
+		GL::Vector4 params = mainScene->getMaterialParams();
+		Color matColor = mainScene->getMaterialColor();
+		setMaterialParams(params.x, params.y, params.z, params.w, matColor);
+	}
+}
+
+System::Void MainForm::resetMatButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	mainScene->resetMaterial();
+	updateMaterialParams();
+	renderScene();
+}
+
+System::Void KDZ::MainForm::matColorButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	ColorDialog ^dialog = gcnew ColorDialog();
+	dialog->ShowHelp = true;
+	dialog->Color = mainScene->getMaterialColor();
+	// Update the text box color if the user clicks OK 
+	if (dialog->ShowDialog(this) == ::DialogResult::OK) {
+		mainScene->setMaterialColor(dialog->Color);
+		lightColorButton->BackColor = dialog->Color;
+		renderScene();
+	}
+}
+
+System::Void MainForm::changeMaterialParams() {
+	mainScene->setMaterialParams(ambiMatBar->Value, diffMatBar->Value, specMatBar->Value, shineMatBar->Value);
+	renderScene();
+}
+
+
+System::Void MainForm::ambiMatBar_Scroll(System::Object ^ sender, System::EventArgs ^ e) {
+	changeMaterialParams();
+}
+
+System::Void MainForm::diffMatBar_Scroll(System::Object ^ sender, System::EventArgs ^ e) {
+	changeMaterialParams();
+}
+
+System::Void MainForm::specMatBar_Scroll(System::Object ^ sender, System::EventArgs ^ e) {
+	changeMaterialParams();
+}
+
+System::Void MainForm::shineMatBar_Scroll(System::Object ^ sender, System::EventArgs ^ e) {
+	changeMaterialParams();
 }

@@ -230,5 +230,49 @@ namespace GL {
 			float right = (poly.vertices[2].x - poly.vertices[0].x) * (poly.vertices[1].y - poly.vertices[0].y);
 			return abs(0.5f * (left - right));
 		}
+
+		// Clamps a number between min and max values.
+		float clamp(float num, float min, float max) {
+			if (num > max) return max;
+			else if (num < min) return min;
+			else return num;
+		}
+
+		// returns a signum of x
+		int sign(int x) {
+			return (x > 0) - (x < 0);
+		}
+
+		float max(float a, float b) { return a > b ? a : b; }
+
+		float min(float a, float b) { return a < b ? a : b; }
+
+		// Returns a vector that has all coordinates in (min, max)
+		Vector3 clampVec(Vector3 vec, float min, float max) {
+			if (vec.x < min) vec.x = min;
+			if (vec.y < min) vec.y = min;
+			if (vec.z < min) vec.z = min;
+
+			if (vec.x > max) vec.x = max;
+			if (vec.y > max) vec.y = max;
+			if (vec.z > max) vec.z = max;
+
+			return vec;
+		}
+
+		// Returns a vector that has all coordinates in (min, max)
+		Vector4 clampVec(Vector4 vec, float min, float max) {
+			if (vec.x < min) vec.x = min;
+			if (vec.y < min) vec.y = min;
+			if (vec.z < min) vec.z = min;
+			if (vec.w < min) vec.w = min;
+
+			if (vec.x > max) vec.x = max;
+			if (vec.y > max) vec.y = max;
+			if (vec.z > max) vec.z = max;
+			if (vec.w > max) vec.w = max;
+
+			return vec;
+		}
 	}
 }

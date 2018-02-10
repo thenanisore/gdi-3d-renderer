@@ -25,7 +25,14 @@ namespace GL {
 		void setRotation(const Vector3 &newRotation);
 		void setReflection(bool xy, bool xz, bool yz);
 
-		void setPolygonColor(const std::vector<Vector4> cols);
+		Material getMaterial() const;
+		void setMaterialParameters(float ambience, float diffuse, float specular, int shininess);
+		Vector4 getMaterialParameters();
+		void setMaterialColor(const Vector4 &col);
+		Vector4 getMaterialColor();
+		void resetMaterial();
+
+		void setPolygonColor(const std::vector<Vector4> &cols);
 
 		Matrix4 getModelMatrix() const;
 		void reset();

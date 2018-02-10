@@ -7,7 +7,7 @@ namespace GL {
 
 	SceneObject::SceneObject(std::vector<Polygon> _polygons)
 		: polygons(_polygons), position(), scale(1.0f, 1.0f, 1.0f), rotation(), 
-		  reflectionXY(false), reflectionXZ(false), reflectionYZ(false) { }
+		  reflectionXY(false), reflectionXZ(false), reflectionYZ(false), material() { }
 
 	Vector3 SceneObject::getPosition() const {
 		return Vector3(position);
@@ -43,7 +43,34 @@ namespace GL {
 		reflectionYZ = yz;
 	}
 
-	void SceneObject::setPolygonColor(const std::vector<Vector4> cols) {
+	Material SceneObject::getMaterial() const {
+		return material;
+	}
+
+	void SceneObject::setMaterialParameters(float ambience, float diffuse, float specular, int shininess) {
+		material.setAmbient(ambience);
+		material.setDiffuse(diffuse);
+		material.setSpecular(specular);
+		material.setShininess(shininess);
+	}
+
+	Vector4 SceneObject::getMaterialParameters() {
+		return Vector4(material.getAmbient(), material.getDiffuse(), material.getSpecular(), material.getShininess());
+	}
+
+	void SceneObject::setMaterialColor(const Vector4 &col) {
+		material.setColor(col);
+	}
+
+	Vector4 SceneObject::getMaterialColor() {
+		return material.getColor();
+	}
+
+	void SceneObject::resetMaterial() {
+		material.reset();
+	}
+
+	void SceneObject::setPolygonColor(const std::vector<Vector4> &cols) {
 		for (int i = 0; i < cols.size(); i++) {
 			polygons[i].setColor(cols[i]);
 		}

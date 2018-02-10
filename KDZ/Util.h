@@ -53,5 +53,21 @@ namespace GL {
 		Vector3 reflect(const Vector3 &inc, const Vector3 &norm);
 		// Returns an area of the given polygon.
 		float area(const GL::Polygon &poly);
+		// Clamps a number between min and max values.
+		float clamp(float num, float min, float max);
+		// returns a signum of x
+		int sign(int x);
+		// swaps two numbers in-place
+		float max(float a, float b);
+		float min(float a, float b);
+		// Returns a vector that has all coordinates in (min, max).
+		Vector3 clampVec(Vector3 vec, float min, float max);
+		Vector4 clampVec(Vector4 vec, float min, float max);
+
+		// swaps two numbers in-place
+		template<typename T>
+		void swap(T &x, T &y) {
+			T t = x; x = y; y = t;
+		}
 	}
 }

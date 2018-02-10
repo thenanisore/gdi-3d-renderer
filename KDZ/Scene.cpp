@@ -15,9 +15,16 @@ namespace GL {
 	const float lightAmbientMultiplier = 0.01f;
 	const float lightDiffuseMultiplier = 0.01f;
 	const float lightSpecularMultiplier = 0.01f;
+	const float materialAmbientMultiplier = 0.01f;
+	const float materialDiffuseMultiplier = 0.01f;
+	const float materialSpecularMultiplier = 0.01f;
 
 	Scene::Scene() : camera(), selectedObject(0) {
 		lightSource = Light(camera.getPosition());
+		faceCull = true;
+		perspective = true;
+		drawWireframe = false;
+		drawSolid = true;
 	}
 
 	void Scene::renderScene(Renderer ^renderer) {
@@ -192,6 +199,50 @@ namespace GL {
 	void Scene::resetLighting() {
 		lightSource.reset();
 	}
+
+	// methods to manipulate the current object's material:
+
+	void Scene::setMaterialParams(int _ambi, int _diff, int _spec, int _shine) {
+		if (!isEmpty()) {
+			sceneObjects[selectedObject].setMaterialParameters(
+				_ambi * materialAmbientMultiplier,
+				_diff * materialDiffuseMultiplier,
+				_spec * materialSpecularMultiplier,
+				pow(2.f, _shine)
+			);
+		}
+	}
+
+	void Scene::setMaterialColor(Color ^col) {
+		if (!isEmpty()) {
+			sceneObjects[selectedObject].setMaterialColor(Util::colorToVec(col));
+		}
+	}
+
+	Vector4 Scene::getMaterialParams() {
+		if (!isEmpty()) {
+			Vector4 params = sceneObjects[selectedObject].getMaterialParameters();
+			float amb = params.x / materialAmbientMultiplier;
+			float diff = params.y / materialDiffuseMultiplier;
+			float spec = params.z / materialSpecularMultiplier;
+			float shine = (int)log2(params.w);
+			return Vector4(amb, diff, spec, shine);
+		}
+	}
+
+	Color Scene::getMaterialColor() {
+		if (!isEmpty()) {
+			return Util::vecToColor(sceneObjects[selectedObject].getMaterialColor());
+		}
+	}
+
+	void Scene::resetMaterial() {
+		if (!isEmpty()) {
+			sceneObjects[selectedObject].resetMaterial();
+		}
+	}
+
+	// other methods:
 
 	void Scene::setProjectionMode(bool _perspective) {
 		perspective = _perspective;

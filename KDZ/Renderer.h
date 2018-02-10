@@ -2,6 +2,7 @@
 
 #include "Vector3.h"
 #include "Light.h"
+#include "Material.h"
 #include "SceneObject.h"
 
 namespace GL {
@@ -56,7 +57,7 @@ namespace GL {
 		void drawLine(const Vector3 &from, const Vector3 &to);
 		void drawPoint(int x, int y, float z, SolidBrush ^b);
 		void drawPolygon(const GL::Polygon &poly);
-		void fillPolygon(const GL::Polygon &poly, const GL::Polygon &worldPoly, const Vector3 &cameraPos, const Light &lightSource);
+		void fillPolygon(const GL::Polygon &poly, const GL::Polygon &worldPoly, const Vector3 &cameraPos, const Light &lightSource, const Material &material);
 		void viewportTransform(GL::Polygon & poly);
 		Vector3 NDCtoViewport(const Vector3 &vertex);
 	};

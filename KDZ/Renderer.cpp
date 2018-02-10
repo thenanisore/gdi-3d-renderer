@@ -101,21 +101,10 @@ namespace GL {
 				if (solid) { 
 					// another one for lighting calculations
 					GL::Polygon worldTransformed = pol.getTransformed(modelView, normalTransform);
-					fillPolygon(transformed, worldTransformed, cameraPos, lightSource);
+					fillPolygon(transformed, worldTransformed, cameraPos, lightSource, obj.getMaterial());
 				}
 			}
 		}
-	}
-
-	// returns a signum of x
-	inline int sign(int x) {
-		return (x > 0) - (x < 0);
-	}
-
-	// swaps two numbers in-place
-	template<typename T>
-	void swap(T &x, T &y) {
-		T t = x; x = y; y = t;
 	}
 
 	float getZ(float x, float y, const Vector3 &p, const Vector3 &normal) {
@@ -128,12 +117,12 @@ namespace GL {
 
 		int dx = abs(to.x - x);
 		int dy = abs(to.y - y);
-		int sx = sign(to.x - x);
-		int sy = sign(to.y - y);
+		int sx = Util::sign(to.x - x);
+		int sy = Util::sign(to.y - y);
 
 		// swap the deltas if 2, 3, 6 or 7th octant
 		bool isSwap = dy > dx;
-		if (isSwap) swap(dx, dy);
+		if (isSwap) Util::swap(dx, dy);
 
 		int e = 2 * dy - dx;
 
@@ -173,19 +162,7 @@ namespace GL {
 		drawLine(pol.vertices[2].toVec3(), pol.vertices[0].toVec3());
 	}
 
-	float max(float a, float b) { return a > b ? a : b; }
-	float min(float a, float b) { return a < b ? a : b; }
-
-	void clampVec(Vector3 &vec, float min, float max) {
-		if (vec.x < min) vec.x = min;
-		if (vec.y < min) vec.y = min;
-		if (vec.z < min) vec.z = min;
-		if (vec.x > max) vec.x = max;
-		if (vec.y > max) vec.y = max;
-		if (vec.z > max) vec.z = max;
-	}
-
-	void Renderer::fillPolygon(const Polygon &poly, const Polygon &worldPoly, const Vector3 &cameraPos, const Light &lightSource) {
+	void Renderer::fillPolygon(const Polygon &poly, const Polygon &worldPoly, const Vector3 &cameraPos, const Light &lightSource, const Material &material) {
 		// copy vectors first
 		Vector3 first = poly.vertices[0].toVec3(), second = poly.vertices[1].toVec3(), third = poly.vertices[2].toVec3();
 		// in world coordinates (for lighting calculations) 
@@ -201,22 +178,22 @@ namespace GL {
 
 		// sort the vertices, third -> second -> first
 		if (first.y > second.y) {
-			swap(first, second);
-			swap(firstW, secondW);
-			swap(firstColor, secondColor);
-			swap(firstNorm, secondNorm);
+			Util::swap(first, second);
+			Util::swap(firstW, secondW);
+			Util::swap(firstColor, secondColor);
+			Util::swap(firstNorm, secondNorm);
 		}
 		if (first.y > third.y) {
-			swap(first, third);
-			swap(firstW, thirdW);
-			swap(firstColor, thirdColor);
-			swap(firstNorm, thirdNorm);
+			Util::swap(first, third);
+			Util::swap(firstW, thirdW);
+			Util::swap(firstColor, thirdColor);
+			Util::swap(firstNorm, thirdNorm);
 		}
 		if (second.y > third.y) {
-			swap(second, third);
-			swap(secondW, thirdW);
-			swap(secondColor, thirdColor);
-			swap(secondNorm, thirdNorm);
+			Util::swap(second, third);
+			Util::swap(secondW, thirdW);
+			Util::swap(secondColor, thirdColor);
+			Util::swap(secondNorm, thirdNorm);
 		}
 
 		// memorize z-values
@@ -241,37 +218,39 @@ namespace GL {
 			// find current intersection point between scanline and first-to-second (or second-to-third) side
 			Vector3 B = secondHalf ? second + (third - second) * beta : first + (second - first) * beta;
 			// A should be on the left
-			if (A.x > B.x) swap(A, B);
+			if (A.x > B.x) Util::swap(A, B);
 			// fill the line between A and B
 			for (int j = A.x; j <= B.x; j++) {
 				// find barycentric coordinates for interpolation
 				try {
 					Vector3 coordinates = Util::barycentric2d(Vector3(j, first.y + i, 0.f), first, second, third);
 					// determine a color
-					Vector3 col = (firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z).toVec3();
+					Vector4 col = firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z;
 					// determine a fragment position (in world coords)
 					Vector3 fragPos = (firstW * coordinates.x + secondW * coordinates.y + thirdW * coordinates.z);
 					// determine an interpolated normal
 					Vector3 fragNormal = (firstNorm * coordinates.x + secondNorm * coordinates.y + thirdNorm * coordinates.z).normalized();
 					// map negative colors to 0, >1 to 1
 
-					// lighting calculations
-					float ambientStrength = lightSource.getAmbient();
-					Vector3 ambient = lightSource.color * ambientStrength;
+					// lighting calculations:
+
+					// ambient lighting
+					Vector4 ambient = lightSource.getAmbientColor() * material.getAmbientColor();
+
 					// diffuse lighting
-					float diffuseStrength = lightSource.getDiffuse();
 					Vector3 lightDir = (lightSource.position - fragPos).normalized();
-					float diff = max(fragNormal.dot(lightDir), 0.f);
-					Vector3 diffuse = lightSource.color * diff * diffuseStrength;
-					// specular lighting
-					float specularStrength = lightSource.getSpecular();
+					float diff = Util::max(fragNormal.dot(lightDir), 0.f);
+					Vector4 diffuse = lightSource.getDiffuseColor() * (material.getDiffuseColor() * diff);
+
+					// specular lighting (Phong)
 					Vector3 viewDir = (-fragPos).normalized();
 					Vector3 reflectDir = Util::reflect(-lightDir, fragNormal).normalized();
-					float spec = pow(max(viewDir.dot(reflectDir), 0.f), 16);
-					Vector3 specular = lightSource.color * specularStrength * spec;
+					float spec = pow(Util::max(viewDir.dot(reflectDir), 0.f), material.getShininess());
+					Vector4 specular = lightSource.getSpecularColor() * (material.getSpecularColor() * spec);
+
 					// resulting
-					col = (diffuse + ambient + specular) * col;
-					clampVec(col, 0, 1.f);
+					col = Util::clampVec((diffuse + ambient + specular) * col, 0.f, 1.f);
+
 					surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
 
 					// find interpolated z-value
