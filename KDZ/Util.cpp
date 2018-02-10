@@ -212,7 +212,7 @@ namespace GL {
 
 		// Returns a Color object with the RGBA values from the col vector.
 		System::Drawing::Color vecToColor(const Vector4 &col) {
-			return System::Drawing::Color::FromArgb(col.w, col.x, col.y, col.z);
+			return System::Drawing::Color::FromArgb(col.w * 255, col.x * 255, col.y * 255, col.z * 255);
 		}
 
 		// Returns a Vector4 object with the RGBA values from the Color object

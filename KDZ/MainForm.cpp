@@ -618,7 +618,7 @@ System::Void KDZ::MainForm::matColorButton_Click(System::Object ^ sender, System
 	// Update the text box color if the user clicks OK 
 	if (dialog->ShowDialog(this) == ::DialogResult::OK) {
 		mainScene->setMaterialColor(dialog->Color);
-		lightColorButton->BackColor = dialog->Color;
+		matColorButton->BackColor = dialog->Color;
 		renderScene();
 	}
 }
