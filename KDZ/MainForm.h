@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene.h"
+#include "Shapes.h"
 
 namespace KDZ {
 	using namespace System;
@@ -95,6 +96,13 @@ namespace KDZ {
 	private: System::Windows::Forms::Label^  matColorLabel;
 	private: System::Windows::Forms::TrackBar^  shineMatBar;
 	private: System::Windows::Forms::Label^  shineMatLabel;
+	private: System::Windows::Forms::ToolStripMenuItem^  shapeToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  cubeToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  thorusToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  pyramidToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  tetrahedronToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  octahedronToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  sphereToolStripMenuItem;
 
 
 
@@ -110,6 +118,13 @@ namespace KDZ {
 		System::Void openToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void aboutToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void addObject(GL::Objects::Shape shape);
+		System::Void cubeToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void thorusToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void pyramidToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void tetrahedronToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void octahedronToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void sphereToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		// mainform events
 		System::Void MainForm_Shown(System::Object^  sender, System::EventArgs^  e);
 		System::Void MainForm_ResizeEnd(System::Object^  sender, System::EventArgs^  e);
@@ -416,6 +431,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->shapeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tableLayoutPanel = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->pictureBox = (gcnew System::Windows::Forms::PictureBox());
 			this->tabControl = (gcnew System::Windows::Forms::TabControl());
@@ -530,6 +546,12 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->lightColorDialog = (gcnew System::Windows::Forms::ColorDialog());
+			this->cubeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->thorusToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->pyramidToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->tetrahedronToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->octahedronToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->sphereToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -589,7 +611,10 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// menuStrip
 			// 
 			this->menuStrip->ImageScalingSize = System::Drawing::Size(20, 20);
-			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->fileToolStripMenuItem });
+			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->fileToolStripMenuItem,
+					this->shapeToolStripMenuItem
+			});
 			this->menuStrip->Location = System::Drawing::Point(0, 0);
 			this->menuStrip->Name = L"menuStrip";
 			this->menuStrip->Size = System::Drawing::Size(914, 28);
@@ -609,23 +634,34 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// openToolStripMenuItem
 			// 
 			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
-			this->openToolStripMenuItem->Size = System::Drawing::Size(129, 26);
+			this->openToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->openToolStripMenuItem->Text = L"Open...";
 			this->openToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::openToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
 			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
-			this->aboutToolStripMenuItem->Size = System::Drawing::Size(129, 26);
+			this->aboutToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->aboutToolStripMenuItem->Text = L"About";
 			this->aboutToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::aboutToolStripMenuItem_Click);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
-			this->exitToolStripMenuItem->Size = System::Drawing::Size(129, 26);
+			this->exitToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->exitToolStripMenuItem->Text = L"Exit";
 			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::exitToolStripMenuItem_Click);
+			// 
+			// shapeToolStripMenuItem
+			// 
+			this->shapeToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {
+				this->cubeToolStripMenuItem,
+					this->thorusToolStripMenuItem, this->pyramidToolStripMenuItem, this->tetrahedronToolStripMenuItem, this->octahedronToolStripMenuItem,
+					this->sphereToolStripMenuItem
+			});
+			this->shapeToolStripMenuItem->Name = L"shapeToolStripMenuItem";
+			this->shapeToolStripMenuItem->Size = System::Drawing::Size(81, 24);
+			this->shapeToolStripMenuItem->Text = L"Generate";
 			// 
 			// tableLayoutPanel
 			// 
@@ -1961,6 +1997,48 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// openFileDialog
 			// 
 			this->openFileDialog->Filter = L"3D Object files|*.object|Text files|*.txt|All files|*.*";
+			// 
+			// cubeToolStripMenuItem
+			// 
+			this->cubeToolStripMenuItem->Name = L"cubeToolStripMenuItem";
+			this->cubeToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->cubeToolStripMenuItem->Text = L"Cube";
+			this->cubeToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::cubeToolStripMenuItem_Click);
+			// 
+			// thorusToolStripMenuItem
+			// 
+			this->thorusToolStripMenuItem->Name = L"thorusToolStripMenuItem";
+			this->thorusToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->thorusToolStripMenuItem->Text = L"Torus";
+			this->thorusToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::thorusToolStripMenuItem_Click);
+			// 
+			// pyramidToolStripMenuItem
+			// 
+			this->pyramidToolStripMenuItem->Name = L"pyramidToolStripMenuItem";
+			this->pyramidToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->pyramidToolStripMenuItem->Text = L"Pyramid";
+			this->pyramidToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::pyramidToolStripMenuItem_Click);
+			// 
+			// tetrahedronToolStripMenuItem
+			// 
+			this->tetrahedronToolStripMenuItem->Name = L"tetrahedronToolStripMenuItem";
+			this->tetrahedronToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->tetrahedronToolStripMenuItem->Text = L"Tetrahedron";
+			this->tetrahedronToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::tetrahedronToolStripMenuItem_Click);
+			// 
+			// octahedronToolStripMenuItem
+			// 
+			this->octahedronToolStripMenuItem->Name = L"octahedronToolStripMenuItem";
+			this->octahedronToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->octahedronToolStripMenuItem->Text = L"Octahedron";
+			this->octahedronToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::octahedronToolStripMenuItem_Click);
+			// 
+			// sphereToolStripMenuItem
+			// 
+			this->sphereToolStripMenuItem->Name = L"sphereToolStripMenuItem";
+			this->sphereToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->sphereToolStripMenuItem->Text = L"Sphere";
+			this->sphereToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::sphereToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 

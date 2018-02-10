@@ -79,15 +79,12 @@ namespace GL {
 		bool isCulling();
 		unsigned int objectCount();
 		unsigned int getSelected();
+
+		// Object placement.
+		void addObject(SceneObject obj);
 		bool fromFile(String ^file);
 
-		// test
-		void addCube();
-		void addPolygon();
-		void addPolygons();
-
 	private:
-		void addObject(SceneObject &obj);
 		Light lightSource;
 		Camera camera;
 		std::vector<SceneObject> sceneObjects;

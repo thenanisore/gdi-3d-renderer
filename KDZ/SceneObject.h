@@ -14,6 +14,8 @@ namespace GL {
 	public:
 		SceneObject();
 		SceneObject(std::vector<Polygon> _polygons);
+		// Copy constructor.
+		SceneObject(const SceneObject &obj);
 
 		Vector3 getPosition() const;
 		Vector3 getScale() const;
@@ -32,7 +34,8 @@ namespace GL {
 		Vector4 getMaterialColor();
 		void resetMaterial();
 
-		void setPolygonColor(const std::vector<Vector4> &cols);
+		// Sets the colors of the SceneObject's polygons. If vertices = true, then it assumes the vector defines the color in each vertex (3 per polygon).
+		void setPolygonColors(const std::vector<Vector4> &cols, bool vertices = false);
 
 		Matrix4 getModelMatrix() const;
 		void reset();

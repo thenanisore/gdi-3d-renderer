@@ -9,6 +9,18 @@ namespace GL {
 		: polygons(_polygons), position(), scale(1.0f, 1.0f, 1.0f), rotation(), 
 		  reflectionXY(false), reflectionXZ(false), reflectionYZ(false), material() { }
 
+	SceneObject::SceneObject(const SceneObject & obj) {
+		position = obj.getPosition();
+		rotation = obj.getRotation();
+		scale = obj.getScale();
+		Vector3 refl = obj.getReflection();
+		reflectionXY = refl.z;
+		reflectionXZ = refl.y;
+		reflectionYZ = refl.x;
+		material = obj.getMaterial();
+		polygons = obj.polygons;
+	}
+
 	Vector3 SceneObject::getPosition() const {
 		return Vector3(position);
 	}
@@ -70,9 +82,23 @@ namespace GL {
 		material.reset();
 	}
 
-	void SceneObject::setPolygonColor(const std::vector<Vector4> &cols) {
-		for (int i = 0; i < cols.size(); i++) {
-			polygons[i].setColor(cols[i]);
+	// Sets the colors of the SceneObject's polygons. If vertices = true, then it assumes the vector defines the color in each vertex (3 per polygon).
+	void SceneObject::setPolygonColors(const std::vector<Vector4> &cols, bool vertices) {
+		for (int i = 0; i < polygons.size(); i++) {
+			if (vertices) {
+				// color per vertex
+				if (cols.size() != polygons.size() * 3) {
+					throw new std::invalid_argument("The color should be specified for each vertex.");
+				}
+				polygons[i].setColors(cols[3 * i], cols[3 * i + 1], cols[3 * i + 2]);
+			}
+			else {
+				// color per polygon
+				if (cols.size() != polygons.size()) {
+					throw new std::invalid_argument("The color should be specified for each polygon.");
+				}
+				polygons[i].setColor(cols[i]);
+			}
 		}
 	}
 

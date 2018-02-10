@@ -2,6 +2,7 @@
 #include "About.h"
 #include "Scene.h"
 #include "Light.h"
+#include "Shapes.h"
 #include "Renderer.h"
 
 #include <Windows.h>
@@ -140,6 +141,40 @@ System::Void KDZ::MainForm::aboutToolStripMenuItem_Click(System::Object ^ sender
 
 System::Void MainForm::exitToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
 	Application::Exit();
+}
+
+// Object generation menu:
+
+System::Void MainForm::addObject(GL::Objects::Shape shape) {
+	mainScene->addObject(GL::Objects::generateObject(shape));
+	checkButtons();
+	updateObjectParams();
+	updateMaterialParams();
+	renderScene();
+}
+
+System::Void MainForm::cubeToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::CUBE);
+}
+
+System::Void MainForm::thorusToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::TORUS);
+}
+
+System::Void MainForm::pyramidToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::PYRAMID);
+}
+
+System::Void MainForm::tetrahedronToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::TETRAHEDRON);
+}
+
+System::Void KDZ::MainForm::octahedronToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::OCTAHEDRON);
+}
+
+System::Void KDZ::MainForm::sphereToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	addObject(GL::Objects::Shape::SPHERE);
 }
 
 System::Void MainForm::setObjectsParams(int objPosX, int objPosY, int objPosZ, int objScaleX, int objScaleY, int objScaleZ, int objRotX, int objRotY, int objRotZ, bool objReflXY, bool objReflXZ, bool objReflYZ) {

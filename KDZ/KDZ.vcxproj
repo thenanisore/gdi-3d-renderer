@@ -135,6 +135,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Matrix4.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Shapes.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Matrix4.h" />

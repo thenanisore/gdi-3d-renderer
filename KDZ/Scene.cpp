@@ -100,7 +100,7 @@ namespace GL {
 		}
 	}
 
-	void Scene::addObject(SceneObject &obj) {
+	void Scene::addObject(SceneObject obj) {
 		sceneObjects.push_back(obj);
 		// select the added object
 		selectedObject = sceneObjects.size() - 1;
@@ -349,67 +349,5 @@ namespace GL {
 		addObject(newObj);
 
 		return true;
-	}
-
-	// test
-	void Scene::addCube() {
-		SceneObject cube(std::vector<Polygon> {
-			// front
-			Polygon(Vector3(1, -1, 1), Vector3(1, 1, 1), Vector3(-1, 1, 1)),
-			Polygon(Vector3(-1, 1, 1), Vector3(-1, -1, 1), Vector3(1, -1, 1)),
-			// right
-			Polygon(Vector3(1, -1, 1), Vector3(1, -1, -1), Vector3(1, 1, -1)),
-			Polygon(Vector3(1, 1, -1), Vector3(1, 1, 1), Vector3(1, -1, 1)),
-			// back
-			Polygon(Vector3(1, 1, -1), Vector3(1, -1, -1), Vector3(-1, -1, -1)),
-			Polygon(Vector3(-1, -1, -1), Vector3(-1, 1, -1), Vector3(1, 1, -1)),
-			// left
-			Polygon(Vector3(-1, -1, 1), Vector3(-1, 1, -1), Vector3(-1, -1, -1)),
-			Polygon(Vector3(-1, -1, 1), Vector3(-1, 1, 1), Vector3(-1, 1, -1)),
-			// top
-			Polygon(Vector3(1, 1, 1), Vector3(1, 1, -1), Vector3(-1, 1, -1)),
-			Polygon(Vector3(-1, 1, -1), Vector3(-1, 1, 1), Vector3(1, 1, 1)),
-			// bottom
-			Polygon(Vector3(-1, -1, -1), Vector3(1, -1, -1), Vector3(1, -1, 1)),
-			Polygon(Vector3(1, -1, 1), Vector3(-1, -1, 1), Vector3(-1, -1, -1))
-		});
-		cube.setPolygonColor(std::vector<Vector4> {
-			// front
-			Vector4(1.f, 0.f, 0.f, 1.f), Vector4(1.f, 0.f, 0.f, 1.f),
-			// right
-			Vector4(0.f, 1.f, 0.f, 1.f), Vector4(0.f, 1.f, 0.f, 1.f),
-			// back
-			Vector4(0.f, 0.f, 1.f, 1.f), Vector4(0.f, 0.f, 1.f, 1.f),
-			// left
-			Vector4(1.f, 0.f, 1.f, 1.f), Vector4(1.f, 0.f, 1.f, 1.f),
-			// top
-			Vector4(1.f, 1.f, 0.f, 1.f), Vector4(1.f, 1.f, 0.f, 1.f),
-			// bottom
-			Vector4(0.f, 1.f, 1.f, 1.f), Vector4(0.f, 1.f, 1.f, 1.f)
-		});
-		sceneObjects.push_back(cube);
-		selectedObject = sceneObjects.size() - 1;
-	}
-
-	void Scene::addPolygons() {
-		SceneObject polygon(std::vector<Polygon> {
-			Polygon(Vector3(0, 0, 2), Vector3(1, 0, 2), Vector3(0, 1, 2)),
-			Polygon(Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0)),
-			Polygon(Vector3(1, 0, -2), Vector3(2, 0, -2), Vector3(1, 1, -2)),
-		});
-		polygon.polygons[0].setColors(Vector3(1, 0, 0), Vector3(1, 0, 0), Vector3(1, 0, 0));
-		polygon.polygons[1].setColors(Vector3(0, 1, 0), Vector3(0, 1, 0), Vector3(0, 1, 0));
-		polygon.polygons[2].setColors(Vector3(0, 0, 1), Vector3(0, 0, 1), Vector3(0, 0, 1));
-		sceneObjects.push_back(polygon);
-		selectedObject = sceneObjects.size() - 1;
-	}
-
-	void Scene::addPolygon() {
-		SceneObject polygon(std::vector<Polygon> {
-			Polygon(Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0)),
-		});
-		polygon.polygons[0].setColors(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1));
-		sceneObjects.push_back(polygon);
-		selectedObject = sceneObjects.size() - 1;
 	}
 }
