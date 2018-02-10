@@ -167,7 +167,7 @@ namespace GL {
 	}
 
 	void Renderer::drawPoint(int x, int y, float z, SolidBrush ^br) {
-		if (x >= 0 && x < viewportX && y >= 0 && y < viewportY && z > -1 && z < 1) {
+		if (x >= 0 && x < viewportX && y >= 0 && y < viewportY && z > (perspective ? -1 : 0) && z < 1) {
 			// z test
 			if (z < zbuffer[x, y]) {
 				zbuffer[x, y] = z;
@@ -235,6 +235,9 @@ namespace GL {
 		int totalHeight = third.y - first.y;
 		// scan down to up
 		for (int i = 0; i < totalHeight; i++) {
+			// line is off the screen, don't draw
+			if (first.y >= viewportY) return;
+			if (first.y + i < 0) continue;
 			bool secondHalf = i > second.y - first.y || second.y == first.y;
 			int segmentHeight = secondHalf ? third.y - second.y : second.y - first.y;
 			// current height to overall height ratio
@@ -247,6 +250,10 @@ namespace GL {
 			Vector3 B = secondHalf ? second + (third - second) * beta : first + (second - first) * beta;
 			// A should be on the left
 			if (A.x > B.x) Util::swap(A, B);
+			// the line is off the screen, don't draw
+			if (A.x > viewportX || B.x <= 0) continue;
+			if (A.x < 0) A.x = 0;
+			if (B.x > viewportX) B.x = viewportX - 1;
 			// fill the line between A and B
 			for (int j = A.x; j <= B.x; j++) {
 				// find barycentric coordinates for interpolation

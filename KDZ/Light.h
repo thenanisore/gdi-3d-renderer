@@ -10,7 +10,7 @@ namespace GL {
 	const Vector3 DEFAULT_LIGHT_COLOR = Vector3(1.f, 1.f, 1.f);
 	const float DEFAULT_LIGHT_AMBIENCE = 0.1f;
 	const float DEFAULT_LIGHT_DIFFUSE = 0.5f;
-	const float DEFAULT_LIGHT_SPECULAR = 1.f;
+	const float DEFAULT_LIGHT_SPECULAR = 0.5f;
 	const LightMode DEFAULT_LIGHT_MODE = LightMode::PHONG;
 
 	// The Light class represents a light source.
