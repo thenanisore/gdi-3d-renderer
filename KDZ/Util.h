@@ -63,7 +63,6 @@ namespace GL {
 		// Returns a vector that has all coordinates in (min, max).
 		Vector3 clampVec(Vector3 vec, float min, float max);
 		Vector4 clampVec(Vector4 vec, float min, float max);
-
 		// swaps two numbers in-place
 		template<typename T>
 		void swap(T &x, T &y) {

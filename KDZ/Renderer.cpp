@@ -73,10 +73,10 @@ namespace GL {
 	bool Renderer::isVisible(const Polygon &pol) {
 		// a face is visible is a dot-product of its normal vector
 		// and the first vertex of the triangle is less than zero (here's reversed)
-		Vector3 norm = pol.normals[0];
+		Vector3 norm = Util::normal(pol.vertices[0].toVec3(), pol.vertices[1].toVec3(), pol.vertices[2].toVec3());
 		Vector3 v0 = pol.vertices[0].toVec3();
 		Vector3 camPos = perspective ? Vector3() : Vector3(v0.x, v0.y, -1.f);
-		bool visible = (camPos - v0).dot(norm) >= 0;
+		bool visible = (camPos - v0).dot(norm) > 0.5;
 		return visible;
 	}
 
@@ -229,7 +229,9 @@ namespace GL {
 					// determine a fragment position (in world coords)
 					Vector3 fragPos = (firstW * coordinates.x + secondW * coordinates.y + thirdW * coordinates.z);
 					// determine an interpolated normal
-					Vector3 fragNormal = (firstNorm * coordinates.x + secondNorm * coordinates.y + thirdNorm * coordinates.z).normalized();
+					Vector3 fragNormal = (lightSource.mode == LightMode::FLAT)
+						? firstNorm 
+						: (firstNorm * coordinates.x + secondNorm * coordinates.y + thirdNorm * coordinates.z).normalized();
 					// map negative colors to 0, >1 to 1
 
 					// lighting calculations:
@@ -242,7 +244,7 @@ namespace GL {
 					float diff = Util::max(fragNormal.dot(lightDir), 0.f);
 					Vector4 diffuse = lightSource.getDiffuseColor() * (material.getDiffuseColor() * diff);
 
-					// specular lighting (Phong)
+					// specular lighting
 					Vector3 viewDir = (-fragPos).normalized();
 					Vector3 reflectDir = Util::reflect(-lightDir, fragNormal).normalized();
 					float spec = pow(Util::max(viewDir.dot(reflectDir), 0.f), material.getShininess());
