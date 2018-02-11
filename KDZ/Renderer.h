@@ -119,6 +119,6 @@ namespace GL {
 		// Translate from homonegenous coordinates of the vector (w-division) and map to the viewport.
 		void viewportTransform(GL::Polygon & poly);
 		// Remaps coordinates from [-1, 1] to the [0, viewportX(Y)] space. 
-		Vector3 NDCtoViewport(const Vector3 &vertex);
+		Vector4 NDCtoViewport(const Vector4 &vertex);
 	};
 }

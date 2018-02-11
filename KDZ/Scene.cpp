@@ -369,8 +369,28 @@ namespace GL {
 			}
 		}
 		// construct a SceneObject
-		SceneObject newObj(vertices, colors, texCoords, indices);
-		addObject(newObj);
+		try {
+			SceneObject newObj;
+			if (colors.size() == vertices.size()) {
+				if (texCoords.size() == indices.size() * 3) {
+					// have both color and texture data
+					newObj = SceneObject(vertices, colors, texCoords, indices);
+				}
+				else {
+					// only color data
+					newObj = SceneObject(vertices, colors, indices);
+				}
+			}
+			else {
+				// no color or texture data
+				newObj = SceneObject(vertices, indices);
+			}
+			addObject(newObj);
+		}
+		catch (const std::invalid_argument &e) {
+			// something went wrong with the construction
+			return false;
+		}
 
 		return true;
 	}

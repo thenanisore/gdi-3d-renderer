@@ -95,6 +95,10 @@ namespace GL {
 		return Vector3(x / w, y / w, z / w);
 	}
 
+	Vector4 Vector4::fromHomogeneous4() const {
+		return Vector4(x / w, y / w, z / w, w);
+	}
+
 	Vector3 Vector4::toVec3() const {
 		return Vector3(x, y, z);
 	}

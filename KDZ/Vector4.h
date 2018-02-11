@@ -53,6 +53,7 @@ namespace GL {
 		Vector4 normalized() const;
 		// Returns a normalized Vector3, dividing the coordinates by w.
 		Vector3 fromHomogeneous() const;
+		Vector4 fromHomogeneous4() const;
 		Vector3 toVec3() const;
 	};
 }

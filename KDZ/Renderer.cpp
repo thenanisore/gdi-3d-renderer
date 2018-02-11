@@ -198,7 +198,7 @@ namespace GL {
 
 	// Draw a single pixel with a Z-test.
 	void Renderer::drawPoint(int x, int y, float z, SolidBrush ^br) {
-		if (x >= 0 && x < viewportX && y >= 0 && y < viewportY && z > (perspective ? -1 : 0) && z < 1) {
+		if (x >= 0 && x < viewportX && y >= 0 && y < viewportY && z > (perspective ? 0 : -1) && z < 1) {
 			// z test
 			if (z < zbuffer[x, y]) {
 				zbuffer[x, y] = z;
@@ -217,6 +217,8 @@ namespace GL {
 	// Fills and shades a polygon.
 	void Renderer::fillPolygon(const Polygon &poly, const Polygon &worldPoly, const Light &lightSource,
 		const Material &material, std::vector<Vector4> gouraudColors) {
+		// memorize 1/w (for perspective-correct mapping)
+		Vector3 ws(1.f / poly.vertices[0].w, 1.f / poly.vertices[1].w, 1.f / poly.vertices[2].w);
 		// copy vectors first
 		Vector3 first = poly.vertices[0].toVec3(), second = poly.vertices[1].toVec3(), third = poly.vertices[2].toVec3();
 		// in world coordinates (for lighting calculations) 
@@ -227,7 +229,9 @@ namespace GL {
 		// texture coordinates (set to zero if a texture isn't set)
 		Vector3 firstTex, secondTex, thirdTex;
 		if (poly.textures.size() != 0) {
-			firstTex = poly.textures[0], secondTex = poly.textures[1], thirdTex = poly.textures[2];
+			firstTex = poly.textures[0] * ws.x,
+			secondTex = poly.textures[1] * ws.y,
+			thirdTex = poly.textures[2] * ws.z;
 		}
 
 		// deformed triangles not needed to be rendered
@@ -243,6 +247,7 @@ namespace GL {
 			Util::swap(firstNorm, secondNorm);
 			Util::swap(firstTex, secondTex);
 			Util::swap(gouraudColors[0], gouraudColors[1]);
+			Util::swap(ws.x, ws.y);
 		}
 		if (first.y > third.y) {
 			Util::swap(first, third);
@@ -251,6 +256,7 @@ namespace GL {
 			Util::swap(firstNorm, thirdNorm);
 			Util::swap(firstTex, thirdTex);
 			Util::swap(gouraudColors[0], gouraudColors[2]);
+			Util::swap(ws.x, ws.z);
 		}
 		if (second.y > third.y) {
 			Util::swap(second, third);
@@ -259,6 +265,7 @@ namespace GL {
 			Util::swap(secondNorm, thirdNorm);
 			Util::swap(secondTex, thirdTex);
 			Util::swap(gouraudColors[1], gouraudColors[2]);
+			Util::swap(ws.y, ws.z);
 		}
 
 		// memorize z-values
@@ -300,11 +307,15 @@ namespace GL {
 				// find barycentric coordinates for interpolation
 				try {
 					Vector3 coordinates = Util::barycentric2d(Vector3(j, first.y + i, 0.f), first, second, third);
+					// find interpolated z-value
+					float z = coordinates.dot(zs);
+					float oneToW = coordinates.dot(ws);
+
 					// determine a color
 					Vector4 col = firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z;
 					if (iTexture >= 0 && iTexture < getTextureNumber()) {
 						// find a texture pixel
-						Vector4 texel = firstTex * coordinates.x + secondTex * coordinates.y + thirdTex * coordinates.z;
+						Vector4 texel = (firstTex * coordinates.x / oneToW + secondTex * coordinates.y / oneToW + thirdTex * coordinates.z / oneToW);
 						// resulting color = color from vertices * texel
 						col = sampleTexture(texel.x, texel.y);
 					}
@@ -348,8 +359,6 @@ namespace GL {
 
 					surfaceBrush->Color = Color::FromArgb(255, col.x * 255, col.y * 255, col.z * 255);
 
-					// find interpolated z-value
-					float z = coordinates.dot(zs);
 					//surfaceBrush->Color = Color::FromArgb(255, z * 255, z * 255, z * 255);
 					drawPoint(j, first.y + i, z, surfaceBrush);
 				}
@@ -363,16 +372,16 @@ namespace GL {
 
 	// Translate from homonegenous coordinates (w-division) and map to the viewport.
 	void Renderer::viewportTransform(GL::Polygon &poly) {
-		poly.vertices[0] = NDCtoViewport(poly.vertices[0].fromHomogeneous());
-		poly.vertices[1] = NDCtoViewport(poly.vertices[1].fromHomogeneous());
-		poly.vertices[2] = NDCtoViewport(poly.vertices[2].fromHomogeneous());
+		poly.vertices[0] = NDCtoViewport(poly.vertices[0].fromHomogeneous4());
+		poly.vertices[1] = NDCtoViewport(poly.vertices[1].fromHomogeneous4());
+		poly.vertices[2] = NDCtoViewport(poly.vertices[2].fromHomogeneous4());
 	}
 
 	// Remaps coordinates from [-1, 1] to the [0, viewport] space. 
-	Vector3 Renderer::NDCtoViewport(const Vector3 &vertex) {
-		return Vector3((int)((1.f + vertex.x) * viewportX / 2.f),
+	Vector4 Renderer::NDCtoViewport(const Vector4 &vertex) {
+		return Vector4((int)((1.f + vertex.x) * viewportX / 2.f),
 			           (int)((1.f - vertex.y) * viewportY / 2.f),
-			            vertex.z);
+			            vertex.z, vertex.w);
 	}
 
 	void Renderer::setGraphics(Graphics ^g) {
