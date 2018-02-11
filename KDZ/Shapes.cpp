@@ -80,7 +80,20 @@ namespace GL {
 				Vector4(0.5, 0.5, 1, 1), Vector4(0.5, 0.5, 1, 1), 
 				Vector4(0.5, 0.5, 1, 1), Vector4(0.5, 0.5, 1, 1)
 			};
-			return SceneObject(vertices, colors, indices);
+			const std::vector<Vector3> texCoords = {
+				// front
+				Vector3(1, 0, 0), Vector3(0.5, 1, 0), Vector3(0, 0, 0), 
+				// right
+				Vector3(1, 0, 0), Vector3(0.5, 1, 0), Vector3(0, 0, 0), 
+				// back
+				Vector3(1, 0, 0), Vector3(0.5, 1, 0), Vector3(0, 0, 0), 
+				// left
+				Vector3(1, 0, 0), Vector3(0.5, 1, 0), Vector3(0, 0, 0), 
+				// bottom
+				Vector3(1, 1, 0), Vector3(0, 1, 0), Vector3(0, 0, 0), 
+				Vector3(1, 1, 0), Vector3(0, 0, 0), Vector3(0, 1, 0), 
+			};
+			return SceneObject(vertices, colors, texCoords, indices);
 		}
 
 		// Generates an octahedron.
