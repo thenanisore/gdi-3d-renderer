@@ -62,8 +62,11 @@ namespace GL {
 			return true;
 		}
 		for (const Vector4 &vert : poly.vertices) {
+			// draw a poly if at least one vertex is inside
 			if (vert.x >= 0 || vert.x < viewportX || vert.y >= 0 || vert.y < viewportY) {
-				// draw a poly if at least one vertex is inside
+				return false;
+			}
+			if (vert.z < 1 && vert.z > 0) {
 				return false;
 			}
 		}
@@ -75,7 +78,7 @@ namespace GL {
 		// and the first vertex of the triangle is less than zero (here's reversed)
 		Vector3 norm = Util::normal(pol.vertices[0].toVec3(), pol.vertices[1].toVec3(), pol.vertices[2].toVec3());
 		Vector3 v0 = pol.vertices[0].toVec3();
-		Vector3 camPos = perspective ? Vector3() : Vector3(v0.x, v0.y, -1.f);
+		Vector3 camPos = perspective ? Vector3() : Vector3(v0.x, v0.y, 1.f);
 		bool visible = (camPos - v0).dot(norm) > 0.5;
 		return visible;
 	}
@@ -140,8 +143,8 @@ namespace GL {
 		}
 		Bitmap^ tex = textures[iTexture];
 
-		int ix = x * tex->Width;
-		int iy = (1 - y) * tex->Height;
+		int ix = x * (tex->Width - 1);
+		int iy = (1 - y) * (tex->Height - 1);
 		bool mirrorX = abs((int)x) % 2 != 0 ^ x <= 0;
 		bool mirrorY = abs((int)y) % 2 != 0 ^ y <= 0;
 
@@ -284,7 +287,7 @@ namespace GL {
 		// scan down to up
 		for (int i = 0; i < totalHeight; i++) {
 			// line is off the screen, don't draw
-			if (first.y >= viewportY) return;
+			if (first.y + i >= viewportY) return;
 			if (first.y + i < 0) continue;
 			bool secondHalf = i > second.y - first.y || second.y == first.y;
 			int segmentHeight = secondHalf ? third.y - second.y : second.y - first.y;

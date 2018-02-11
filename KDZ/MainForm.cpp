@@ -161,10 +161,6 @@ System::Void MainForm::cubeToolStripMenuItem_Click(System::Object ^ sender, Syst
 	addObject(GL::Objects::Shape::CUBE, 1);
 }
 
-System::Void MainForm::thorusToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
-	addObject(GL::Objects::Shape::TORUS, 3);
-}
-
 System::Void MainForm::pyramidToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
 	addObject(GL::Objects::Shape::PYRAMID, 1);
 }

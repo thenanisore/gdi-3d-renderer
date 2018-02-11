@@ -107,7 +107,7 @@ namespace KDZ {
 	private: System::Windows::Forms::Label^  shineMatLabel;
 	private: System::Windows::Forms::ToolStripMenuItem^  shapeToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  cubeToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  thorusToolStripMenuItem;
+
 	private: System::Windows::Forms::ToolStripMenuItem^  pyramidToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  tetrahedronToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  octahedronToolStripMenuItem;
@@ -153,7 +153,6 @@ private: System::Windows::Forms::RadioButton^  wrapRepeatRButton;
 		System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void addObject(GL::Objects::Shape shape, int precision);
 		System::Void cubeToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-		System::Void thorusToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void pyramidToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void tetrahedronToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void octahedronToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
@@ -480,7 +479,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->shapeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->cubeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->thorusToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pyramidToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tetrahedronToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->octahedronToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -602,6 +600,10 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->cullGroupBox = (gcnew System::Windows::Forms::GroupBox());
 			this->cullOffRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->cullOnRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->texWrapGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->wrapClampEdgeRButton = (gcnew System::Windows::Forms::RadioButton());
+			this->wrapMRepeatRButton = (gcnew System::Windows::Forms::RadioButton());
+			this->wrapRepeatRButton = (gcnew System::Windows::Forms::RadioButton());
 			this->statusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->objCountLabel = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->bgColorDialog = (gcnew System::Windows::Forms::ColorDialog());
@@ -610,10 +612,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->lightColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->loadTextureDialog = (gcnew System::Windows::Forms::OpenFileDialog());
-			this->texWrapGroupBox = (gcnew System::Windows::Forms::GroupBox());
-			this->wrapClampEdgeRButton = (gcnew System::Windows::Forms::RadioButton());
-			this->wrapMRepeatRButton = (gcnew System::Windows::Forms::RadioButton());
-			this->wrapRepeatRButton = (gcnew System::Windows::Forms::RadioButton());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -668,8 +666,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->colorGroupBox->SuspendLayout();
 			this->drawingModeGroupBox->SuspendLayout();
 			this->cullGroupBox->SuspendLayout();
-			this->statusStrip->SuspendLayout();
 			this->texWrapGroupBox->SuspendLayout();
+			this->statusStrip->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// menuStrip
@@ -718,10 +716,9 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			// shapeToolStripMenuItem
 			// 
-			this->shapeToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {
+			this->shapeToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
 				this->cubeToolStripMenuItem,
-					this->thorusToolStripMenuItem, this->pyramidToolStripMenuItem, this->tetrahedronToolStripMenuItem, this->octahedronToolStripMenuItem,
-					this->sphereToolStripMenuItem
+					this->pyramidToolStripMenuItem, this->tetrahedronToolStripMenuItem, this->octahedronToolStripMenuItem, this->sphereToolStripMenuItem
 			});
 			this->shapeToolStripMenuItem->Name = L"shapeToolStripMenuItem";
 			this->shapeToolStripMenuItem->Size = System::Drawing::Size(81, 24);
@@ -730,35 +727,28 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// cubeToolStripMenuItem
 			// 
 			this->cubeToolStripMenuItem->Name = L"cubeToolStripMenuItem";
-			this->cubeToolStripMenuItem->Size = System::Drawing::Size(164, 26);
+			this->cubeToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->cubeToolStripMenuItem->Text = L"Cube";
 			this->cubeToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::cubeToolStripMenuItem_Click);
-			// 
-			// thorusToolStripMenuItem
-			// 
-			this->thorusToolStripMenuItem->Name = L"thorusToolStripMenuItem";
-			this->thorusToolStripMenuItem->Size = System::Drawing::Size(164, 26);
-			this->thorusToolStripMenuItem->Text = L"Torus";
-			this->thorusToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::thorusToolStripMenuItem_Click);
 			// 
 			// pyramidToolStripMenuItem
 			// 
 			this->pyramidToolStripMenuItem->Name = L"pyramidToolStripMenuItem";
-			this->pyramidToolStripMenuItem->Size = System::Drawing::Size(164, 26);
+			this->pyramidToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->pyramidToolStripMenuItem->Text = L"Pyramid";
 			this->pyramidToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::pyramidToolStripMenuItem_Click);
 			// 
 			// tetrahedronToolStripMenuItem
 			// 
 			this->tetrahedronToolStripMenuItem->Name = L"tetrahedronToolStripMenuItem";
-			this->tetrahedronToolStripMenuItem->Size = System::Drawing::Size(164, 26);
+			this->tetrahedronToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->tetrahedronToolStripMenuItem->Text = L"Tetrahedron";
 			this->tetrahedronToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::tetrahedronToolStripMenuItem_Click);
 			// 
 			// octahedronToolStripMenuItem
 			// 
 			this->octahedronToolStripMenuItem->Name = L"octahedronToolStripMenuItem";
-			this->octahedronToolStripMenuItem->Size = System::Drawing::Size(164, 26);
+			this->octahedronToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->octahedronToolStripMenuItem->Text = L"Octahedron";
 			this->octahedronToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::octahedronToolStripMenuItem_Click);
 			// 
@@ -769,7 +759,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 					this->sphere1MenuItem, this->sphere2MenuItem, this->sphere3MenuItem, this->sphere4MenuItem, this->sphere5MenuItem
 			});
 			this->sphereToolStripMenuItem->Name = L"sphereToolStripMenuItem";
-			this->sphereToolStripMenuItem->Size = System::Drawing::Size(164, 26);
+			this->sphereToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->sphereToolStripMenuItem->Text = L"Sphere";
 			// 
 			// sphere0MenuItem
@@ -1444,8 +1434,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// camRotYawBar
 			// 
 			this->camRotYawBar->Location = System::Drawing::Point(6, 100);
-			this->camRotYawBar->Maximum = 269;
-			this->camRotYawBar->Minimum = 91;
+			this->camRotYawBar->Maximum = 225;
+			this->camRotYawBar->Minimum = 135;
 			this->camRotYawBar->Name = L"camRotYawBar";
 			this->camRotYawBar->Size = System::Drawing::Size(212, 56);
 			this->camRotYawBar->TabIndex = 8;
@@ -2175,30 +2165,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->cullOnRadioButton->UseVisualStyleBackColor = true;
 			this->cullOnRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::cullOnRadioButton_CheckedChanged);
 			// 
-			// statusStrip
-			// 
-			this->statusStrip->ImageScalingSize = System::Drawing::Size(20, 20);
-			this->statusStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->objCountLabel });
-			this->statusStrip->Location = System::Drawing::Point(0, 671);
-			this->statusStrip->Name = L"statusStrip";
-			this->statusStrip->Size = System::Drawing::Size(914, 25);
-			this->statusStrip->TabIndex = 3;
-			this->statusStrip->Text = L"statusStrip";
-			// 
-			// objCountLabel
-			// 
-			this->objCountLabel->Name = L"objCountLabel";
-			this->objCountLabel->Size = System::Drawing::Size(74, 20);
-			this->objCountLabel->Text = L"Objects: 0";
-			// 
-			// openFileDialog
-			// 
-			this->openFileDialog->Filter = L"3D Object files|*.object|Text files|*.txt|All files|*.*";
-			// 
-			// loadTextureDialog
-			// 
-			this->loadTextureDialog->Filter = L"PNG textures|*.png|JPEG textures|*.jpeg|All files|*.*";
-			// 
 			// texWrapGroupBox
 			// 
 			this->texWrapGroupBox->Controls->Add(this->wrapClampEdgeRButton);
@@ -2245,6 +2211,30 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->wrapRepeatRButton->Text = L"Repeat";
 			this->wrapRepeatRButton->UseVisualStyleBackColor = true;
 			this->wrapRepeatRButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::wrapRepeatRButton_CheckedChanged);
+			// 
+			// statusStrip
+			// 
+			this->statusStrip->ImageScalingSize = System::Drawing::Size(20, 20);
+			this->statusStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->objCountLabel });
+			this->statusStrip->Location = System::Drawing::Point(0, 671);
+			this->statusStrip->Name = L"statusStrip";
+			this->statusStrip->Size = System::Drawing::Size(914, 25);
+			this->statusStrip->TabIndex = 3;
+			this->statusStrip->Text = L"statusStrip";
+			// 
+			// objCountLabel
+			// 
+			this->objCountLabel->Name = L"objCountLabel";
+			this->objCountLabel->Size = System::Drawing::Size(74, 20);
+			this->objCountLabel->Text = L"Objects: 0";
+			// 
+			// openFileDialog
+			// 
+			this->openFileDialog->Filter = L"3D Object files|*.object|Text files|*.txt|All files|*.*";
+			// 
+			// loadTextureDialog
+			// 
+			this->loadTextureDialog->Filter = L"PNG textures|*.png|JPEG textures|*.jpeg|All files|*.*";
 			// 
 			// MainForm
 			// 
@@ -2335,10 +2325,10 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->drawingModeGroupBox->PerformLayout();
 			this->cullGroupBox->ResumeLayout(false);
 			this->cullGroupBox->PerformLayout();
-			this->statusStrip->ResumeLayout(false);
-			this->statusStrip->PerformLayout();
 			this->texWrapGroupBox->ResumeLayout(false);
 			this->texWrapGroupBox->PerformLayout();
+			this->statusStrip->ResumeLayout(false);
+			this->statusStrip->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

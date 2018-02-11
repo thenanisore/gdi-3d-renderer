@@ -36,9 +36,29 @@ namespace GL {
 				Vector4(0, 0, 0, 1), Vector4(0, 0, 1, 1), 
 				Vector4(0, 1, 0, 1), Vector4(0, 1, 1, 1), 
 				Vector4(1, 0, 0, 1), Vector4(1, 0, 1, 1), 
-				Vector4(1, 1, 0, 1), Vector4(1, 1, 1, 1)
+				Vector4(1, 1, 0, 1), Vector4(1, 1, 1, 1),
 			};
-			return SceneObject(vertices, colors, indices);
+			const std::vector<Vector3> texCoords = {
+				// front
+				Vector3(1, 0, 0), Vector3(1, 1, 0), Vector3(0, 1, 0), 
+				Vector3(0, 1, 0), Vector3(0, 0, 0), Vector3(1, 0, 0), 
+				// right
+				Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(1, 1, 0), 
+				Vector3(1, 1, 0), Vector3(0, 1, 0), Vector3(0, 0, 0), 
+				// back
+				Vector3(0, 1, 0), Vector3(0, 0, 0), Vector3(1, 0, 0), 
+				Vector3(1, 0, 0), Vector3(1, 1, 0), Vector3(0, 1, 0), 
+				// left
+				Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 0), 
+				Vector3(1, 0, 0), Vector3(1, 1, 0), Vector3(0, 1, 0), 
+				// top
+				Vector3(1, 0, 0), Vector3(1, 1, 0), Vector3(0, 1, 0), 
+				Vector3(0, 1, 0), Vector3(0, 0, 0), Vector3(1, 0, 0), 
+				// bottom
+				Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(1, 1, 0), 
+				Vector3(1, 1, 0), Vector3(0, 1, 0), Vector3(0, 0, 0),
+			};
+			return SceneObject(vertices, colors, texCoords, indices);
 		}
 
 		// Returns a pyramid.
@@ -83,12 +103,6 @@ namespace GL {
 		// Generates a tetrahedron.
 		SceneObject tetrahedron() {
 			// TODO: tetraedron
-			return cube();
-		}
-
-		// Generates a torus.
-		SceneObject torus() {
-			// TODO: torus
 			return cube();
 		}
 
@@ -204,8 +218,6 @@ namespace GL {
 				return octahedron();
 			case SPHERE:
 				return sphere(precision, DEFAULT_RADIUS);
-			case TORUS:
-				return torus();
 			}
 		}
 	}
