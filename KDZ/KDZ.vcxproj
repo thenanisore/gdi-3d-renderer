@@ -157,7 +157,6 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Shapes.h" />
-    <ClInclude Include="Texture.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Matrix4.h" />

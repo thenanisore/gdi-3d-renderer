@@ -60,7 +60,7 @@ namespace GL {
 				Matrix4 model = object.getModelMatrix();
 				// notify the renderer if the current object is selected
 				renderer->isSelectedObject = (&sceneObjects[selectedObject] == &object);
-				renderer->setTextureIndex(sceneObjects[selectedObject].getTextureIndex());
+				renderer->setTextureIndex(object.getTextureIndex());
 				// pass the current object and transformation matrices in the renderer
 				renderer->renderObject(object, model, view, projection, lightSource, drawWireframe, drawSolid);
 				renderer->isSelectedObject = false;

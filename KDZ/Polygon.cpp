@@ -16,8 +16,9 @@ namespace GL {
 
 	Polygon::Polygon(const Vector4 &first, const Vector4 &second, const Vector4 &third) {
 		vertices = std::vector<Vector4>{ first, second, third };
-		// colors are initially all zero (black/transparent)
-		colors = std::vector<Vector4> { Vector4(), Vector4(), Vector4() };
+		// colors are initially white
+		colors = std::vector<Vector4> { Vector4(1.f, 1.f, 1.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f) };
+		textures = std::vector<Vector3> { Vector3(), Vector3(), Vector3() };
 		calculateNormals();
 	}
 
@@ -55,6 +56,7 @@ namespace GL {
 		for (int i = 0; i < vertices.size(); i++) {
 			transformed.vertices[i] = mat * vertices[i];
 			transformed.colors[i] = colors[i];
+			transformed.textures[i] = textures[i];
 			// we need a different matrix for the normal transformation (inversed-transposed).
 			transformed.normals[i] = (normalMat * normals[i]).normalized();
 		}

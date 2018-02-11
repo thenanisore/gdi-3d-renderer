@@ -159,7 +159,7 @@ namespace GL {
 		textureIndex = -1;
 	}
 
-	int SceneObject::getTextureIndex() {
+	int SceneObject::getTextureIndex() const {
 		return textureIndex;
 	}
 

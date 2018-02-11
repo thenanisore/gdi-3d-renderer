@@ -91,6 +91,8 @@ namespace GL {
 		List<Bitmap^>^ textures;
 		// Selected texture.
 		int iTexture;
+		// Returns a (x, y) pixel of the selected texture.
+		Vector4 sampleTexture(float x, float y);
 		// True, if a polygon is entirely off the screen.
 		bool toClip(const Polygon & poly);
 		// True, if a polygon is back-faced.

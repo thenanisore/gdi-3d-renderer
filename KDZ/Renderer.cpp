@@ -131,6 +131,22 @@ namespace GL {
 		}
 	}
 
+	float nfmod(float a, float b) {
+		return a - b * floor(a / b);
+	}
+
+	// Returns a (x, y) pixel of the selected texture.
+	Vector4 Renderer::sampleTexture(float x, float y) {
+		if (iTexture < 0 || iTexture > getTextureNumber()) {
+			// return white color if no texture
+			return Vector4(1.f, 1.f, 1.f, 1.f);
+		}
+		Bitmap^ tex = textures[iTexture];
+		int ix = abs(fmod(x * (tex->Width - 1), tex->Width));
+		int iy = abs(fmod((1 - y) * (tex->Height - 1), tex->Height));
+		return Util::colorToVec(tex->GetPixel(ix, iy));
+	}
+
 	// Draws a line using the Bresenham's algorithm with Z-testing.
 	void Renderer::drawLine(const Vector3 &from, const Vector3 &to) {
 		int x = from.x, y = from.y;
@@ -194,18 +210,24 @@ namespace GL {
 		// normals (in world coordinates, for lighting calculations)
 		Vector3 firstNorm = worldPoly.normals[0], secondNorm = worldPoly.normals[1], thirdNorm = worldPoly.normals[2];
 		Vector4 firstColor = poly.colors[0], secondColor = poly.colors[1], thirdColor = poly.colors[2];
+		// texture coordinates (set to zero if a texture isn't set)
+		Vector3 firstTex, secondTex, thirdTex;
+		if (poly.textures.size() != 0) {
+			firstTex = poly.textures[0], secondTex = poly.textures[1], thirdTex = poly.textures[2];
+		}
 
 		// deformed triangles not needed to be rendered
 		if ((first.y == second.y && first.y == third.y) || (first.x == second.x && first.x == third.x)) {
 			return;
 		}
 
-		// sort the vertices, third -> second -> first
+		// sort the vertices with all the data, third -> second -> first
 		if (first.y > second.y) {
 			Util::swap(first, second);
 			Util::swap(firstW, secondW);
 			Util::swap(firstColor, secondColor);
 			Util::swap(firstNorm, secondNorm);
+			Util::swap(firstTex, secondTex);
 			Util::swap(gouraudColors[0], gouraudColors[1]);
 		}
 		if (first.y > third.y) {
@@ -213,6 +235,7 @@ namespace GL {
 			Util::swap(firstW, thirdW);
 			Util::swap(firstColor, thirdColor);
 			Util::swap(firstNorm, thirdNorm);
+			Util::swap(firstTex, thirdTex);
 			Util::swap(gouraudColors[0], gouraudColors[2]);
 		}
 		if (second.y > third.y) {
@@ -220,6 +243,7 @@ namespace GL {
 			Util::swap(secondW, thirdW);
 			Util::swap(secondColor, thirdColor);
 			Util::swap(secondNorm, thirdNorm);
+			Util::swap(secondTex, thirdTex);
 			Util::swap(gouraudColors[1], gouraudColors[2]);
 		}
 
@@ -264,6 +288,15 @@ namespace GL {
 					Vector3 coordinates = Util::barycentric2d(Vector3(j, first.y + i, 0.f), first, second, third);
 					// determine a color
 					Vector4 col = firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z;
+					if (iTexture >= 0 && iTexture < getTextureNumber()) {
+						// find a texture pixel
+						Vector4 texel = firstTex * coordinates.x + secondTex * coordinates.y + thirdTex * coordinates.z;
+						// resulting color = color from vertices * texel
+						col = sampleTexture(texel.x, texel.y);
+					}
+					else {
+						col = firstColor * coordinates.x + secondColor * coordinates.y + thirdColor * coordinates.z;
+					}
 					// determine a fragment position (in world coords)
 					Vector3 fragPos = (firstW * coordinates.x + secondW * coordinates.y + thirdW * coordinates.z);
 					// determine an interpolated normal

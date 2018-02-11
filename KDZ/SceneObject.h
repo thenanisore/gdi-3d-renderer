@@ -48,7 +48,7 @@ namespace GL {
 		
 		void setTextureIndex(int iTex);
 		void removeTexture();
-		int getTextureIndex();
+		int getTextureIndex() const;
 
 		// Sets the colors of the SceneObject's polygons. If vertices = true, then it assumes the vector defines the color in each vertex (3 per polygon).
 		void setPolygonColors(const std::vector<Vector4> &cols, bool vertices = false);
