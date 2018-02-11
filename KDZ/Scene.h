@@ -47,7 +47,7 @@ namespace GL {
 
 		void setCameraPosition(int x_coord, int y_coord, int z_coord);
 		void setLightParams(float _ambient, float _diffuse, float _specular);
-		Vector3 getLightParams();
+		Vector3 getLightParams(bool worldParams) const;
 		void setCameraRotation(float pitch, float yawn, float roll);
 		Vector3 getCameraPosition(bool worldCoords) const;
 		Vector3 getCameraRotation(bool worldCoords) const;
@@ -56,14 +56,14 @@ namespace GL {
 
 		// methods to manipulate lighting:
 
-		Vector3 getLightPosition(bool worldCoords);
+		Vector3 getLightPosition(bool worldCoords) const;
 		void setLightPosition(int x_coord, int y_coord, int z_coord);
 		void setLightColor(Color^ lightColor);
 		void setLightOn(bool isOn);
 		void setLightMode(LightMode _mode);
-		Color getLightColor();
-		bool isLightOn();
-		LightMode getLightMode();
+		Color getLightColor() const;
+		bool isLightOn() const;
+		LightMode getLightMode() const;
 		void resetLighting();
 
 		// material parameters manipulation:

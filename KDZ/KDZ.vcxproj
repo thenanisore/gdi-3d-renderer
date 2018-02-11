@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="objects\cube.object" />
+    <None Include="objects\cube_repeated.object" />
     <None Include="objects\diamond.object" />
     <None Include="objects\ramiel.object" />
   </ItemGroup>

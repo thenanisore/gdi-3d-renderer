@@ -161,23 +161,23 @@ namespace GL {
 
 	// methods to manipulate the light source:
 
-	Vector3 Scene::getLightPosition(bool worldCoords) {
+	Vector3 Scene::getLightPosition(bool worldCoords) const {
 		return lightSource.position / (worldCoords ? 1.f : lightPositionMultiplier);
 	}
 
 	void Scene::setLightPosition(int x_coord, int y_coord, int z_coord) {
-		lightSource.position = Vector3(x_coord, y_coord, z_coord);
+		lightSource.position = Vector3(x_coord, y_coord, z_coord) * lightPositionMultiplier;
 	}
 
-	Color Scene::getLightColor() {
+	Color Scene::getLightColor() const {
 		return Util::vecToColor(lightSource.color);
 	}
 
-	bool Scene::isLightOn() {
+	bool Scene::isLightOn() const {
 		return lightSource.on;
 	}
 
-	LightMode Scene::getLightMode() {
+	LightMode Scene::getLightMode() const {
 		return lightSource.mode;
 	}
 
@@ -199,10 +199,10 @@ namespace GL {
 		lightSource.setSpecular(_spec * lightSpecularMultiplier);
 	}
 
-	Vector3 Scene::getLightParams() {
-		float amb = lightSource.getAmbient() / lightAmbientMultiplier;
-		float diff = lightSource.getDiffuse() / lightDiffuseMultiplier;
-		float spec = lightSource.getSpecular() / lightSpecularMultiplier;
+	Vector3 Scene::getLightParams(bool worldParams) const {
+		float amb = lightSource.getAmbient() / (worldParams ? 1.f : lightAmbientMultiplier);
+		float diff = lightSource.getDiffuse() / (worldParams ? 1.f : lightDiffuseMultiplier);
+		float spec = lightSource.getSpecular() / (worldParams ? 1.f : lightSpecularMultiplier);
 		return Vector3(amb, diff, spec);
 	}
 

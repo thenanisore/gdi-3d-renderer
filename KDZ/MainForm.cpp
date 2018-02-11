@@ -110,7 +110,7 @@ System::Void MainForm::updateStatusBar() {
 	GL::Vector3 camPos = mainScene->getCameraPosition(true);
 	info += "Camera | Pos : (" + camPos.x + ", " + camPos.y + ", " + camPos.z + ") | ";
 	GL::Vector3 camRot = mainScene->getCameraRotation(true);
-	info += "Pitch : " + camRot.x + " | Yaw : " + camRot.y + " |";
+	info += "Pitch : " + camRot.x + " | Yaw : " + camRot.y + " | ";
 	GL::Vector3 lightPos = mainScene->getLightPosition(true);
 	info += "Light | Pos : (" + lightPos.x + ", " + lightPos.y + ", " + lightPos.z + ") | ";
 	objCountLabel->Text = info;
@@ -564,7 +564,7 @@ System::Void MainForm::updateLightParams() {
 	Color lightColor = mainScene->getLightColor();
 	bool isOn = mainScene->isLightOn();
 	GL::LightMode mode = mainScene->getLightMode();
-	GL::Vector3 params = mainScene->getLightParams();
+	GL::Vector3 params = mainScene->getLightParams(false);
 	setLightParams(pos.x, pos.y, pos.z, isOn, mode, lightColor, (int)params.x, (int)params.y, (int)params.z);
 }
 
