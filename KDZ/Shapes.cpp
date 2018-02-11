@@ -110,12 +110,47 @@ namespace GL {
 				Vector4(1, 1, 1, 1), Vector4(1, 0, 1, 1), Vector4(1, 0, 1, 1),
 				Vector4(1, 0, 1, 1), Vector4(1, 0, 1, 1), Vector4(1, 1, 1, 1)
 			};
-			return SceneObject(vertices, colors, indices);
+			const std::vector<Vector3> texCoords = {
+				Vector3(0.5, 0, 0), Vector3(1, 1, 0), Vector3(0, 1, 0), 
+				Vector3(0.5, 0, 0), Vector3(1, 1, 0), Vector3(0, 1, 0), 
+				Vector3(0.5, 0, 0), Vector3(1, 1, 0), Vector3(0, 1, 0), 
+				Vector3(0.5, 0, 0), Vector3(1, 1, 0), Vector3(0, 1, 0), 
+				Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0.5, 1, 0), 
+				Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0.5, 1, 0), 
+				Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0.5, 1, 0), 
+				Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0.5, 1, 0), 
+			};
+			return SceneObject(vertices, colors, texCoords, indices);
 		}
 
 		// Generates a tetrahedron.
 		SceneObject tetrahedron() {
-			// TODO: tetraedron
+			const std::vector<Vector3> vertices = {
+				Vector3(0, 1, 0), 
+				Vector3(sqrt(8.f / 9.f), -1.f / 3.f, 0),
+				Vector3(-sqrt(2.f / 9.f), -1.f / 3.f, sqrt(2.f / 3.f)),
+				Vector3(-sqrt(2.f / 9.f), -1.f / 3.f, -sqrt(2.f / 3.f)), 
+			};
+			const std::vector<Vector3> indices = {
+				Vector3(1, 0, 2),
+				Vector3(3, 0, 1),
+				Vector3(2, 0, 3),
+				Vector3(1, 2, 3), // bottom
+			};
+			const std::vector<Vector4> colors = {
+				Vector4(1, 1, 1, 1), 
+				Vector4(1, 0.5, 1, 1),
+				Vector4(1, 0.5, 1, 1), 
+				Vector4(1, 0.5, 1, 1), 
+			};
+			const std::vector<Vector3> texCoords = {
+				Vector3(1, 0, 0), Vector3(0.5, 1, 0), Vector3(0, 0, 0), 
+				Vector3(1, 0, 0), Vector3(0.5, 1, 0), Vector3(0, 0, 0), 
+				Vector3(1, 0, 0), Vector3(0.5, 1, 0), Vector3(0, 0, 0), 
+				// bottom
+				Vector3(1, 0, 0), Vector3(0.5, 1, 0), Vector3(0, 0, 0), 
+			};
+			return SceneObject(vertices, colors, texCoords, indices);
 			return cube();
 		}
 
