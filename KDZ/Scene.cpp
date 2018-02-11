@@ -30,6 +30,7 @@ namespace GL {
 	Scene::Scene() : camera(), selectedObject(0) {
 		lightSource = Light(camera.getPosition());
 		faceCull = true;
+		wrapMode = DEFAULT_WRAP_MODE;
 		perspective = true;
 		drawWireframe = false;
 		drawSolid = true;
@@ -39,6 +40,7 @@ namespace GL {
 		renderer->clearScreen();
 		renderer->clearZBuffer();
 		renderer->setFaceCulling(faceCull);
+		renderer->setWrapMode(wrapMode);
 		
 		// calculate matrices
 		Matrix4 view = camera.getViewMatrix();
@@ -283,6 +285,10 @@ namespace GL {
 		faceCull = cull;
 	}
 
+	void Scene::setWrapMode(TextureWrapMode mode) {
+		wrapMode = mode;
+	}
+
 	bool Scene::isEmpty() {
 		return sceneObjects.size() == 0;
 	}
@@ -309,6 +315,10 @@ namespace GL {
 
 	bool Scene::isCulling() {
 		return faceCull;
+	}
+
+	TextureWrapMode Scene::getWrapMode() {
+		return wrapMode;
 	}
 
 	unsigned int Scene::objectCount() {

@@ -172,9 +172,9 @@ void test4() {
 }
 
 int main(array<System::String ^> ^args) {
-	GL::Vector3 norm(0, -1, 0);
-	GL::Vector3 a(1.5, 2.f, 0);
-	print(a - norm * (2.f * norm.dot(a)));
+	int a = 20, b = -20, width = 100;
+	std::cout << (width + (20 % 100)) % width << " " <<  (width + (-20 % 100)) % width << " " << fmod(20, 100) << " " << fmod(-20, 100) << std::endl;
+	std::cout << (width + (120 % 100)) % width << " " <<  (width + (-120 % 100)) % width << " " << fmod(120, 100) << " " << fmod(-120, 100) << std::endl;
 
 	std::getchar();
     return 0;

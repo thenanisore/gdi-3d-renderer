@@ -85,6 +85,7 @@ namespace GL {
 		// Sets drawing mode flags: wireframe and/or solid.
 		void setDrawingMode(bool wireframe, bool solid);
 		void setCulling(bool cull);
+		void setWrapMode(TextureWrapMode mode);
 		// Returns true is the scene contains no objects.
 		bool isEmpty();
 		bool isSelectedFirst();
@@ -93,6 +94,7 @@ namespace GL {
 		bool isWireframeMode();
 		bool isSolidMode();
 		bool isCulling();
+		TextureWrapMode getWrapMode();
 		unsigned int objectCount();
 		unsigned int getSelected();
 
@@ -107,6 +109,7 @@ namespace GL {
 		int selectedObject;
 		bool perspective;
 		bool faceCull;
+		TextureWrapMode wrapMode;
 		bool drawWireframe;
 		bool drawSolid;
 	};

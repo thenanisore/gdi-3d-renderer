@@ -130,6 +130,10 @@ private: System::Windows::Forms::Button^  loadTextureButton;
 private: System::Windows::Forms::Label^  textureLabel;
 private: System::Windows::Forms::OpenFileDialog^  loadTextureDialog;
 private: System::Windows::Forms::Button^  removeTextureButton;
+private: System::Windows::Forms::GroupBox^  texWrapGroupBox;
+private: System::Windows::Forms::RadioButton^  wrapClampEdgeRButton;
+private: System::Windows::Forms::RadioButton^  wrapMRepeatRButton;
+private: System::Windows::Forms::RadioButton^  wrapRepeatRButton;
 
 
 
@@ -194,7 +198,7 @@ private: System::Windows::Forms::Button^  removeTextureButton;
 		System::Void setObjectsParams(int objPosX, int objPosY, int objPosZ, int objScaleX, int objScaleY, int objScaleZ, int objRotX, int objRotY, int objRotZ, bool objReflXY, bool objReflXZ, bool objReflYZ);
 		System::Void setCameraParams(int camPosX, int camPosY, int camPosZ, int camPitch, int camYaw, bool perspective);
 		System::Void setLightParams(int lightPosX, int lightPosY, int lightPosZ, bool isOn, GL::LightMode mode, Color lightColor, int ambi, int diff, int spec);
-		System::Void setOtherParams(Color bgColor, Color wfColor, Color selectedColor, bool wfMode, bool solidMode, bool faceCull);
+		System::Void setOtherParams(Color bgColor, Color wfColor, Color selectedColor, bool wfMode, bool solidMode, bool faceCull, GL::TextureWrapMode wrapMode);
 		System::Void resetObjButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		System::Void resetCamButton_Click(System::Object^  sender, System::EventArgs^  e); 
 		// object reflection checkboxes:
@@ -249,6 +253,11 @@ private: System::Windows::Forms::Button^  removeTextureButton;
 		// texture
 		System::Void loadTextureButton_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void removeTextureButton_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void changeWrappingMode();
+		// texture wrapping
+		System::Void wrapRepeatRButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void wrapMRepeatRButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void wrapClampEdgeRButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 
 	private: System::Windows::Forms::Button^  prevObjButton;
 	private: System::Windows::Forms::Button^  nextObjButton;
@@ -574,6 +583,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->matColorButton = (gcnew System::Windows::Forms::Button());
 			this->matColorLabel = (gcnew System::Windows::Forms::Label());
 			this->textureGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->removeTextureButton = (gcnew System::Windows::Forms::Button());
 			this->loadTextureButton = (gcnew System::Windows::Forms::Button());
 			this->textureLabel = (gcnew System::Windows::Forms::Label());
 			this->otherTabPage = (gcnew System::Windows::Forms::TabPage());
@@ -600,7 +610,10 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->lightColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->loadTextureDialog = (gcnew System::Windows::Forms::OpenFileDialog());
-			this->removeTextureButton = (gcnew System::Windows::Forms::Button());
+			this->texWrapGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->wrapClampEdgeRButton = (gcnew System::Windows::Forms::RadioButton());
+			this->wrapMRepeatRButton = (gcnew System::Windows::Forms::RadioButton());
+			this->wrapRepeatRButton = (gcnew System::Windows::Forms::RadioButton());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -656,6 +669,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->drawingModeGroupBox->SuspendLayout();
 			this->cullGroupBox->SuspendLayout();
 			this->statusStrip->SuspendLayout();
+			this->texWrapGroupBox->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// menuStrip
@@ -1947,6 +1961,16 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->textureGroupBox->TabStop = false;
 			this->textureGroupBox->Text = L"Texture";
 			// 
+			// removeTextureButton
+			// 
+			this->removeTextureButton->Location = System::Drawing::Point(87, 157);
+			this->removeTextureButton->Name = L"removeTextureButton";
+			this->removeTextureButton->Size = System::Drawing::Size(125, 23);
+			this->removeTextureButton->TabIndex = 19;
+			this->removeTextureButton->Text = L"Remove";
+			this->removeTextureButton->UseVisualStyleBackColor = true;
+			this->removeTextureButton->Click += gcnew System::EventHandler(this, &MainForm::removeTextureButton_Click);
+			// 
 			// loadTextureButton
 			// 
 			this->loadTextureButton->BackColor = System::Drawing::Color::White;
@@ -1986,6 +2010,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->otherFlowLayoutPanel->Controls->Add(this->colorGroupBox);
 			this->otherFlowLayoutPanel->Controls->Add(this->drawingModeGroupBox);
 			this->otherFlowLayoutPanel->Controls->Add(this->cullGroupBox);
+			this->otherFlowLayoutPanel->Controls->Add(this->texWrapGroupBox);
 			this->otherFlowLayoutPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->otherFlowLayoutPanel->FlowDirection = System::Windows::Forms::FlowDirection::TopDown;
 			this->otherFlowLayoutPanel->Location = System::Drawing::Point(3, 3);
@@ -2083,12 +2108,10 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// bothRadioButton
 			// 
 			this->bothRadioButton->AutoSize = true;
-			this->bothRadioButton->Checked = true;
 			this->bothRadioButton->Location = System::Drawing::Point(7, 76);
 			this->bothRadioButton->Name = L"bothRadioButton";
 			this->bothRadioButton->Size = System::Drawing::Size(58, 21);
 			this->bothRadioButton->TabIndex = 2;
-			this->bothRadioButton->TabStop = true;
 			this->bothRadioButton->Text = L"Both";
 			this->bothRadioButton->UseVisualStyleBackColor = true;
 			this->bothRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::bothRadioButton_CheckedChanged);
@@ -2096,10 +2119,12 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// solidRadioButton
 			// 
 			this->solidRadioButton->AutoSize = true;
+			this->solidRadioButton->Checked = true;
 			this->solidRadioButton->Location = System::Drawing::Point(6, 49);
 			this->solidRadioButton->Name = L"solidRadioButton";
 			this->solidRadioButton->Size = System::Drawing::Size(60, 21);
 			this->solidRadioButton->TabIndex = 1;
+			this->solidRadioButton->TabStop = true;
 			this->solidRadioButton->Text = L"Solid";
 			this->solidRadioButton->UseVisualStyleBackColor = true;
 			this->solidRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::solidRadioButton_CheckedChanged);
@@ -2133,7 +2158,6 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->cullOffRadioButton->Name = L"cullOffRadioButton";
 			this->cullOffRadioButton->Size = System::Drawing::Size(48, 21);
 			this->cullOffRadioButton->TabIndex = 1;
-			this->cullOffRadioButton->TabStop = true;
 			this->cullOffRadioButton->Text = L"Off";
 			this->cullOffRadioButton->UseVisualStyleBackColor = true;
 			this->cullOffRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::cullOffRadioButton_CheckedChanged);
@@ -2141,6 +2165,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// cullOnRadioButton
 			// 
 			this->cullOnRadioButton->AutoSize = true;
+			this->cullOnRadioButton->Checked = true;
 			this->cullOnRadioButton->Location = System::Drawing::Point(7, 22);
 			this->cullOnRadioButton->Name = L"cullOnRadioButton";
 			this->cullOnRadioButton->Size = System::Drawing::Size(48, 21);
@@ -2174,15 +2199,52 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->loadTextureDialog->Filter = L"PNG textures|*.png|JPEG textures|*.jpeg|All files|*.*";
 			// 
-			// removeTextureButton
+			// texWrapGroupBox
 			// 
-			this->removeTextureButton->Location = System::Drawing::Point(87, 157);
-			this->removeTextureButton->Name = L"removeTextureButton";
-			this->removeTextureButton->Size = System::Drawing::Size(125, 23);
-			this->removeTextureButton->TabIndex = 19;
-			this->removeTextureButton->Text = L"Remove";
-			this->removeTextureButton->UseVisualStyleBackColor = true;
-			this->removeTextureButton->Click += gcnew System::EventHandler(this, &MainForm::removeTextureButton_Click);
+			this->texWrapGroupBox->Controls->Add(this->wrapClampEdgeRButton);
+			this->texWrapGroupBox->Controls->Add(this->wrapMRepeatRButton);
+			this->texWrapGroupBox->Controls->Add(this->wrapRepeatRButton);
+			this->texWrapGroupBox->Location = System::Drawing::Point(3, 330);
+			this->texWrapGroupBox->Name = L"texWrapGroupBox";
+			this->texWrapGroupBox->Size = System::Drawing::Size(235, 108);
+			this->texWrapGroupBox->TabIndex = 3;
+			this->texWrapGroupBox->TabStop = false;
+			this->texWrapGroupBox->Text = L"Texture Wrapping";
+			// 
+			// wrapClampEdgeRButton
+			// 
+			this->wrapClampEdgeRButton->AutoSize = true;
+			this->wrapClampEdgeRButton->Location = System::Drawing::Point(10, 75);
+			this->wrapClampEdgeRButton->Name = L"wrapClampEdgeRButton";
+			this->wrapClampEdgeRButton->Size = System::Drawing::Size(120, 21);
+			this->wrapClampEdgeRButton->TabIndex = 5;
+			this->wrapClampEdgeRButton->Text = L"Clamp to edge";
+			this->wrapClampEdgeRButton->UseVisualStyleBackColor = true;
+			this->wrapClampEdgeRButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::wrapClampEdgeRButton_CheckedChanged);
+			// 
+			// wrapMRepeatRButton
+			// 
+			this->wrapMRepeatRButton->AutoSize = true;
+			this->wrapMRepeatRButton->Location = System::Drawing::Point(9, 48);
+			this->wrapMRepeatRButton->Name = L"wrapMRepeatRButton";
+			this->wrapMRepeatRButton->Size = System::Drawing::Size(127, 21);
+			this->wrapMRepeatRButton->TabIndex = 4;
+			this->wrapMRepeatRButton->Text = L"Mirrored repeat";
+			this->wrapMRepeatRButton->UseVisualStyleBackColor = true;
+			this->wrapMRepeatRButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::wrapMRepeatRButton_CheckedChanged);
+			// 
+			// wrapRepeatRButton
+			// 
+			this->wrapRepeatRButton->AutoSize = true;
+			this->wrapRepeatRButton->Checked = true;
+			this->wrapRepeatRButton->Location = System::Drawing::Point(10, 21);
+			this->wrapRepeatRButton->Name = L"wrapRepeatRButton";
+			this->wrapRepeatRButton->Size = System::Drawing::Size(75, 21);
+			this->wrapRepeatRButton->TabIndex = 3;
+			this->wrapRepeatRButton->TabStop = true;
+			this->wrapRepeatRButton->Text = L"Repeat";
+			this->wrapRepeatRButton->UseVisualStyleBackColor = true;
+			this->wrapRepeatRButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::wrapRepeatRButton_CheckedChanged);
 			// 
 			// MainForm
 			// 
@@ -2275,6 +2337,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->cullGroupBox->PerformLayout();
 			this->statusStrip->ResumeLayout(false);
 			this->statusStrip->PerformLayout();
+			this->texWrapGroupBox->ResumeLayout(false);
+			this->texWrapGroupBox->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

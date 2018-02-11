@@ -15,6 +15,10 @@
 
 namespace GL {
 
+	enum TextureWrapMode { REPEAT, MIRRORED_REPEAT, CLAMP_TO_EDGE };
+
+	const TextureWrapMode DEFAULT_WRAP_MODE = TextureWrapMode::REPEAT;
+
 	using namespace System;
 	using namespace System::Drawing;
 	using namespace System::Collections::Generic;
@@ -43,6 +47,8 @@ namespace GL {
 		Bitmap^ getTexture(int iTex);
 		// Sets a current texture.
 		void setTextureIndex(int iTex);
+		// Sets a texture edge sampling mode.
+		void setWrapMode(TextureWrapMode mode);
 		// Returns the background color.
 		Color getBGColor();
 		// Returns the wireframe color.
@@ -91,6 +97,8 @@ namespace GL {
 		List<Bitmap^>^ textures;
 		// Selected texture.
 		int iTexture;
+		// Specifies the edge sampling behavior.
+		TextureWrapMode wrapMode;
 		// Returns a (x, y) pixel of the selected texture.
 		Vector4 sampleTexture(float x, float y);
 		// True, if a polygon is entirely off the screen.

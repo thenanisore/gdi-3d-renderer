@@ -232,7 +232,8 @@ System::Void MainForm::setCameraParams(int camPosX, int camPosY, int camPosZ, in
 	isSettingParams = false;
 }
 
-System::Void MainForm::setOtherParams(Color bgColor, Color wfColor, Color selectedColor, bool wfMode, bool solidMode, bool faceCull) {
+System::Void MainForm::setOtherParams(Color bgColor, Color wfColor, Color selectedColor, bool wfMode,
+	bool solidMode, bool faceCull, GL::TextureWrapMode wrapMode) {
 	// set other parameters
 	isSettingParams = true;
 	wfColorButton->BackColor = wfColor;
@@ -247,6 +248,17 @@ System::Void MainForm::setOtherParams(Color bgColor, Color wfColor, Color select
 	}
 	cullOnRadioButton->Checked = faceCull;
 	cullOffRadioButton->Checked = !faceCull;
+	switch (wrapMode) {
+	case GL::TextureWrapMode::REPEAT:
+		wrapRepeatRButton->Checked = true;
+		break;
+	case GL::TextureWrapMode::MIRRORED_REPEAT:
+		wrapMRepeatRButton->Checked = true;
+		break;
+	case GL::TextureWrapMode::CLAMP_TO_EDGE:
+		wrapClampEdgeRButton->Checked = true;
+		break;
+	}
 	isSettingParams = false;
 }
 
@@ -274,7 +286,8 @@ System::Void MainForm::updateOtherParams() {
 	bool wf = mainScene->isWireframeMode();
 	bool solid = mainScene->isSolidMode();
 	bool cull = mainScene->isCulling();
-	setOtherParams(bg, wfCol, sel, wf, solid, cull);
+	GL::TextureWrapMode wrapMode = mainScene->getWrapMode();
+	setOtherParams(bg, wfCol, sel, wf, solid, cull, wrapMode);
 }
 
 // Sets scene after the MainForm is shown.
@@ -693,7 +706,6 @@ System::Void MainForm::changeMaterialParams() {
 	renderScene();
 }
 
-
 System::Void MainForm::ambiMatBar_Scroll(System::Object ^ sender, System::EventArgs ^ e) {
 	changeMaterialParams();
 }
@@ -735,6 +747,33 @@ System::Void MainForm::removeTextureButton_Click(System::Object ^ sender, System
 	checkButtons();
 	updateMaterialParams();
 	renderScene();
+}
+
+// Texture wrapping params:
+
+System::Void MainForm::changeWrappingMode() {
+	if (wrapRepeatRButton->Checked) {
+		mainScene->setWrapMode(GL::TextureWrapMode::REPEAT);
+	}
+	else if (wrapMRepeatRButton->Checked) {
+		mainScene->setWrapMode(GL::TextureWrapMode::MIRRORED_REPEAT);
+	}
+	else if (wrapClampEdgeRButton->Checked) {
+		mainScene->setWrapMode(GL::TextureWrapMode::CLAMP_TO_EDGE);
+	}
+	renderScene();
+}
+
+System::Void MainForm::wrapRepeatRButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeWrappingMode();
+}
+
+System::Void MainForm::wrapMRepeatRButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeWrappingMode();
+}
+
+System::Void MainForm::wrapClampEdgeRButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e) {
+	changeWrappingMode();
 }
 
 

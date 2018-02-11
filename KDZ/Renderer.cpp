@@ -29,6 +29,7 @@ namespace GL {
 		setViewport(viewportWidth, viewportHeight);
 		// initialize textures list
 		textures = gcnew List<Bitmap^>();
+		wrapMode = DEFAULT_WRAP_MODE;
 		iTexture = -1;
 	}
 
@@ -131,10 +132,6 @@ namespace GL {
 		}
 	}
 
-	float nfmod(float a, float b) {
-		return a - b * floor(a / b);
-	}
-
 	// Returns a (x, y) pixel of the selected texture.
 	Vector4 Renderer::sampleTexture(float x, float y) {
 		if (iTexture < 0 || iTexture > getTextureNumber()) {
@@ -142,8 +139,25 @@ namespace GL {
 			return Vector4(1.f, 1.f, 1.f, 1.f);
 		}
 		Bitmap^ tex = textures[iTexture];
-		int ix = abs(fmod(x * (tex->Width - 1), tex->Width));
-		int iy = abs(fmod((1 - y) * (tex->Height - 1), tex->Height));
+
+		int ix = x * tex->Width;
+		int iy = (1 - y) * tex->Height;
+		bool mirrorX = abs((int)x) % 2 != 0 ^ x <= 0;
+		bool mirrorY = abs((int)y) % 2 != 0 ^ y <= 0;
+
+		switch (wrapMode) {
+		case TextureWrapMode::CLAMP_TO_EDGE:
+			ix = Util::clamp(x, 0.f, 1.f) * (tex->Width - 1);
+			iy = Util::clamp(1 - y, 0.f, 1.f) * (tex->Height - 1);
+			break;
+		case TextureWrapMode::MIRRORED_REPEAT:
+			if (mirrorX) ix = tex->Width - ix;
+			if (mirrorY) iy = tex->Height - iy;
+		case TextureWrapMode::REPEAT:
+			ix = (tex->Width + (ix % tex->Width)) % tex->Width;
+			iy = (tex->Height + (iy % tex->Height)) % tex->Height;
+			break;
+		}
 		return Util::colorToVec(tex->GetPixel(ix, iy));
 	}
 
@@ -386,6 +400,10 @@ namespace GL {
 			iTexture = -1;
 		}
 		iTexture = iTex;
+	}
+
+	void Renderer::setWrapMode(TextureWrapMode mode) {
+		wrapMode = mode;
 	}
 
 	Color Renderer::getBGColor() {
