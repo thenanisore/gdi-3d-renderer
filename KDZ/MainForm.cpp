@@ -65,6 +65,8 @@ System::Void MainForm::checkButtons() {
 		diffMatBar->Enabled = false;
 		specMatBar->Enabled = false;
 		shineMatBar->Enabled = false;
+		loadTextureButton->Enabled = false;
+		removeTextureButton->Enabled = false;
 	}
 	else {
 		prevObjButton->Enabled = mainScene->objectCount() > 1 && !mainScene->isSelectedFirst();
@@ -89,6 +91,8 @@ System::Void MainForm::checkButtons() {
 		diffMatBar->Enabled = true;
 		specMatBar->Enabled = true;
 		shineMatBar->Enabled = true;
+		loadTextureButton->Enabled = true;
+		removeTextureButton->Enabled = mainScene->getTexture() >= 0 || mainScene->getTexture() < renderer->getTextureNumber();
 	}
 }
 
@@ -115,7 +119,7 @@ System::Void MainForm::updateStatusBar() {
 System::Void MainForm::openToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e) {
 	if (openFileDialog->ShowDialog() == ::DialogResult::OK) {
 		IO::StreamReader ^sr = gcnew IO::StreamReader(openFileDialog->FileName);
-		try {;
+		try {
 			if (mainScene->fromFile(sr->ReadToEnd())) {
 				// object loaded successfully
 				checkButtons();
@@ -383,6 +387,7 @@ System::Void MainForm::nextObjButton_Click(System::Object^  sender, System::Even
 	mainScene->selectNextObject();
 	checkButtons();
 	updateObjectParams();
+	updateMaterialParams();
 	renderScene();
 }
 
@@ -390,6 +395,7 @@ System::Void MainForm::prevObjButton_Click(System::Object^  sender, System::Even
 	mainScene->selectPreviousObject();
 	checkButtons();
 	updateObjectParams();
+	updateMaterialParams();
 	renderScene();
 }
 
@@ -397,6 +403,7 @@ System::Void MainForm::deleteObjButton_Click(System::Object^  sender, System::Ev
 	mainScene->deleteObject();
 	checkButtons();
 	updateObjectParams();
+	updateMaterialParams();
 	renderScene();
 }
 
@@ -641,7 +648,7 @@ System::Void MainForm::flatLightRadioButton_CheckedChanged(System::Object^  send
 
 // Material parameters:
 
-System::Void MainForm::setMaterialParams(int ambi, int diff, int spec, int shine, Color matColor) {
+System::Void MainForm::setMaterialParams(int ambi, int diff, int spec, int shine, Color matColor, int iTex) {
 	// set material parameters
 	isSettingParams = true;
 	ambiMatBar->Value = ambi;
@@ -649,6 +656,7 @@ System::Void MainForm::setMaterialParams(int ambi, int diff, int spec, int shine
 	specMatBar->Value = spec;
 	shineMatBar->Value = shine;
 	matColorButton->BackColor = matColor;
+	loadTextureButton->BackgroundImage = (iTex < 0 || iTex > renderer->getTextureNumber()) ? noTexture : renderer->getTexture(iTex);
 	isSettingParams = false;
 }
 
@@ -656,17 +664,19 @@ System::Void MainForm::updateMaterialParams() {
 	if (!mainScene->isEmpty()) {
 		GL::Vector4 params = mainScene->getMaterialParams();
 		Color matColor = mainScene->getMaterialColor();
-		setMaterialParams(params.x, params.y, params.z, params.w, matColor);
+		int iTex = mainScene->getTexture();
+		setMaterialParams(params.x, params.y, params.z, params.w, matColor, iTex);
 	}
 }
 
 System::Void MainForm::resetMatButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
 	mainScene->resetMaterial();
+	mainScene->removeTexture();
 	updateMaterialParams();
 	renderScene();
 }
 
-System::Void KDZ::MainForm::matColorButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
+System::Void MainForm::matColorButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
 	ColorDialog ^dialog = gcnew ColorDialog();
 	dialog->ShowHelp = true;
 	dialog->Color = mainScene->getMaterialColor();
@@ -699,3 +709,32 @@ System::Void MainForm::specMatBar_Scroll(System::Object ^ sender, System::EventA
 System::Void MainForm::shineMatBar_Scroll(System::Object ^ sender, System::EventArgs ^ e) {
 	changeMaterialParams();
 }
+
+// Textures
+
+System::Void MainForm::loadTextureButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	if (loadTextureDialog->ShowDialog() == ::DialogResult::OK) {
+		try {
+			Bitmap^ b = (Bitmap^)Image::FromFile(loadTextureDialog->FileName);
+			renderer->addTexture(b);
+			mainScene->setTexture(renderer->getTextureNumber() - 1);
+			loadTextureButton->BackgroundImage = b;
+			checkButtons();
+			updateMaterialParams();
+			renderScene();
+		}
+		catch (const std::exception& e) {
+			// something went wrong
+			MessageBox::Show(L"Can't load texture", L"Error");
+		}
+	}
+}
+
+System::Void MainForm::removeTextureButton_Click(System::Object ^ sender, System::EventArgs ^ e) {
+	mainScene->removeTexture();
+	checkButtons();
+	updateMaterialParams();
+	renderScene();
+}
+
+

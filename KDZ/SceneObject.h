@@ -43,6 +43,10 @@ namespace GL {
 		void setMaterialColor(const Vector4 &col);
 		Vector4 getMaterialColor();
 		void resetMaterial();
+		
+		void setTextureIndex(int iTex);
+		void removeTexture();
+		int getTextureIndex();
 
 		// Sets the colors of the SceneObject's polygons. If vertices = true, then it assumes the vector defines the color in each vertex (3 per polygon).
 		void setPolygonColors(const std::vector<Vector4> &cols, bool vertices = false);
@@ -68,5 +72,8 @@ namespace GL {
 		bool reflectionXY;
 		bool reflectionXZ;
 		bool reflectionYZ;
+
+		// the number of the currently used texture (-1 if no texture)
+		int textureIndex;
 	};
 }

@@ -66,11 +66,19 @@ namespace GL {
 		LightMode getLightMode();
 		void resetLighting();
 
+		// material parameters manipulation:
+
 		void setMaterialParams(int _ambi, int _diff, int _spec, int _shine);
 		void setMaterialColor(Color ^col);
 		Vector4 getMaterialParams();
 		Color getMaterialColor();
 		void resetMaterial();
+
+		// textures manipulation:
+
+		void setTexture(int iTex);
+		void removeTexture();
+		int getTexture();
 
 		// Sets projection mode: perspective if the parameter is true, orthographics otherwise.
 		void setProjectionMode(bool perspective);

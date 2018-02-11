@@ -24,12 +24,21 @@ namespace KDZ {
 			bm = gcnew Bitmap(pictureBox->Width, pictureBox->Height);
 			renderer = gcnew GL::Renderer(Graphics::FromImage(bm), pictureBox->Width, pictureBox->Height);
 			pictureBox->Image = bm;
+			try {
+				noTexture = (Bitmap^)Image::FromFile(L"res/notexture.png");
+			}
+			catch (System::IO::FileNotFoundException^ e) {
+				noTexture = gcnew Bitmap(loadTextureButton->Width, loadTextureButton->Height);
+				loadTextureButton->BackColor = Color::Black;
+			}
 			isSettingParams = false;
 		}
 
 	private: 
 		GL::Renderer ^renderer;
 		Bitmap^ bm;
+		Bitmap ^noTexture;
+
 	private: System::Windows::Forms::TabPage^  otherTabPage;
 	private: System::Windows::Forms::FlowLayoutPanel^  otherFlowLayoutPanel;
 	private: System::Windows::Forms::GroupBox^  colorGroupBox;
@@ -116,6 +125,12 @@ namespace KDZ {
 
 
 	private: System::Windows::Forms::ToolStripMenuItem^  sphere0MenuItem;
+private: System::Windows::Forms::GroupBox^  textureGroupBox;
+private: System::Windows::Forms::Button^  loadTextureButton;
+private: System::Windows::Forms::Label^  textureLabel;
+private: System::Windows::Forms::OpenFileDialog^  loadTextureDialog;
+private: System::Windows::Forms::Button^  removeTextureButton;
+
 
 
 
@@ -221,7 +236,7 @@ namespace KDZ {
 		System::Void phongLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void gouraudLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void flatLightRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
-		System::Void setMaterialParams(int ambi, int diff, int spec, int shine, Color matColor);
+		System::Void setMaterialParams(int ambi, int diff, int spec, int shine, Color matColor, int iTex);
 		System::Void updateMaterialParams();
 		// material control
 		System::Void resetMatButton_Click(System::Object^  sender, System::EventArgs^  e);
@@ -231,6 +246,9 @@ namespace KDZ {
 		System::Void diffMatBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void specMatBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		System::Void shineMatBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		// texture
+		System::Void loadTextureButton_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void removeTextureButton_Click(System::Object^  sender, System::EventArgs^  e);
 
 	private: System::Windows::Forms::Button^  prevObjButton;
 	private: System::Windows::Forms::Button^  nextObjButton;
@@ -445,6 +463,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -554,6 +573,9 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->ambiMatLabel = (gcnew System::Windows::Forms::Label());
 			this->matColorButton = (gcnew System::Windows::Forms::Button());
 			this->matColorLabel = (gcnew System::Windows::Forms::Label());
+			this->textureGroupBox = (gcnew System::Windows::Forms::GroupBox());
+			this->loadTextureButton = (gcnew System::Windows::Forms::Button());
+			this->textureLabel = (gcnew System::Windows::Forms::Label());
 			this->otherTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->otherFlowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->colorGroupBox = (gcnew System::Windows::Forms::GroupBox());
@@ -577,6 +599,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->selectedColorDialog = (gcnew System::Windows::Forms::ColorDialog());
 			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->lightColorDialog = (gcnew System::Windows::Forms::ColorDialog());
+			this->loadTextureDialog = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->removeTextureButton = (gcnew System::Windows::Forms::Button());
 			this->menuStrip->SuspendLayout();
 			this->tableLayoutPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
@@ -625,6 +649,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->specMatBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->diffMatBar))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->ambiMatBar))->BeginInit();
+			this->textureGroupBox->SuspendLayout();
 			this->otherTabPage->SuspendLayout();
 			this->otherFlowLayoutPanel->SuspendLayout();
 			this->colorGroupBox->SuspendLayout();
@@ -691,35 +716,35 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// cubeToolStripMenuItem
 			// 
 			this->cubeToolStripMenuItem->Name = L"cubeToolStripMenuItem";
-			this->cubeToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->cubeToolStripMenuItem->Size = System::Drawing::Size(164, 26);
 			this->cubeToolStripMenuItem->Text = L"Cube";
 			this->cubeToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::cubeToolStripMenuItem_Click);
 			// 
 			// thorusToolStripMenuItem
 			// 
 			this->thorusToolStripMenuItem->Name = L"thorusToolStripMenuItem";
-			this->thorusToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->thorusToolStripMenuItem->Size = System::Drawing::Size(164, 26);
 			this->thorusToolStripMenuItem->Text = L"Torus";
 			this->thorusToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::thorusToolStripMenuItem_Click);
 			// 
 			// pyramidToolStripMenuItem
 			// 
 			this->pyramidToolStripMenuItem->Name = L"pyramidToolStripMenuItem";
-			this->pyramidToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->pyramidToolStripMenuItem->Size = System::Drawing::Size(164, 26);
 			this->pyramidToolStripMenuItem->Text = L"Pyramid";
 			this->pyramidToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::pyramidToolStripMenuItem_Click);
 			// 
 			// tetrahedronToolStripMenuItem
 			// 
 			this->tetrahedronToolStripMenuItem->Name = L"tetrahedronToolStripMenuItem";
-			this->tetrahedronToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->tetrahedronToolStripMenuItem->Size = System::Drawing::Size(164, 26);
 			this->tetrahedronToolStripMenuItem->Text = L"Tetrahedron";
 			this->tetrahedronToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::tetrahedronToolStripMenuItem_Click);
 			// 
 			// octahedronToolStripMenuItem
 			// 
 			this->octahedronToolStripMenuItem->Name = L"octahedronToolStripMenuItem";
-			this->octahedronToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->octahedronToolStripMenuItem->Size = System::Drawing::Size(164, 26);
 			this->octahedronToolStripMenuItem->Text = L"Octahedron";
 			this->octahedronToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::octahedronToolStripMenuItem_Click);
 			// 
@@ -730,7 +755,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 					this->sphere1MenuItem, this->sphere2MenuItem, this->sphere3MenuItem, this->sphere4MenuItem, this->sphere5MenuItem
 			});
 			this->sphereToolStripMenuItem->Name = L"sphereToolStripMenuItem";
-			this->sphereToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->sphereToolStripMenuItem->Size = System::Drawing::Size(164, 26);
 			this->sphereToolStripMenuItem->Text = L"Sphere";
 			// 
 			// sphere0MenuItem
@@ -1759,6 +1784,7 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->matFlowLayoutPanel->AutoScroll = true;
 			this->matFlowLayoutPanel->Controls->Add(this->resetMatButton);
 			this->matFlowLayoutPanel->Controls->Add(this->matParamsGroupBox);
+			this->matFlowLayoutPanel->Controls->Add(this->textureGroupBox);
 			this->matFlowLayoutPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->matFlowLayoutPanel->FlowDirection = System::Windows::Forms::FlowDirection::TopDown;
 			this->matFlowLayoutPanel->Location = System::Drawing::Point(3, 3);
@@ -1908,6 +1934,40 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			this->matColorLabel->Size = System::Drawing::Size(41, 17);
 			this->matColorLabel->TabIndex = 0;
 			this->matColorLabel->Text = L"Color";
+			// 
+			// textureGroupBox
+			// 
+			this->textureGroupBox->Controls->Add(this->removeTextureButton);
+			this->textureGroupBox->Controls->Add(this->loadTextureButton);
+			this->textureGroupBox->Controls->Add(this->textureLabel);
+			this->textureGroupBox->Location = System::Drawing::Point(3, 357);
+			this->textureGroupBox->Name = L"textureGroupBox";
+			this->textureGroupBox->Size = System::Drawing::Size(222, 190);
+			this->textureGroupBox->TabIndex = 19;
+			this->textureGroupBox->TabStop = false;
+			this->textureGroupBox->Text = L"Texture";
+			// 
+			// loadTextureButton
+			// 
+			this->loadTextureButton->BackColor = System::Drawing::Color::White;
+			this->loadTextureButton->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"loadTextureButton.BackgroundImage")));
+			this->loadTextureButton->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+			this->loadTextureButton->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->loadTextureButton->Location = System::Drawing::Point(87, 26);
+			this->loadTextureButton->Name = L"loadTextureButton";
+			this->loadTextureButton->Size = System::Drawing::Size(125, 125);
+			this->loadTextureButton->TabIndex = 3;
+			this->loadTextureButton->UseVisualStyleBackColor = false;
+			this->loadTextureButton->Click += gcnew System::EventHandler(this, &MainForm::loadTextureButton_Click);
+			// 
+			// textureLabel
+			// 
+			this->textureLabel->AutoSize = true;
+			this->textureLabel->Location = System::Drawing::Point(6, 26);
+			this->textureLabel->Name = L"textureLabel";
+			this->textureLabel->Size = System::Drawing::Size(56, 17);
+			this->textureLabel->TabIndex = 2;
+			this->textureLabel->Text = L"Texture";
 			// 
 			// otherTabPage
 			// 
@@ -2110,6 +2170,20 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			// 
 			this->openFileDialog->Filter = L"3D Object files|*.object|Text files|*.txt|All files|*.*";
 			// 
+			// loadTextureDialog
+			// 
+			this->loadTextureDialog->Filter = L"PNG textures|*.png|JPEG textures|*.jpeg|All files|*.*";
+			// 
+			// removeTextureButton
+			// 
+			this->removeTextureButton->Location = System::Drawing::Point(87, 157);
+			this->removeTextureButton->Name = L"removeTextureButton";
+			this->removeTextureButton->Size = System::Drawing::Size(125, 23);
+			this->removeTextureButton->TabIndex = 19;
+			this->removeTextureButton->Text = L"Remove";
+			this->removeTextureButton->UseVisualStyleBackColor = true;
+			this->removeTextureButton->Click += gcnew System::EventHandler(this, &MainForm::removeTextureButton_Click);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -2189,6 +2263,8 @@ private: System::Windows::Forms::CheckBox^  objReflectionXYCheckbox;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->specMatBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->diffMatBar))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->ambiMatBar))->EndInit();
+			this->textureGroupBox->ResumeLayout(false);
+			this->textureGroupBox->PerformLayout();
 			this->otherTabPage->ResumeLayout(false);
 			this->otherFlowLayoutPanel->ResumeLayout(false);
 			this->colorGroupBox->ResumeLayout(false);

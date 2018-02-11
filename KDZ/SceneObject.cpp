@@ -15,7 +15,7 @@ namespace GL {
 
 	SceneObject::SceneObject(std::vector<Polygon> _polygons)
 		: polygons(_polygons), position(), scale(1.0f, 1.0f, 1.0f), rotation(), 
-		  reflectionXY(false), reflectionXZ(false), reflectionYZ(false), material() { }
+		  reflectionXY(false), reflectionXZ(false), reflectionYZ(false), material(), textureIndex(-1) { }
 
 	SceneObject::SceneObject(const std::vector<Vector3> &vertices, std::vector<Vector3> indices)
 	    : SceneObject::SceneObject() 
@@ -59,6 +59,7 @@ namespace GL {
 		reflectionYZ = refl.x;
 		material = obj.getMaterial();
 		polygons = obj.polygons;
+		textureIndex = obj.textureIndex;
 	}
 
 	Vector3 SceneObject::getPosition() const {
@@ -120,6 +121,18 @@ namespace GL {
 
 	void SceneObject::resetMaterial() {
 		material.reset();
+	}
+
+	void SceneObject::setTextureIndex(int iTex) {
+		textureIndex = iTex;
+	}
+
+	void SceneObject::removeTexture() {
+		textureIndex = -1;
+	}
+
+	int SceneObject::getTextureIndex() {
+		return textureIndex;
 	}
 
 	// Sets the colors of the SceneObject's polygons. If vertices = true, then it assumes the vector defines the color in each vertex (3 per polygon).

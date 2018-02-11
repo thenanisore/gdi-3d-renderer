@@ -60,6 +60,7 @@ namespace GL {
 				Matrix4 model = object.getModelMatrix();
 				// notify the renderer if the current object is selected
 				renderer->isSelectedObject = (&sceneObjects[selectedObject] == &object);
+				renderer->setTextureIndex(sceneObjects[selectedObject].getTextureIndex());
 				// pass the current object and transformation matrices in the renderer
 				renderer->renderObject(object, model, view, projection, lightSource, drawWireframe, drawSolid);
 				renderer->isSelectedObject = false;
@@ -246,6 +247,24 @@ namespace GL {
 	void Scene::resetMaterial() {
 		if (!isEmpty()) {
 			sceneObjects[selectedObject].resetMaterial();
+		}
+	}
+
+	void Scene::setTexture(int iTex) {
+		if (!isEmpty()) {
+			sceneObjects[selectedObject].setTextureIndex(iTex);
+		}
+	}
+
+	void Scene::removeTexture() {
+		if (!isEmpty()) {
+			sceneObjects[selectedObject].removeTexture();
+		}
+	}
+
+	int Scene::getTexture() {
+		if (!isEmpty()) {
+			return sceneObjects[selectedObject].getTextureIndex();
 		}
 	}
 

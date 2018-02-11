@@ -157,6 +157,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Shapes.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Matrix4.h" />
@@ -174,6 +175,14 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.h</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\notexture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="objects\cube.object" />
+    <None Include="objects\diamond.object" />
+    <None Include="objects\ramiel.object" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

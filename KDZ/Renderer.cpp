@@ -27,6 +27,9 @@ namespace GL {
 		surfaceBrush = gcnew SolidBrush(Color::Black);
 		// initialize z-buffer
 		setViewport(viewportWidth, viewportHeight);
+		// initialize textures list
+		textures = gcnew List<Bitmap^>();
+		iTexture = -1;
 	}
 
 	void Renderer::setViewport(int width, int height) {
@@ -327,6 +330,29 @@ namespace GL {
 
 	void Renderer::setGraphics(Graphics ^g) {
 		graphics = g;
+	}
+
+	// Load a texture to the renderer.
+	void Renderer::addTexture(Bitmap ^tex) {
+		textures->Add(tex);
+	}
+
+	size_t Renderer::getTextureNumber() {
+		return textures->Count;
+	}
+
+	Bitmap ^ Renderer::getTexture(int iTex) {
+		if (iTex < 0 || iTex >= textures->Count) {
+			throw new std::invalid_argument("Texture index is out of bounds");
+		}
+		return textures[iTex];
+	}
+
+	void Renderer::setTextureIndex(int iTex) {
+		if (iTex < 0 || iTex >= textures->Count) {
+			iTexture = -1;
+		}
+		iTexture = iTex;
 	}
 
 	Color Renderer::getBGColor() {

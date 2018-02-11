@@ -17,6 +17,7 @@ namespace GL {
 
 	using namespace System;
 	using namespace System::Drawing;
+	using namespace System::Collections::Generic;
 
 	// The Renderer class contains functions that rasterize SceneObjects on the specified Graphics object.
 	ref class Renderer
@@ -34,8 +35,14 @@ namespace GL {
 		void renderObject(const SceneObject &obj, const Matrix4 &model, const Matrix4 &view,
 			const Matrix4 &proj, const Light &light, bool wireframe, bool solid);
 		void setGraphics(Graphics ^g);
-
-
+		// Loads a texture to the renderer.
+		void addTexture(Bitmap ^tex);
+		// Returns the number of the currently loaded textures.
+		size_t getTextureNumber();
+		// Returns a selected texture.
+		Bitmap^ getTexture(int iTex);
+		// Sets a current texture.
+		void setTextureIndex(int iTex);
 		// Returns the background color.
 		Color getBGColor();
 		// Returns the wireframe color.
@@ -79,7 +86,11 @@ namespace GL {
 		// The height of the viewport (screen).
 		int viewportY;
 		// Depth buffer (width X height).
-		array<float, 2> ^zbuffer;
+		array<float, 2>^ zbuffer;
+		// Loaded textures.
+		List<Bitmap^>^ textures;
+		// Selected texture.
+		int iTexture;
 		// True, if a polygon is entirely off the screen.
 		bool toClip(const Polygon & poly);
 		// True, if a polygon is back-faced.
