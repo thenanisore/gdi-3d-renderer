@@ -41,6 +41,10 @@ namespace GL {
 		normals = std::vector<Vector3> { first, second, third };
 	}
 
+	void Polygon::setTexCoords(const Vector3 & first, const Vector3 & second, const Vector3 & third) {
+		textures = std::vector<Vector3> { first, second, third };
+	}
+
 	void Polygon::calculateNormals() {
 		Vector3 normal = Util::normal(vertices[0].fromHomogeneous(), vertices[1].fromHomogeneous(), vertices[2].fromHomogeneous());
 		normals = std::vector<Vector3> { normal, normal, normal };

@@ -49,6 +49,34 @@ namespace GL {
 		}
 	}
 
+	SceneObject::SceneObject(const std::vector<Vector3>& vertices, const std::vector<Vector4>& colors, std::vector<Vector3> texCoords, std::vector<Vector3> indices)
+		: SceneObject::SceneObject()
+	{
+		if (colors.size() != vertices.size()) {
+			throw new std::invalid_argument("Colors must be specified for each vertex");
+		}
+		if (texCoords.size() != indices.size() * 3) {
+			throw new std::invalid_argument("Texture coordinates must be specified for each polygon");
+		}
+		for (int i = 0; i < indices.size(); i++) {
+			addPolygon(GL::Polygon(
+				vertices[(int)indices[i].x],
+				vertices[(int)indices[i].y],
+				vertices[(int)indices[i].z]
+			));
+			polygons[polygons.size() - 1].setColors(
+				colors[(int)indices[i].x],
+				colors[(int)indices[i].y],
+				colors[(int)indices[i].z]
+			);
+			polygons[polygons.size() - 1].setTexCoords(
+				texCoords[3 * i],
+				texCoords[3 * i + 1],
+				texCoords[3 * i + 2]
+			);
+		}
+	}
+
 	SceneObject::SceneObject(const SceneObject & obj) {
 		position = obj.getPosition();
 		rotation = obj.getRotation();

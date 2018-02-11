@@ -323,9 +323,8 @@ namespace GL {
 		array<Char>^ delimiter = delimStr->ToCharArray();
 		array<String^>^ lines = file->Split(delimiter);
 		// parse each line
-		std::vector<Vector3> vertices;
 		std::vector<Vector4> colors;
-		std::vector<Vector3> indices;
+		std::vector<Vector3> vertices, indices, texCoords, texCoordData;
 		for (int i = 0; i < lines->Length; i++) {
 			String^ trimmed = lines[i]->Trim();
 			// discard empty lines and comments
@@ -349,6 +348,10 @@ namespace GL {
 					data = Util::parseVec3(trimmed->Substring(2));
 					indices.push_back(data - 1);
 					break;
+				case 't':
+					// texture coordinates
+					texCoordData = Util::parseTexCoords(trimmed->Substring(2));
+					texCoords.insert(std::end(texCoords), std::begin(texCoordData), std::end(texCoordData));
 				default:
 					// do nothing?
 					continue;
@@ -356,7 +359,7 @@ namespace GL {
 			}
 		}
 		// construct a SceneObject
-		SceneObject newObj(vertices, colors, indices);
+		SceneObject newObj(vertices, colors, texCoords, indices);
 		addObject(newObj);
 
 		return true;

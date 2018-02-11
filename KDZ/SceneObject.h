@@ -24,6 +24,8 @@ namespace GL {
 		SceneObject(std::vector<Polygon> _polygons);
 		SceneObject(const std::vector<Vector3> &vertices, std::vector<Vector3> indices);
 		SceneObject(const std::vector<Vector3> &vertices, const std::vector<Vector4> &colors, std::vector<Vector3> indices);
+		SceneObject(const std::vector<Vector3> &vertices, const std::vector<Vector4> &colors, 
+			std::vector<Vector3> texCoords, std::vector<Vector3> indices);
 		// Copy constructor.
 		SceneObject(const SceneObject &obj);
 

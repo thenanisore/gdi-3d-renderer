@@ -214,6 +214,26 @@ namespace GL {
 			return Vector3(nums);
 		}
 
+		// Parses a string containing of six floating-point numbers and returns a resulting vector of three Vector3.
+		std::vector<Vector3> parseTexCoords(System::String^ str) {
+			array<wchar_t, 1>^ delim = { ' ' };
+			array<System::String^>^ strs = str->Split(delim);
+			std::vector<float> nums;
+			for (int i = 0; i < strs->Length; i++) {
+				if (!System::String::IsNullOrWhiteSpace(strs[i])) {
+					// culture info is provided for parsing dots correctly ("1.0")
+					nums.push_back(float::Parse(strs[i], System::Globalization::CultureInfo::InvariantCulture));
+				}
+			}
+			if (nums.size() != 6) {
+				throw std::invalid_argument("Invalid string format (must be 6 numbers).");
+			}
+			Vector3 texCoord1(nums[0], nums[1], 0);
+			Vector3 texCoord2(nums[2], nums[3], 0);
+			Vector3 texCoord3(nums[4], nums[5], 0);
+			return std::vector<Vector3> { texCoord1, texCoord2, texCoord3 };
+		}
+
 		bool compareFloat(float a, float b, float eps) {
 			return abs(a - b) < eps;
 		}
