@@ -1,7 +1,16 @@
+/*
+* Студент: Иванов Олег Владимирович
+* Группа: 141/1, 4 курс
+* КДЗ #1, Вариант 1: 3D-сцена в GDI.
+* 
+* Класс Matrix4: матрица 4x4, матричные операции.
+*/
+
 #include "Matrix4.h"
 
 namespace GL {
 
+	// Initializes an identity matrix.
 	Matrix4::Matrix4() {
 		values = { 1, 0, 0, 0,
 				   0, 1, 0, 0,
@@ -9,10 +18,13 @@ namespace GL {
 				   0, 0, 0, 1 };
 	}
 
+	// Initializes a matrix with the values given in a list.
 	Matrix4::Matrix4(const std::vector<float> _values) : values(_values) { }
 
+	// Copy constructor
 	Matrix4::Matrix4(const Matrix4 &mat) : values(mat.values) { }
 
+	// Copy assignment operator.
 	Matrix4& Matrix4::operator=(const Matrix4 &mat) {
 		values = mat.values;
 		return *this;

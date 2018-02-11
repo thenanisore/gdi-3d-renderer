@@ -1,3 +1,11 @@
+/*
+* Студент: Иванов Олег Владимирович
+* Группа: 141/1, 4 курс
+* КДЗ #1, Вариант 1: 3D-сцена в GDI.
+*
+* Класс Polygon: треугольный полигон.
+*/
+
 #include "Polygon.h"
 #include "Util.h"
 
@@ -43,6 +51,7 @@ namespace GL {
 		for (int i = 0; i < vertices.size(); i++) {
 			transformed.vertices[i] = mat * vertices[i];
 			transformed.colors[i] = colors[i];
+			// we need a different matrix for the normal transformation (inversed-transposed).
 			transformed.normals[i] = (normalMat * normals[i]).normalized();
 		}
 		return transformed;

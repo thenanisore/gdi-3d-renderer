@@ -1,3 +1,11 @@
+/*
+ * Студент: Иванов Олег Владимирович
+ * Группа: 141/1, 4 курс
+ * КДЗ #1, Вариант 1: 3D-сцена в GDI.
+ * 
+ * Класс Matrix4: матрица 4x4, матричные операции.
+ */
+
 #pragma once
 
 #include "Vector4.h"
@@ -18,6 +26,7 @@ namespace GL {
 		// Copy constructor
 		Matrix4(const Matrix4 &mat);
 
+		// The dimension of the matrix.
 		const int dim = 4;
 
 		// Copy assignment operator.
@@ -35,6 +44,7 @@ namespace GL {
 		Matrix4 transposed() const;
 		float determinant() const;
 		Matrix4 inverted() const;
+		// Returns the 3x3 matrix with the first 3 rows/colums.
 		Matrix3 toMat3() const;
 
 	private:

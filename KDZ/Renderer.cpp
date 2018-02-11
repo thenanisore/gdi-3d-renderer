@@ -1,3 +1,11 @@
+/*
+* Студент: Иванов Олег Владимирович
+* Группа: 141/1, 4 курс
+* КДЗ #1, Вариант 1: 3D-сцена в GDI.
+*
+* Класс Renderer: растеризатор, содержит функции перевода 3D-объектов в 2D-изображения (преобразование вершин, затенение).
+*/
+
 #include "Renderer.h"
 #include "Util.h"
 
@@ -31,18 +39,6 @@ namespace GL {
 		return (float)viewportX / (float)viewportY;
 	}
 
-	void Renderer::drawAxes(Matrix4 transformMatrix, bool grid) {
-		// TODO: rework
-		// get correct axes' coordinates 
-		Vector3 origin = NDCtoViewport((transformMatrix * Vector4(0.0f, 0.0f, 0.0f, 1.0f)).fromHomogeneous());
-		Vector3 x = NDCtoViewport((transformMatrix * Vector4(50.0f, 0.0f, 0.0f, 1.0f)).fromHomogeneous());
-		Vector3 y = NDCtoViewport((transformMatrix * Vector4(0.0f, 50.0f, 0.0f, 1.0f)).fromHomogeneous());
-		Vector3 z = NDCtoViewport((transformMatrix * Vector4(0.0f, 0.0f, 50.0f, 1.0f)).fromHomogeneous());
-		drawLine(origin, x);
-		drawLine(origin, y);
-		drawLine(origin, z);
-	}
-
 	void Renderer::clearScreen() {
 		graphics->Clear(bgColor);
 	}
@@ -55,9 +51,9 @@ namespace GL {
 		}
 	}
 
+	// True, if a polygon is back-faced.
 	bool Renderer::toClip(const Polygon &poly) {
 		// don't draw a poly if it's entirely outside or with area = 0
-		// TODO: correct clipping
 		if (Util::area(poly) < 0.01) {
 			return true;
 		}
@@ -80,6 +76,7 @@ namespace GL {
 		return visible;
 	}
 
+	// Calculates the colors in the vertices of a polygon using the Gouraud shading.
 	std::vector<Vector4> Renderer::getGouraudColors(const GL::Polygon &poly, Light lightSource, Material material) {
 		// Gouraud model lighting calculations:
 		std::vector<Vector4> colors;
@@ -166,6 +163,7 @@ namespace GL {
 		}
 	}
 
+	// Draw a single pixel with a Z-test.
 	void Renderer::drawPoint(int x, int y, float z, SolidBrush ^br) {
 		if (x >= 0 && x < viewportX && y >= 0 && y < viewportY && z > (perspective ? -1 : 0) && z < 1) {
 			// z test
@@ -176,12 +174,14 @@ namespace GL {
 		}
 	}
 
+	// Draw a wireframe of a polygon.
 	void Renderer::drawPolygon(const GL::Polygon &pol) {
 		drawLine(pol.vertices[0].toVec3(), pol.vertices[1].toVec3());
 		drawLine(pol.vertices[1].toVec3(), pol.vertices[2].toVec3());
 		drawLine(pol.vertices[2].toVec3(), pol.vertices[0].toVec3());
 	}
 
+	// Fills and shades a polygon.
 	void Renderer::fillPolygon(const Polygon &poly, const Polygon &worldPoly, const Light &lightSource,
 		const Material &material, std::vector<Vector4> gouraudColors) {
 		// copy vectors first
@@ -323,24 +323,6 @@ namespace GL {
 		return Vector3((int)((1.f + vertex.x) * viewportX / 2.f),
 			           (int)((1.f - vertex.y) * viewportY / 2.f),
 			            vertex.z);
-	}
-
-
-	// test code
-	void Renderer::ztofile() {
-			std::ofstream myfile;
-			myfile.open("log.txt");
-			for (int x = viewportX / 3; x < 2 * viewportX / 3; x++) {
-				for (int y = viewportY / 3; y < 2 * viewportY / 3; y++) {
-					if (zbuffer[x, y] == INFINITY) {
-						myfile << "| |";
-					} else {
-						myfile << "|" << zbuffer[x, y] << "|";
-					}
-				}
-				myfile << std::endl;
-			}
-			myfile.close();
 	}
 
 	void Renderer::setGraphics(Graphics ^g) {
