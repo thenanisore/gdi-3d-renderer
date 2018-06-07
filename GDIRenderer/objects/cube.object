@@ -1,5 +1,6 @@
-# vertices
+# Each vertex has its x-y-z coordinates.
 
+# vertices:
 v 1 1 1
 v 1 1 -1
 v 1 -1 1
@@ -9,7 +10,9 @@ v -1 1 -1
 v -1 -1 1
 v -1 -1 -1
 
-# colors
+# Each vertex has its color (0.0 to 1.0), colors are interpolated across the polygon (same as OpenGL)
+
+# colors:
 c 0 0 0
 c 0 0 1
 c 0 1 0
@@ -19,9 +22,12 @@ c 1 0 1
 c 1 1 0
 c 1 1 1
 
-# polygons (indexing starts from 1) + texture coords
+# You describe each polygons (or faces) as a path of vertices.
+# The vertices should rotate counter-clockwise around the triangle's center!
+# Texture coordinates are applied to the corresponding vertices (each one from 0 to 1).
 
-# front 
+# polygons + texture coords:
+# front
 f 3 1 5
 t 1 0 1 1 0 1
 f 5 7 3
