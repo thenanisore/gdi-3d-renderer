@@ -28,6 +28,5 @@ The resulting `.exe` file will be generated under `x64/Debug/` (or `x64/Release/
 
 ## Screenshots
 
-<img src="Screenshots/scene.png" alt="Scene" />
-
-<img src="Screenshots/scene-egypt.png" alt="Scene Egypt" />
+<img src="Screenshots/scene.png" alt="Scene" width="500" />
+<img src="Screenshots/scene-egypt.png" alt="Scene Egypt" width="500" />
