@@ -1,6 +1,6 @@
 # gdi-3d-renderer
 
-This project is a simple software renderer for 3D graphics written in Visual C++ (Windows only). Everything is implemented from scratch (literally, from the `putPixel` function), including:
+A simple software renderer for 3D graphics written in Visual C++ (Windows only). Everything is implemented from scratch (literally, from the `putPixel` function), including:
 
 - Vector/matrix manipulations
 - Orthographic/perspective projections
